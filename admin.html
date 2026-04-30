@@ -33,6 +33,10 @@ img{max-width:100%;display:block;}
 .lf input:focus{border-color:var(--lime);}
 .lbtn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:100px;font-weight:700;font-size:.96rem;margin-top:6px;transition:var(--ease);}
 .lbtn:hover{background:var(--gdark);transform:translateY(-1px);}
+.google-btn{background:#fff;color:#111827;display:flex;align-items:center;justify-content:center;gap:10px;}
+.google-btn:hover{background:#f8fafc;color:#111827;}
+.login-divider{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.38);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin:16px 0 12px;}
+.login-divider::before,.login-divider::after{content:'';height:1px;background:rgba(255,255,255,.12);flex:1;}
 .lerr{color:#f87171;font-size:.82rem;margin-top:10px;display:none;}
 .lok{color:#86efac;font-size:.82rem;margin-top:10px;display:none;}
 .lhint{margin-top:20px;font-size:.72rem;color:rgba(255,255,255,.25);}
@@ -220,7 +224,12 @@ img{max-width:100%;display:block;}
   <div class="lcard">
     <div class="llogo">New <em>Heights</em></div>
     <div class="login-stage active" id="loginStageEmail">
-      <div class="login-chip">Step 1 · Verify Email</div>
+      <div class="login-chip">Step 1 · Google Verification</div>
+      <button class="lbtn google-btn" onclick="loginWithGoogle()">
+        <span style="font-weight:800;">G</span>
+        Continue with Google
+      </button>
+      <div class="login-divider">or use code</div>
       <div class="lf"><label>Approved Admin Email</label><input type="email" id="lEmail" placeholder="admin@school.com"/></div>
       <button class="lbtn" onclick="sendAdminCode()">Send Verification Code</button>
       <div class="lf"><label>Verification Code</label><input type="text" id="lCode" maxlength="6" placeholder="Enter 6-digit code" onkeydown="if(event.key==='Enter')verifyAdminCode()"/></div>
@@ -684,9 +693,45 @@ const GALAXY_ADMIN_EMAIL = 'galaxydesignstudio4@gmail.com';
 const GALAXY_ADMIN_CODE = '055688';
 const GALAXY_ADMIN_PASSWORD = 'admin123';
 const LOCKED_ADMIN_EMAILS = ['newheights218@gmail.com', GALAXY_ADMIN_EMAIL];
+const ADMIN_UNLOCK_KEY = 'nhs_admin_unlock_v1';
+const ADMIN_UNLOCK_MS = 12 * 60 * 60 * 1000;
 
 function isLockedAdminEmail(email){
   return LOCKED_ADMIN_EMAILS.includes(String(email || '').trim().toLowerCase());
+}
+
+function getAdminUnlock(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(ADMIN_UNLOCK_KEY) || 'null');
+    if(!saved?.email || !saved?.expiresAt || Date.now() > saved.expiresAt){
+      localStorage.removeItem(ADMIN_UNLOCK_KEY);
+      return null;
+    }
+    return saved;
+  }catch(_err){
+    localStorage.removeItem(ADMIN_UNLOCK_KEY);
+    return null;
+  }
+}
+
+function rememberAdminUnlock(email){
+  localStorage.setItem(ADMIN_UNLOCK_KEY, JSON.stringify({
+    email: String(email || '').trim().toLowerCase(),
+    expiresAt: Date.now() + ADMIN_UNLOCK_MS
+  }));
+}
+
+function clearAdminUnlock(){
+  localStorage.removeItem(ADMIN_UNLOCK_KEY);
+}
+
+async function openDashboardFor(email){
+  verifiedAdminEmail = String(email || '').trim().toLowerCase();
+  rememberAdminUnlock(verifiedAdminEmail);
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminApp').classList.add('show');
+  setLoginMessage();
+  await loadAll();
 }
 
 /* ── LOGIN ── */
@@ -725,6 +770,35 @@ function setLoginMessage(type, message){
 function showLoginStage(stage){
   document.getElementById('loginStageEmail')?.classList.toggle('active', stage === 'email');
   document.getElementById('loginStagePassword')?.classList.toggle('active', stage === 'password');
+}
+
+async function loginWithGoogle(){
+  try{
+    const supabase = await NHS.getSupabase();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href.split('#')[0] }
+    });
+    if(error) throw error;
+  }catch(err){
+    setLoginMessage('error', err.message || 'Google login could not start.');
+  }
+}
+
+async function useVerifiedEmail(email, message){
+  await NHS.refresh();
+  D = NHS.get();
+  const clean = String(email || '').trim().toLowerCase();
+  if(!clean || !NHS.isApprovedAdminEmail(clean)){
+    setLoginMessage('error', 'This Google account is not approved for admin access.');
+    return false;
+  }
+  verifiedAdminEmail = clean;
+  document.getElementById('lVerifiedEmail').value = clean;
+  document.getElementById('lPass2').value = '';
+  showLoginStage('password');
+  setLoginMessage('ok', message || 'Google account verified. Enter the dashboard password to continue.');
+  return true;
 }
 
 async function sendAdminCode(){
@@ -801,10 +875,7 @@ doLogin = async function(){
   if(!verifiedAdminEmail){ setLoginMessage('error', 'Verify an approved email before entering the dashboard password.'); return; }
   const expectedPassword = verifiedAdminEmail === GALAXY_ADMIN_EMAIL ? GALAXY_ADMIN_PASSWORD : d.adminPassword;
   if(pass !== expectedPassword){ setLoginMessage('error', 'Incorrect dashboard password.'); return; }
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('adminApp').classList.add('show');
-  setLoginMessage();
-  await loadAll();
+  await openDashboardFor(verifiedAdminEmail);
 };
 
 doLogout = async function(){
@@ -812,6 +883,7 @@ doLogout = async function(){
     const supabase = await NHS.getSupabase();
     await supabase.auth.signOut();
   }catch(_err){}
+  clearAdminUnlock();
   verifiedAdminEmail = '';
   showLoginStage('email');
   document.getElementById('loginScreen').style.display='flex';
@@ -1709,8 +1781,13 @@ function v(id){ const el=document.getElementById(id); return el?el.value:''; }
 /* ── CTRL+SHIFT+A ── */
 document.addEventListener('keydown',e=>{
   if(e.ctrlKey&&e.shiftKey&&e.key==='A'){
-    document.getElementById('loginScreen').style.display='flex';
-    document.getElementById('adminApp').classList.remove('show');
+    const unlocked = getAdminUnlock();
+    if(unlocked?.email && NHS.isApprovedAdminEmail(unlocked.email)){
+      openDashboardFor(unlocked.email);
+    }else{
+      document.getElementById('loginScreen').style.display='flex';
+      document.getElementById('adminApp').classList.remove('show');
+    }
   }
 });
 
@@ -1725,15 +1802,17 @@ document.addEventListener('keydown',e=>{
     if(button.textContent.includes('Sign In')) button.style.display = 'none';
   });
   showLoginStage('email');
+  const unlocked = getAdminUnlock();
+  if(unlocked?.email && NHS.isApprovedAdminEmail(unlocked.email)){
+    await openDashboardFor(unlocked.email);
+    return;
+  }
   try{
     const supabase = await NHS.getSupabase();
     const { data } = await supabase.auth.getUser();
     const email = data?.user?.email?.toLowerCase();
     if(email && NHS.isApprovedAdminEmail(email)){
-      verifiedAdminEmail = email;
-      document.getElementById('lVerifiedEmail').value = email;
-      showLoginStage('password');
-      setLoginMessage('ok', 'Verified email found. Enter the dashboard password to continue.');
+      await useVerifiedEmail(email, 'Google account verified. Enter the dashboard password to continue.');
     }
   }catch(_err){}
 })();
