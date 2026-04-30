@@ -140,7 +140,11 @@ const NHS = (function () {
     emailjsServiceId: "",
     emailjsTemplateId: "",
     emailjsPublicKey: "",
+    emailjsSenderName: "New Heights School",
     adminEmail: "newheights218@gmail.com",
+    adminUsers: [
+      { name: "Primary Admin", email: "newheights218@gmail.com" }
+    ],
     applications: [],
     contactMessages: [],
     adminPassword: "NewHeights2025"
@@ -152,6 +156,32 @@ const NHS = (function () {
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
+  }
+
+  function formatDateTime(value) {
+    if (!value) return '';
+    try {
+      return new Date(value).toLocaleString('en-GH', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    } catch (_err) {
+      return value;
+    }
+  }
+
+  function makeSixDigitCode() {
+    return String(Math.floor(100000 + Math.random() * 900000));
+  }
+
+  function generateApplicationCode(existingApps) {
+    const taken = new Set((existingApps || []).map((app) => String(app.applicationCode || '')));
+    let code = makeSixDigitCode();
+    while (taken.has(code)) code = makeSixDigitCode();
+    return code;
   }
 
   function mergeState(base, data) {
@@ -271,6 +301,81 @@ const NHS = (function () {
     }));
   }
 
+  async function fetchApplicationsRemote() {
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from('admissions')
+      .select('id,name,email,phone,details,submitted_at')
+      .order('submitted_at', { ascending: false });
+    if (error) throw error;
+    return (data || []).map((row) => {
+      const details = row.details || {};
+      return Object.assign({}, details, {
+        id: row.id,
+        studentName: details.studentName || row.name || '',
+        email: details.email || row.email || '',
+        phone: details.phone || row.phone || '',
+        date: details.date || formatDateTime(row.submitted_at),
+        submittedAt: row.submitted_at || details.submittedAt || '',
+        status: details.status || 'pending',
+        applicationCode: details.applicationCode || ''
+      });
+    });
+  }
+
+  async function updateApplicationRemote(app) {
+    if (!app?.id) throw new Error('Application id is missing.');
+    const supabase = await getSupabase();
+    const payload = Object.assign({}, app, {
+      date: app.date || formatDateTime(app.submittedAt || new Date().toISOString()),
+      submittedAt: app.submittedAt || new Date().toISOString()
+    });
+    const { error } = await supabase
+      .from('admissions')
+      .update({
+        name: payload.studentName || payload.firstName || 'Student',
+        email: payload.email || 'no-email@newheights.local',
+        phone: payload.phone || '',
+        details: payload
+      })
+      .eq('id', app.id);
+    if (error) throw error;
+    return payload;
+  }
+
+  async function deleteApplicationRemote(appId) {
+    if (!appId) return;
+    const supabase = await getSupabase();
+    const { error } = await supabase.from('admissions').delete().eq('id', appId);
+    if (error) throw error;
+  }
+
+  async function findApplicationByCode(code) {
+    const apps = await fetchApplicationsRemote();
+    const clean = String(code || '').trim();
+    return apps.find((app) => String(app.applicationCode || '').trim() === clean) || null;
+  }
+
+  function syncApplicationCache(apps) {
+    cache.applications = apps || [];
+    writeLocal(cache);
+    return cache.applications;
+  }
+
+  function updateCachedApplication(app) {
+    cache.applications = cache.applications || [];
+    const index = cache.applications.findIndex((entry) => entry.id === app.id);
+    if (index >= 0) cache.applications[index] = app;
+    else cache.applications.unshift(app);
+    writeLocal(cache);
+    return app;
+  }
+
+  function removeCachedApplication(appId) {
+    cache.applications = (cache.applications || []).filter((entry) => entry.id !== appId);
+    writeLocal(cache);
+  }
+
   async function uploadImage(file, bucket, folder) {
     const supabase = await getSupabase();
     const ext = file.name.includes('.') ? file.name.split('.').pop() : 'jpg';
@@ -337,6 +442,7 @@ const NHS = (function () {
         const remote = await fetchStateFromRemote();
         if (remote) cache = remote;
         cache.galleryImages = await fetchGalleryRemote();
+        cache.applications = await fetchApplicationsRemote();
       } catch (err) {
         console.warn('Using local fallback data because Supabase could not be reached.', err);
       }
@@ -368,26 +474,38 @@ const NHS = (function () {
 
   async function addApplication(app) {
     const supabase = await getSupabase();
+    const existingApps = await fetchApplicationsRemote();
     const entry = Object.assign({}, app, {
-      id: Date.now(),
-      date: new Date().toLocaleString('en-GH'),
+      date: formatDateTime(new Date().toISOString()),
+      submittedAt: new Date().toISOString(),
       status: 'pending',
-      seen: false
+      seen: false,
+      applicationCode: generateApplicationCode(existingApps)
     });
 
-    const { error } = await supabase.from('admissions').insert([{
+    const { data, error } = await supabase.from('admissions').insert([{
       name: entry.studentName,
       email: entry.email,
       phone: entry.phone,
       details: entry,
-      submitted_at: new Date().toISOString()
-    }]);
+      submitted_at: entry.submittedAt
+    }]).select('id').single();
     if (error) throw error;
 
-    cache.applications = cache.applications || [];
-    cache.applications.unshift(entry);
-    await save(cache);
+    entry.id = data.id;
+    updateCachedApplication(entry);
     return entry;
+  }
+
+  async function saveApplication(app) {
+    const updated = await updateApplicationRemote(app);
+    updateCachedApplication(updated);
+    return updated;
+  }
+
+  async function removeApplication(appId) {
+    await deleteApplicationRemote(appId);
+    removeCachedApplication(appId);
   }
 
   async function addMessage(msg) {
@@ -443,19 +561,89 @@ const NHS = (function () {
     return `https://www.youtube.com/embed/${id}?rel=0`;
   }
 
+  function isApprovedAdminEmail(email) {
+    const clean = String(email || '').trim().toLowerCase();
+    return (cache.adminUsers || []).some((entry) => String(entry.email || '').trim().toLowerCase() === clean);
+  }
+
+  function getAdminUserByEmail(email) {
+    const clean = String(email || '').trim().toLowerCase();
+    return (cache.adminUsers || []).find((entry) => String(entry.email || '').trim().toLowerCase() === clean) || null;
+  }
+
+  function getStatusLabel(status) {
+    const value = String(status || 'pending').toLowerCase();
+    if (value === 'accepted') return 'Approved';
+    if (value === 'denied') return 'Declined';
+    return 'Pending Review';
+  }
+
+  function loadEmailJs() {
+    if (window.emailjs?.send) return Promise.resolve(window.emailjs);
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-emailjs-cdn="true"]');
+      if (existing) {
+        existing.addEventListener('load', () => resolve(window.emailjs), { once: true });
+        existing.addEventListener('error', reject, { once: true });
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+      script.async = true;
+      script.dataset.emailjsCdn = 'true';
+      script.onload = () => resolve(window.emailjs);
+      script.onerror = () => reject(new Error('Failed to load EmailJS.'));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function sendStatusEmail(app, overrideStatus) {
+    const d = get();
+    const status = String(overrideStatus || app?.status || 'pending').toLowerCase();
+    if (!app?.email) throw new Error('Parent email is missing.');
+    if (!d.emailjsPublicKey || !d.emailjsServiceId || !d.emailjsTemplateId) {
+      throw new Error('Email settings are not configured in admin notifications.');
+    }
+    const emailjs = await loadEmailJs();
+    emailjs.init({
+      publicKey: d.emailjsPublicKey
+    });
+    return emailjs.send(d.emailjsServiceId, d.emailjsTemplateId, {
+      student_name: app.studentName || '',
+      parent_name: app.parentName || '',
+      apply_class: app.applyClass || '',
+      status: getStatusLabel(status),
+      school_name: `${d.schoolName} ${d.schoolTagline}`.trim(),
+      school_phone: d.contactPhone1,
+      school_email: d.contactEmail1,
+      tracking_code: app.applicationCode || '',
+      to_email: app.email,
+      to_name: app.parentName || app.studentName || '',
+      sender_name: d.emailjsSenderName || `${d.schoolName} ${d.schoolTagline}`.trim()
+    });
+  }
+
   return {
     DEFAULT,
     addApplication,
     addGalleryImages,
     addMessage,
+    findApplicationByCode,
     fileToBase64,
+    getAdminUserByEmail,
     get,
+    getStatusLabel,
     getSupabase,
     getUnseenCount,
     init,
+    isApprovedAdminEmail,
+    loadEmailJs,
     refresh,
+    removeApplication,
     removeGalleryImage,
     save,
+    saveApplication,
+    sendStatusEmail,
     setFavicon,
     uploadImage,
     youtubeEmbed,
@@ -482,7 +670,7 @@ function renderNav(active) {
             ${d.navLinks.map((link) => `<li><a href="${link.href}" class="nav-link${link.href === active ? ' active' : ''}">${link.label}</a></li>`).join('')}
             <li><a href="admissions.html" class="btn btn-primary nav-cta-btn">Enroll Now</a></li>
           </ul>
-          <button class="hamburger" id="hamburgerBtn" aria-label="Menu" onclick="toggleNav()">
+          <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks" onclick="toggleNav()">
             <span></span><span></span><span></span>
           </button>
         </div>
@@ -558,23 +746,43 @@ function renderFooter() {
     </footer>`;
 }
 
+function closeNav() {
+  const navLinks = document.getElementById('navLinks');
+  const button = document.getElementById('hamburgerBtn');
+  if (!navLinks) return;
+  navLinks.classList.remove('nav-open');
+  if (button) {
+    button.classList.remove('active');
+    button.setAttribute('aria-expanded', 'false');
+  }
+  document.body.style.overflow = '';
+}
+
 function toggleNav() {
   const navLinks = document.getElementById('navLinks');
   const button = document.getElementById('hamburgerBtn');
   if (!navLinks) return;
   const open = navLinks.classList.toggle('nav-open');
-  if (button) button.classList.toggle('active', open);
+  if (button) {
+    button.classList.toggle('active', open);
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
 document.addEventListener('click', (event) => {
   const navLinks = document.getElementById('navLinks');
   if (navLinks && navLinks.classList.contains('nav-open') && !event.target.closest('.navbar')) {
-    navLinks.classList.remove('nav-open');
-    const button = document.getElementById('hamburgerBtn');
-    if (button) button.classList.remove('active');
-    document.body.style.overflow = '';
+    closeNav();
   }
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 860) closeNav();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeNav();
 });
 
 function initReveal() {

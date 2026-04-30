@@ -68,6 +68,7 @@ create policy "public read programs" on programs for select using (true);
 create policy "public write programs" on programs for all using (true) with check (true);
 create policy "public read gallery" on gallery for select using (true);
 create policy "public write gallery" on gallery for all using (true) with check (true);
+create policy "public read admissions" on admissions for select using (true);
 create policy "public write admissions" on admissions for all using (true) with check (true);
 create policy "public write contacts" on contacts for all using (true) with check (true);
 

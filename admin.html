@@ -34,7 +34,12 @@ img{max-width:100%;display:block;}
 .lbtn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:100px;font-weight:700;font-size:.96rem;margin-top:6px;transition:var(--ease);}
 .lbtn:hover{background:var(--gdark);transform:translateY(-1px);}
 .lerr{color:#f87171;font-size:.82rem;margin-top:10px;display:none;}
+.lok{color:#86efac;font-size:.82rem;margin-top:10px;display:none;}
 .lhint{margin-top:20px;font-size:.72rem;color:rgba(255,255,255,.25);}
+.login-stage{display:none;}
+.login-stage.active{display:block;}
+.login-back{background:none;border:none;color:var(--lime);font-size:.82rem;margin-top:12px;}
+.login-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(220,231,117,.12);color:var(--lime);font-size:.76rem;font-weight:700;margin-bottom:14px;}
 
 /* ── LAYOUT ── */
 #adminApp{display:none;min-height:100vh;}
@@ -157,6 +162,18 @@ img{max-width:100%;display:block;}
 .expand-btn:hover{background:rgba(220,231,117,.1);}
 .app-detail{display:none;background:var(--card2);border-radius:8px;padding:14px;margin-top:8px;font-size:.8rem;line-height:1.9;color:var(--dim);}
 .app-detail strong{color:var(--text);}
+.apps-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+.apps-filter-tabs{display:flex;gap:8px;flex-wrap:wrap;}
+.filter-chip{padding:8px 14px;border:none;border-radius:999px;background:rgba(255,255,255,.05);color:var(--dim);font-size:.76rem;font-weight:700;cursor:pointer;transition:var(--ease);}
+.filter-chip.active{background:var(--green);color:#fff;}
+.apps-search{min-width:240px;flex:1;max-width:320px;}
+.apps-search input{width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:999px;color:var(--text);font-size:.84rem;outline:none;}
+.quick-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.tiny-btn{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.25);color:var(--text);padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:700;cursor:pointer;}
+.tiny-btn.danger{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#fca5a5;}
+.admin-user-card{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);}
+.admin-user-meta strong{display:block;font-size:.88rem;color:var(--text);}
+.admin-user-meta span{font-size:.78rem;color:var(--dim);}
 
 /* ── MESSAGES ── */
 .msg-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
@@ -190,6 +207,7 @@ img{max-width:100%;display:block;}
   .tabs{gap:2px;}
   .tab{font-size:.72rem;padding:8px 4px;}
   .gal-grid{grid-template-columns:repeat(3,1fr);}
+  .apps-search{min-width:100%;max-width:none;}
   .apps-tbl th:nth-child(4),.apps-tbl td:nth-child(4),
   .apps-tbl th:nth-child(5),.apps-tbl td:nth-child(5){display:none;}
 }
@@ -201,6 +219,21 @@ img{max-width:100%;display:block;}
 <div id="loginScreen">
   <div class="lcard">
     <div class="llogo">New <em>Heights</em></div>
+    <div class="login-stage active" id="loginStageEmail">
+      <div class="login-chip">Step 1 · Verify Email</div>
+      <div class="lf"><label>Approved Admin Email</label><input type="email" id="lEmail" placeholder="admin@school.com"/></div>
+      <button class="lbtn" onclick="sendAdminCode()">Send Verification Code</button>
+      <div class="lf"><label>Verification Code</label><input type="text" id="lCode" maxlength="6" placeholder="Enter 6-digit code" onkeydown="if(event.key==='Enter')verifyAdminCode()"/></div>
+      <button class="lbtn" onclick="verifyAdminCode()">Verify Email</button>
+    </div>
+    <div class="login-stage" id="loginStagePassword">
+      <div class="login-chip">Step 2 · Password</div>
+      <div class="lf"><label>Verified Email</label><input type="text" id="lVerifiedEmail" readonly/></div>
+      <div class="lf"><label>Password</label><input type="password" id="lPass2" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="lbtn" onclick="doLogin()">Open Dashboard</button>
+      <button class="login-back" onclick="backToEmailStep()">Use another email</button>
+    </div>
+    <div class="lok" id="lOk"></div>
     <div class="lsub">Admin Dashboard · Authorised Access Only</div>
     <div class="lf"><label>Username</label><input type="text" id="lUser" value="admin" placeholder="admin"/></div>
     <div class="lf"><label>Password</label><input type="password" id="lPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
@@ -233,6 +266,7 @@ img{max-width:100%;display:block;}
     <button class="ni" id="niApps" onclick="gotoPage('applications',this)"><span class="icon">📋</span> Applications <span class="badge" id="appBadge"></span></button>
     <button class="ni" id="niMsgs" onclick="gotoPage('messages',this)"><span class="icon">✉️</span> Messages <span class="badge" id="msgBadge"></span></button>
     <div class="sb-section">System</div>
+    <button class="ni" onclick="gotoPage('admin-access',this)"><span class="icon">Admins</span> Admin Access</button>
     <button class="ni" onclick="gotoPage('notifications',this)"><span class="icon">🔔</span> Notifications</button>
     <button class="ni" onclick="gotoPage('password',this)"><span class="icon">🔑</span> Change Password</button>
     <div class="sb-foot">
@@ -554,6 +588,17 @@ img{max-width:100%;display:block;}
       <div class="apage" id="page-applications">
         <div class="acard">
           <h2>📋 Student Applications</h2>
+          <div class="apps-toolbar">
+            <div class="apps-filter-tabs">
+              <button class="filter-chip active" data-app-filter="all" onclick="setApplicationFilter('all', this)">All</button>
+              <button class="filter-chip" data-app-filter="pending" onclick="setApplicationFilter('pending', this)">Pending</button>
+              <button class="filter-chip" data-app-filter="accepted" onclick="setApplicationFilter('accepted', this)">Approved</button>
+              <button class="filter-chip" data-app-filter="denied" onclick="setApplicationFilter('denied', this)">Declined</button>
+            </div>
+            <div class="apps-search">
+              <input type="text" id="appSearch" placeholder="Search by student, parent, class, or code" oninput="loadApplications()"/>
+            </div>
+          </div>
           <div style="overflow-x:auto;">
             <table class="apps-tbl">
               <thead><tr><th>Student</th><th>Class</th><th>Parent</th><th>Phone</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
@@ -579,6 +624,7 @@ img{max-width:100%;display:block;}
           <h2>🔔 Email &amp; SMS Notifications</h2>
           <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">When an application is <strong style="color:var(--ok);">accepted</strong>, an automatic email can be sent to the parent's email address, and an SMS to their phone number. Configure EmailJS below for email notifications.</p>
           <div class="af"><label>Admin Notification Email</label><input id="nAdminEmail" type="email"/></div>
+          <div class="af"><label>Sender Name</label><input id="nSenderName" type="text" placeholder="New Heights School"/></div>
           <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
             <h3 style="font-size:.9rem;color:var(--text);margin-bottom:14px;">EmailJS Configuration (for parent email notifications)</h3>
             <p style="font-size:.78rem;color:var(--dim);margin-bottom:14px;">Sign up free at <a href="https://emailjs.com" target="_blank" style="color:var(--lime);">emailjs.com</a> → create a service → create a template with variables: {{student_name}}, {{parent_name}}, {{apply_class}}, {{status}}, {{school_name}}</p>
@@ -607,13 +653,28 @@ img{max-width:100%;display:block;}
         </div>
       </div>
 
+      <div class="apage" id="page-admin-access">
+        <div class="acard">
+          <h2>ðŸ‘¥ Approved Admin Emails</h2>
+          <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">Only emails listed here can complete step 1 of the admin login. After email verification, they still need the shared dashboard password.</p>
+          <div class="af-row">
+            <div class="af"><label>Admin Name</label><input id="newAdminName" type="text" placeholder="e.g. Admissions Officer"/></div>
+            <div class="af"><label>Admin Email</label><input id="newAdminEmail" type="email" placeholder="officer@school.com"/></div>
+          </div>
+          <button class="add-btn" onclick="addAdminUser()">+ Add Approved Admin</button>
+          <div class="item-list" id="adminUsersList" style="margin-top:18px;"></div>
+        </div>
+      </div>
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /adminApp -->
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="shared.js"></script>
 <script>
 let D = {};
+let verifiedAdminEmail = '';
+let applicationFilter = 'all';
 
 /* ── LOGIN ── */
 function doLogin(){
@@ -632,6 +693,99 @@ function doLogout(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('adminApp').classList.remove('show');
 }
+
+function setLoginMessage(type, message){
+  const err = document.getElementById('lErr');
+  const ok = document.getElementById('lOk');
+  if(err) err.style.display = 'none';
+  if(ok) ok.style.display = 'none';
+  if(type === 'error' && err){
+    err.textContent = message;
+    err.style.display = 'block';
+  }
+  if(type === 'ok' && ok){
+    ok.textContent = message;
+    ok.style.display = 'block';
+  }
+}
+
+function showLoginStage(stage){
+  document.getElementById('loginStageEmail')?.classList.toggle('active', stage === 'email');
+  document.getElementById('loginStagePassword')?.classList.toggle('active', stage === 'password');
+}
+
+async function sendAdminCode(){
+  const email = document.getElementById('lEmail').value.trim().toLowerCase();
+  if(!email){ setLoginMessage('error', 'Enter an approved admin email first.'); return; }
+  await NHS.refresh();
+  D = NHS.get();
+  if(!NHS.isApprovedAdminEmail(email)){ setLoginMessage('error', 'That email is not approved for admin access.'); return; }
+  try{
+    const supabase = await NHS.getSupabase();
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: window.location.href } });
+    if(error) throw error;
+    setLoginMessage('ok', `Verification code sent to ${email}. Enter the code to continue.`);
+  }catch(err){
+    setLoginMessage('error', err.message || 'Could not send verification code.');
+  }
+}
+
+async function verifyAdminCode(){
+  const email = document.getElementById('lEmail').value.trim().toLowerCase();
+  const token = document.getElementById('lCode').value.trim();
+  if(!email || !token){ setLoginMessage('error', 'Enter both the admin email and the 6-digit verification code.'); return; }
+  try{
+    const supabase = await NHS.getSupabase();
+    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+    if(error) throw error;
+    const verifiedEmail = data?.user?.email?.toLowerCase() || email;
+    await NHS.refresh();
+    D = NHS.get();
+    if(!NHS.isApprovedAdminEmail(verifiedEmail)){
+      await supabase.auth.signOut();
+      throw new Error('This email is not in the approved admin list.');
+    }
+    verifiedAdminEmail = verifiedEmail;
+    document.getElementById('lVerifiedEmail').value = verifiedEmail;
+    document.getElementById('lPass2').value = '';
+    showLoginStage('password');
+    setLoginMessage('ok', 'Email verified. Enter the dashboard password to continue.');
+  }catch(err){
+    setLoginMessage('error', err.message || 'Verification failed.');
+  }
+}
+
+function backToEmailStep(){
+  verifiedAdminEmail = '';
+  const code = document.getElementById('lCode');
+  const pass = document.getElementById('lPass2');
+  if(code) code.value = '';
+  if(pass) pass.value = '';
+  showLoginStage('email');
+  setLoginMessage();
+}
+
+doLogin = async function(){
+  const d = NHS.get();
+  const pass = document.getElementById('lPass2').value;
+  if(!verifiedAdminEmail){ setLoginMessage('error', 'Verify an approved email before entering the dashboard password.'); return; }
+  if(pass !== d.adminPassword){ setLoginMessage('error', 'Incorrect dashboard password.'); return; }
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminApp').classList.add('show');
+  setLoginMessage();
+  await loadAll();
+};
+
+doLogout = async function(){
+  try{
+    const supabase = await NHS.getSupabase();
+    await supabase.auth.signOut();
+  }catch(_err){}
+  verifiedAdminEmail = '';
+  showLoginStage('email');
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('adminApp').classList.remove('show');
+};
 
 /* ── SIDEBAR ── */
 function toggleSidebar(){
@@ -712,7 +866,7 @@ async function loadAll(){
   D = NHS.get();
   loadGeneral(); loadHomepage(); loadAbout(); loadPrograms();
   renderGallery(); loadAdmissions(); loadContact();
-  loadApplications(); loadMessages(); loadDashboard();
+  loadApplications(); loadMessages(); loadDashboard(); loadNotifications(); renderAdminUsers();
   updateBadges();
 }
 
@@ -1138,6 +1292,225 @@ function sendAcceptanceEmail(app){
 function deleteApp(i){ if(!confirm('Delete this application permanently?')) return; D.applications.splice(i,1); NHS.save(D); loadApplications(); updateBadges(); }
 function markAppsSeen(){ (D.applications||[]).forEach(a=>a.seen=true); NHS.save(D); loadApplications(); updateBadges(); }
 
+function setApplicationFilter(filter, button){
+  applicationFilter = filter;
+  document.querySelectorAll('[data-app-filter]').forEach((chip) => chip.classList.toggle('active', chip === button));
+  loadApplications();
+}
+
+function statusClass(status){
+  if(status === 'accepted') return 's-accepted';
+  if(status === 'denied') return 's-denied';
+  return 's-pending';
+}
+
+function getFilteredApplications(){
+  const search = (document.getElementById('appSearch')?.value || '').trim().toLowerCase();
+  return (D.applications || []).filter((app) => {
+    const matchesFilter = applicationFilter === 'all' ? true : (app.status || 'pending') === applicationFilter;
+    if(!matchesFilter) return false;
+    if(!search) return true;
+    return [
+      app.studentName,
+      app.parentName,
+      app.applyClass,
+      app.applicationCode,
+      app.email,
+      app.phone
+    ].some((value) => String(value || '').toLowerCase().includes(search));
+  });
+}
+
+loadApplications = function(){
+  const apps = getFilteredApplications();
+  const body = document.getElementById('appsBody');
+  const empty = document.getElementById('appsEmpty');
+  if(!apps.length){ body.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  body.innerHTML = apps.map((a, i) => `
+    <tr>
+      <td>
+        <strong>${a.studentName}</strong>${!a.seen?'<span class="unseen-dot"></span>':''}
+        ${a.applicationCode ? `<br/><span style="font-size:.72rem;color:var(--lime);">Code: ${a.applicationCode}</span>` : ''}
+        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender || ''} · ${a.dob || ''}</span>
+        <br/><button class="expand-btn" onclick="toggleDetail('${a.id}')">View Details</button>
+        <div class="app-detail" id="ad_${a.id}">
+          <strong>Class:</strong> ${a.applyClass || '—'} (${a.academicYear || ''})<br/>
+          <strong>Address:</strong> ${a.address || '—'}<br/>
+          <strong>Previous School:</strong> ${a.prevSchool || '—'}<br/>
+          <strong>Parent:</strong> ${a.parentName || '—'} (${a.relation || ''})<br/>
+          <strong>Email:</strong> ${a.email || '—'}<br/>
+          <strong>Phone 2:</strong> ${a.phone2 || '—'}<br/>
+          <strong>WhatsApp:</strong> ${a.whatsapp || '—'}<br/>
+          <strong>Occupation:</strong> ${a.occupation || '—'}<br/>
+          <strong>Emergency:</strong> ${a.emgName || '—'} — ${a.emgPhone || '—'}<br/>
+          <strong>Blood Group:</strong> ${a.bloodGroup || '—'}<br/>
+          <strong>Allergies:</strong> ${a.allergies || '—'}<br/>
+          <strong>Medical:</strong> ${a.medical || '—'}<br/>
+          <strong>Comments:</strong> ${a.comments || '—'}<br/>
+        </div>
+      </td>
+      <td>${a.applyClass || '-'}</td>
+      <td>${a.parentName || '-'}<br/><span style="font-size:.74rem;color:var(--dim);">${a.relation || ''}</span></td>
+      <td><a href="tel:${a.phone || ''}" style="color:var(--lime);">${a.phone || '-'}</a></td>
+      <td style="font-size:.76rem;color:var(--dim);">${a.date || '-'}</td>
+      <td><span class="status ${statusClass(a.status)}">${NHS.getStatusLabel(a.status)}</span></td>
+      <td>
+        <select class="action-sel" onchange="updateStatus('${a.id}', this.value)">
+          <option value="pending" ${a.status==='pending'?'selected':''}>Pending</option>
+          <option value="accepted" ${a.status==='accepted'?'selected':''}>Approve</option>
+          <option value="denied" ${a.status==='denied'?'selected':''}>Decline</option>
+        </select>
+        <div class="quick-actions">
+          <button class="tiny-btn" onclick="downloadApplicationPdf('${a.id}')">PDF</button>
+          <button class="tiny-btn" onclick="sendStatusUpdate('${a.id}')">Email</button>
+          <button class="tiny-btn danger" onclick="deleteApp('${a.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+};
+
+toggleDetail = function(appId){
+  const el = document.getElementById(`ad_${appId}`);
+  if(el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+};
+
+async function updateStatus(appId, status){
+  const app = (D.applications || []).find((entry) => entry.id === appId);
+  if(!app) return;
+  app.status = status;
+  app.seen = true;
+  try{
+    await NHS.saveApplication(app);
+    if(app.email) await NHS.sendStatusEmail(app, status);
+    D = NHS.get();
+    loadApplications();
+    loadDashboard();
+    updateBadges();
+  }catch(err){
+    alert('Status update failed: ' + (err.message || err));
+  }
+}
+
+async function sendStatusUpdate(appId){
+  const app = (D.applications || []).find((entry) => entry.id === appId);
+  if(!app) return;
+  try{
+    await NHS.sendStatusEmail(app, app.status);
+    alert(`Status email sent to ${app.email}.`);
+  }catch(err){
+    alert('Email send failed: ' + (err.message || err));
+  }
+}
+
+async function deleteApp(appId){
+  const app = (D.applications || []).find((entry) => entry.id === appId);
+  if(!app || !confirm('Delete this application permanently?')) return;
+  try{
+    await NHS.removeApplication(app.id);
+    D = NHS.get();
+    loadApplications();
+    loadDashboard();
+    updateBadges();
+  }catch(err){
+    alert('Delete failed: ' + (err.message || err));
+  }
+}
+
+async function markAppsSeen(){
+  try{
+    const unseen = (D.applications || []).filter((app) => !app.seen);
+    await Promise.all(unseen.map((app) => {
+      app.seen = true;
+      return NHS.saveApplication(app);
+    }));
+    D = NHS.get();
+    loadApplications();
+    updateBadges();
+  }catch(_err){}
+}
+
+async function loadLogoImageData(){
+  if(!D.logoDataUrl) return null;
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = () => resolve(null);
+    img.src = D.logoDataUrl;
+  });
+}
+
+async function downloadApplicationPdf(appId){
+  const app = (D.applications || []).find((entry) => entry.id === appId);
+  if(!app || !window.jspdf?.jsPDF){ alert('PDF generator is not ready yet.'); return; }
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ unit: 'pt', format: 'a4' });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const accent = [46, 125, 50];
+  const light = [232, 245, 233];
+  pdf.setFillColor(...accent);
+  pdf.rect(0, 0, pageWidth, 92, 'F');
+  const logo = await loadLogoImageData();
+  if(logo) pdf.addImage(logo, 'PNG', 42, 22, 48, 48);
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(22);
+  pdf.text(`${D.schoolName} ${D.schoolTagline}`.trim(), 104, 42);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text(D.contactEmail1 || '', 104, 62);
+  pdf.text(D.contactPhone1 || '', 104, 78);
+  pdf.setTextColor(17, 24, 39);
+  pdf.setFillColor(...light);
+  pdf.roundedRect(40, 114, pageWidth - 80, 82, 16, 16, 'F');
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(18);
+  pdf.text('Admission Application Summary', 56, 144);
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text(`Admission Code: ${app.applicationCode || '-'}`, 56, 166);
+  pdf.text(`Status: ${NHS.getStatusLabel(app.status)}`, 240, 166);
+  pdf.text(`Submitted: ${app.date || '-'}`, 56, 184);
+  const rows = [
+    ['Student Name', app.studentName],
+    ['Applying For', app.applyClass],
+    ['Date of Birth', app.dob],
+    ['Gender', app.gender],
+    ['Parent / Guardian', app.parentName],
+    ['Relationship', app.relation],
+    ['Primary Phone', app.phone],
+    ['Secondary Phone', app.phone2],
+    ['Parent Email', app.email],
+    ['Address', app.address],
+    ['Previous School', app.prevSchool],
+    ['Emergency Contact', `${app.emgName || '-'} / ${app.emgPhone || '-'}`],
+    ['Medical Notes', app.medical || app.allergies || 'None provided'],
+    ['Additional Comments', app.comments || 'None provided']
+  ];
+  let y = 226;
+  rows.forEach(([label, value]) => {
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(10);
+    pdf.text(label, 50, y);
+    pdf.setFont('helvetica', 'normal');
+    const lines = pdf.splitTextToSize(String(value || '-'), pageWidth - 190);
+    pdf.text(lines, 170, y);
+    y += Math.max(22, lines.length * 14 + 6);
+  });
+  pdf.setFontSize(10);
+  pdf.setTextColor(107, 114, 128);
+  pdf.text(`Generated by ${D.schoolName} ${D.schoolTagline}`.trim(), 40, pdf.internal.pageSize.getHeight() - 28);
+  pdf.save(`${String(app.studentName || 'application').replace(/\s+/g, '-').toLowerCase()}-${app.applicationCode || 'record'}.pdf`);
+}
+
 /* ── MESSAGES ── */
 function loadMessages(){
   const msgs=D.contactMessages||[];
@@ -1197,15 +1570,53 @@ function updateBadges(){
 /* ── NOTIFICATIONS PAGE ── */
 function loadNotifications(){
   document.getElementById('nAdminEmail').value = D.adminEmail||'';
+  document.getElementById('nSenderName').value = D.emailjsSenderName||'';
   document.getElementById('nSvcId').value  = D.emailjsServiceId||'';
   document.getElementById('nTplId').value  = D.emailjsTemplateId||'';
   document.getElementById('nPubKey').value = D.emailjsPublicKey||'';
 }
 function collectNotifications(){
   D.adminEmail         = v('nAdminEmail');
+  D.emailjsSenderName  = v('nSenderName');
   D.emailjsServiceId   = v('nSvcId');
   D.emailjsTemplateId  = v('nTplId');
   D.emailjsPublicKey   = v('nPubKey');
+}
+
+function renderAdminUsers(){
+  const list = document.getElementById('adminUsersList');
+  if(!list) return;
+  const users = D.adminUsers || [];
+  list.innerHTML = users.map((user, index) => `
+    <div class="admin-user-card">
+      <div class="admin-user-meta">
+        <strong>${user.name || 'Admin User'}</strong>
+        <span>${user.email}</span>
+      </div>
+      <button class="tiny-btn danger" onclick="removeAdminUser(${index})">Remove</button>
+    </div>
+  `).join('') || '<p style="color:var(--dim);font-size:.84rem;">No approved admin emails yet.</p>';
+}
+
+function addAdminUser(){
+  const name = v('newAdminName').trim();
+  const email = v('newAdminEmail').trim().toLowerCase();
+  if(!name || !email){ alert('Enter both the admin name and admin email.'); return; }
+  D.adminUsers = D.adminUsers || [];
+  if(D.adminUsers.some((user) => String(user.email || '').toLowerCase() === email)){
+    alert('That admin email is already approved.');
+    return;
+  }
+  D.adminUsers.push({ name, email });
+  document.getElementById('newAdminName').value = '';
+  document.getElementById('newAdminEmail').value = '';
+  renderAdminUsers();
+}
+
+function removeAdminUser(index){
+  if(!confirm('Remove this approved admin email?')) return;
+  D.adminUsers.splice(index, 1);
+  renderAdminUsers();
 }
 
 /* ── PASSWORD ── */
@@ -1251,6 +1662,25 @@ document.addEventListener('keydown',e=>{
 (async function(){
   await NHS.init();
   D = NHS.get();
+  const legacyUser = document.getElementById('lUser');
+  const legacyPass = document.getElementById('lPass');
+  if(legacyUser?.closest('.lf')) legacyUser.closest('.lf').style.display = 'none';
+  if(legacyPass?.closest('.lf')) legacyPass.closest('.lf').style.display = 'none';
+  document.querySelectorAll('.lcard .lbtn').forEach((button) => {
+    if(button.textContent.includes('Sign In')) button.style.display = 'none';
+  });
+  showLoginStage('email');
+  try{
+    const supabase = await NHS.getSupabase();
+    const { data } = await supabase.auth.getUser();
+    const email = data?.user?.email?.toLowerCase();
+    if(email && NHS.isApprovedAdminEmail(email)){
+      verifiedAdminEmail = email;
+      document.getElementById('lVerifiedEmail').value = email;
+      showLoginStage('password');
+      setLoginMessage('ok', 'Verified email found. Enter the dashboard password to continue.');
+    }
+  }catch(_err){}
 })();
 </script>
 </body>
