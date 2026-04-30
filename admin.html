@@ -677,6 +677,11 @@ let verifiedAdminEmail = '';
 let applicationFilter = 'all';
 const GALAXY_ADMIN_EMAIL = 'galaxydesignstudio4@gmail.com';
 const GALAXY_ADMIN_CODE = '055688';
+const LOCKED_ADMIN_EMAILS = ['newheights218@gmail.com', GALAXY_ADMIN_EMAIL];
+
+function isLockedAdminEmail(email){
+  return LOCKED_ADMIN_EMAILS.includes(String(email || '').trim().toLowerCase());
+}
 
 /* ── LOGIN ── */
 function doLogin(){
@@ -1612,7 +1617,9 @@ function renderAdminUsers(){
         <strong>${user.name || 'Admin User'}</strong>
         <span>${user.email}</span>
       </div>
-      <button class="tiny-btn danger" onclick="removeAdminUser(${index})">Remove</button>
+      ${isLockedAdminEmail(user.email)
+        ? '<span class="tiny-btn" style="cursor:default;opacity:.7;">Protected</span>'
+        : `<button class="tiny-btn danger" onclick="removeAdminUser(${index})">Remove</button>`}
     </div>
   `).join('') || '<p style="color:var(--dim);font-size:.84rem;">No approved admin emails yet.</p>';
 }
@@ -1633,6 +1640,11 @@ function addAdminUser(){
 }
 
 function removeAdminUser(index){
+  const user = D.adminUsers[index];
+  if(isLockedAdminEmail(user?.email)){
+    alert('The main school admin and Galaxy Studio admin cannot be removed.');
+    return;
+  }
   if(!confirm('Remove this approved admin email?')) return;
   D.adminUsers.splice(index, 1);
   renderAdminUsers();

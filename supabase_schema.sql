@@ -63,6 +63,24 @@ alter table admissions enable row level security;
 alter table contacts enable row level security;
 alter table users enable row level security;
 
+drop policy if exists "public read content" on content;
+drop policy if exists "public write content" on content;
+drop policy if exists "public read programs" on programs;
+drop policy if exists "public write programs" on programs;
+drop policy if exists "public read gallery" on gallery;
+drop policy if exists "public write gallery" on gallery;
+drop policy if exists "public read admissions" on admissions;
+drop policy if exists "public write admissions" on admissions;
+drop policy if exists "public write contacts" on contacts;
+drop policy if exists "public read users" on users;
+drop policy if exists "public write users" on users;
+drop policy if exists "public read general bucket" on storage.objects;
+drop policy if exists "public write general bucket" on storage.objects;
+drop policy if exists "public update general bucket" on storage.objects;
+drop policy if exists "public read gallery bucket" on storage.objects;
+drop policy if exists "public write gallery bucket" on storage.objects;
+drop policy if exists "public update gallery bucket" on storage.objects;
+
 create policy "public read content" on content for select using (true);
 create policy "public write content" on content for all using (true) with check (true);
 create policy "public read programs" on programs for select using (true);

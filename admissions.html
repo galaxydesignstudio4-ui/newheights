@@ -119,9 +119,12 @@
       </table>
     </div>
     <p class="fees-note" id="feesNote"></p>
-    <div style="text-align:center;margin-top:20px;">
+    <div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button class="btn btn-outline" onclick="downloadFees()">
         Download Fee Schedule (CSV)
+      </button>
+      <button class="btn btn-primary" onclick="downloadFeesPdf()">
+        Download Fee Schedule (PDF)
       </button>
     </div>
   </div>
@@ -576,19 +579,74 @@ function downloadFees() {
   URL.revokeObjectURL(link.href);
 }
 
-(async function () {
-  NHS.initLocal();
-  renderNav('admissions.html');
-  renderFooter();
-  await NHS.init();
-  renderNav('admissions.html');
-  renderFooter();
-  initReveal();
-  updateWizardUI();
+function downloadFeesPdf() {
+  const d = NHS.get();
+  const fees = d.admissions.fees || [];
+  const logo = d.logoDataUrl ? `<img src="${d.logoDataUrl}" alt="School logo"/>` : `<div class="pdf-logo-fallback">NH</div>`;
+  const rows = fees.map((fee) => `
+    <tr>
+      <td>${fee.level || ''}</td>
+      <td>${fee.tuition || ''}</td>
+      <td>${fee.levies || ''}</td>
+      <td>${fee.feeding || ''}</td>
+      <td>${fee.enrolment || ''}</td>
+    </tr>
+  `).join('');
+  const win = window.open('', '_blank');
+  if(!win){ alert('Please allow pop-ups to download the PDF.'); return; }
+  win.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>New Heights Fee Schedule</title>
+      <style>
+        *{box-sizing:border-box}
+        body{font-family:Arial,sans-serif;margin:0;color:#111827;background:#f4f6f5}
+        .sheet{max-width:980px;margin:24px auto;background:#fff;padding:34px;border:1px solid #e5e7eb}
+        .head{display:flex;align-items:center;gap:18px;border-bottom:4px solid #2E7D32;padding-bottom:18px;margin-bottom:22px}
+        .head img,.pdf-logo-fallback{width:74px;height:74px;object-fit:contain;border:1px solid #d1d5db;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#2E7D32}
+        h1{font-family:Georgia,serif;margin:0;color:#1B5E20;font-size:30px}
+        .meta{margin-top:4px;color:#6B7280;font-size:14px}
+        table{width:100%;border-collapse:collapse;margin-top:16px}
+        th{background:#2E7D32;color:#fff;text-align:left;padding:12px;font-size:13px}
+        td{border:1px solid #e5e7eb;padding:11px;font-size:13px}
+        tr:nth-child(even) td{background:#F9FAF9}
+        .note{margin-top:16px;padding:13px 15px;border-left:4px solid #2E7D32;background:#E8F5E9;color:#374151;font-size:13px;line-height:1.6}
+        .foot{margin-top:22px;color:#6B7280;font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+        @media print{body{background:#fff}.sheet{margin:0;max-width:none;border:none}.no-print{display:none}}
+      </style>
+    </head>
+    <body>
+      <div class="sheet">
+        <div class="head">
+          ${logo}
+          <div>
+            <h1>${d.schoolName} ${d.schoolTagline}</h1>
+            <div class="meta">${d.schoolMotto || 'Higher and Higher Still'}</div>
+            <div class="meta">${d.contactAddress || ''}</div>
+          </div>
+        </div>
+        <h2>Fee Schedule</h2>
+        <table>
+          <thead><tr><th>Level</th><th>Tuition / Term</th><th>Levies</th><th>Feeding Fee</th><th>Enrolment (Once)</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="note">${d.admissions.feesNote || ''}</div>
+        <div class="foot"><span>${d.contactPhone1 || ''}</span><span>${d.contactEmail1 || ''}</span></div>
+      </div>
+      <script>window.onload=function(){window.print();};<\/script>
+    </body>
+    </html>
+  `);
+  win.document.close();
+}
 
+function renderAdmissionsContent() {
   const D = NHS.get();
-  const adm = D.admissions;
-  document.getElementById('stepsWrap').innerHTML = (adm.steps || []).map((step) => `
+  const adm = D.admissions || {};
+  const defaultSteps = NHS.DEFAULT.admissions.steps;
+  const steps = (adm.steps && adm.steps.length ? adm.steps : defaultSteps);
+  document.getElementById('stepsWrap').innerHTML = steps.map((step) => `
     <div class="step-box reveal">
       <div class="step-circle">${step.num}</div>
       <h3>${step.title}</h3>
@@ -607,6 +665,19 @@ function downloadFees() {
   document.getElementById('feesNote').textContent = adm.feesNote || '';
   document.getElementById('ctaPhone').textContent = D.contactPhone1;
   document.getElementById('ctaEmail').textContent = D.contactEmail1;
+}
+
+(async function () {
+  NHS.initLocal();
+  renderNav('admissions.html');
+  renderFooter();
+  renderAdmissionsContent();
+  await NHS.init();
+  renderNav('admissions.html');
+  renderFooter();
+  initReveal();
+  updateWizardUI();
+  renderAdmissionsContent();
 })();
 </script>
 </body>
