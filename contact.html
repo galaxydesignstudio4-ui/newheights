@@ -107,6 +107,9 @@ async function sendMsg() {
 }
 
 (async function () {
+  NHS.initLocal();
+  renderNav('contact.html');
+  renderFooter();
   await NHS.init();
   renderNav('contact.html');
   renderFooter();

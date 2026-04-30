@@ -135,6 +135,8 @@
 <script src="shared.js"></script>
 <script>
 (async function () {
+NHS.initLocal();
+renderNav('about.html'); renderFooter();
 await NHS.init();
 renderNav('about.html'); renderFooter();
 const D = NHS.get(); const ab = D.about;

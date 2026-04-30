@@ -95,6 +95,7 @@
     <div class="section-head center text-center reveal">
       <span class="label">How It Works</span>
       <h2>Four Simple Steps to Enrolment</h2>
+      <p>Submit the form, meet the admissions team, receive your decision, then confirm your child's place at New Heights School.</p>
     </div>
     <div class="steps-wrap" id="stepsWrap"></div>
   </div>
@@ -576,6 +577,9 @@ function downloadFees() {
 }
 
 (async function () {
+  NHS.initLocal();
+  renderNav('admissions.html');
+  renderFooter();
   await NHS.init();
   renderNav('admissions.html');
   renderFooter();

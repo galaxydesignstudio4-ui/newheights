@@ -183,10 +183,19 @@
 <script src="shared.js"></script>
 <script>
 (async function () {
+NHS.initLocal();
+renderNav('index.html');
+renderFooter();
+window.playVideo = function (src) {
+  document.getElementById('videoWrap').innerHTML = `<iframe src="${src}&autoplay=1" title="School Video" allowfullscreen></iframe>`;
+};
+renderHome(NHS.get());
 await NHS.init();
 renderNav('index.html');
 renderFooter();
-const D = NHS.get();
+renderHome(NHS.get());
+
+function renderHome(D) {
 
 // HERO
 const hbg = document.getElementById('heroBg');
@@ -271,6 +280,8 @@ document.getElementById('ctaHead').textContent  = cta.heading;
 document.getElementById('ctaText').textContent  = cta.text;
 document.getElementById('ctaBtn').textContent   = cta.btnText + ' →';
 document.getElementById('ctaBtn').href          = cta.btnLink;
+
+}
 
 // Reveal init
 document.addEventListener('DOMContentLoaded', initReveal);

@@ -47,6 +47,8 @@
 <script src="shared.js"></script>
 <script>
 (async function () {
+NHS.initLocal();
+renderNav('programs.html'); renderFooter();
 await NHS.init();
 renderNav('programs.html'); renderFooter();
 const D = NHS.get();

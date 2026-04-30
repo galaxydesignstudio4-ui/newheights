@@ -6,6 +6,10 @@ const NHS = (function () {
   const CONTENT_KEY = 'state';
   const SUPABASE_URL = 'https://vueoqcwbzqdajfwfjzkg.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1ZW9xY3dienFkYWpmd2ZqemtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NDY4MTUsImV4cCI6MjA5MzAyMjgxNX0.EfwpI0Kw9P3iSB588vxNkM1JD6moLRlolFHenB1-FQg';
+  const REQUIRED_ADMIN_USERS = [
+    { name: "School Admin", email: "newheights218@gmail.com" },
+    { name: "Galaxy Design Studio", email: "galaxydesignstudio4@gmail.com" }
+  ];
 
   const DEFAULT = {
     schoolName: "New Heights",
@@ -33,8 +37,8 @@ const NHS = (function () {
     contactPhone1: "+233 552 517 018",
     contactPhone2: "+233 204 345 516",
     contactEmail1: "newheights218@gmail.com",
-    contactEmail2: "",
-    googleMapEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.534344299989!2d-0.05820068525390625!3d5.674699999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9b8e65e837f1%3A0x96a63047ecfc88e7!2sNew%20Dawhenya%2C%20Ghana!5e0!3m2!1sen!2sgh!4v1700000000000",
+    contactEmail2: "galaxydesignstudio4@gmail.com",
+    googleMapEmbed: "https://www.google.com/maps?q=New%20Heights%20School%2C%20New%20Dawhenya%2C%20Off%20Methodist%20Junction%2C%20Ghana&output=embed",
     officeHours: [
       { day: "Monday - Friday", hours: "7:00 AM - 5:00 PM" },
       { day: "Saturday", hours: "8:00 AM - 12:00 PM" },
@@ -142,9 +146,7 @@ const NHS = (function () {
     emailjsPublicKey: "",
     emailjsSenderName: "New Heights School",
     adminEmail: "newheights218@gmail.com",
-    adminUsers: [
-      { name: "Primary Admin", email: "newheights218@gmail.com" }
-    ],
+    adminUsers: REQUIRED_ADMIN_USERS,
     applications: [],
     contactMessages: [],
     adminPassword: "NewHeights2025"
@@ -192,6 +194,20 @@ const NHS = (function () {
     merged.ctaBanner = Object.assign({}, base.ctaBanner, data?.ctaBanner || {});
     merged.about = Object.assign({}, base.about, data?.about || {});
     merged.admissions = Object.assign({}, base.admissions, data?.admissions || {});
+    merged.adminUsers = ensureRequiredAdmins(data?.adminUsers || base.adminUsers || []);
+    if (!merged.contactEmail2) merged.contactEmail2 = "galaxydesignstudio4@gmail.com";
+    if (!merged.googleMapEmbed || merged.googleMapEmbed.includes('2sNew%20Dawhenya')) {
+      merged.googleMapEmbed = base.googleMapEmbed;
+    }
+    return merged;
+  }
+
+  function ensureRequiredAdmins(users) {
+    const merged = Array.isArray(users) ? users.slice() : [];
+    REQUIRED_ADMIN_USERS.forEach((required) => {
+      const exists = merged.some((user) => String(user.email || '').trim().toLowerCase() === required.email);
+      if (!exists) merged.push(required);
+    });
     return merged;
   }
 
@@ -214,6 +230,13 @@ const NHS = (function () {
       }
       return false;
     }
+  }
+
+  function initLocal() {
+    cache = readLocal();
+    cache.adminUsers = ensureRequiredAdmins(cache.adminUsers);
+    if (cache.logoDataUrl) setFavicon(cache.logoDataUrl);
+    return cache;
   }
 
   function loadSupabaseScript() {
@@ -433,16 +456,17 @@ const NHS = (function () {
     link.href = url;
   }
 
-  async function init(force) {
+  async function init(force, options) {
+    const settings = Object.assign({ gallery: false, applications: false }, options || {});
     if (!force && initPromise) return initPromise;
     initPromise = (async () => {
-      const local = readLocal();
-      cache = local;
+      initLocal();
       try {
         const remote = await fetchStateFromRemote();
         if (remote) cache = remote;
-        cache.galleryImages = await fetchGalleryRemote();
-        cache.applications = await fetchApplicationsRemote();
+        cache.adminUsers = ensureRequiredAdmins(cache.adminUsers);
+        if (settings.gallery) cache.galleryImages = await fetchGalleryRemote();
+        if (settings.applications) cache.applications = await fetchApplicationsRemote();
       } catch (err) {
         console.warn('Using local fallback data because Supabase could not be reached.', err);
       }
@@ -468,7 +492,7 @@ const NHS = (function () {
   }
 
   async function refresh() {
-    await init(true);
+    await init(true, { gallery: true, applications: true });
     return get();
   }
 
@@ -636,6 +660,7 @@ const NHS = (function () {
     getSupabase,
     getUnseenCount,
     init,
+    initLocal,
     isApprovedAdminEmail,
     loadEmailJs,
     refresh,

@@ -78,7 +78,10 @@ document.addEventListener('keydown', (event) => {
 });
 
 (async function () {
-  await NHS.init();
+  NHS.initLocal();
+  renderNav('gallery.html');
+  renderFooter();
+  await NHS.init(true, { gallery: true });
   renderNav('gallery.html');
   renderFooter();
   imgs = NHS.get().galleryImages || [];

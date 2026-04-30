@@ -1,6 +1,4 @@
 /* ===== NEW HEIGHTS SCHOOL — GLOBAL STYLES v3 ===== */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
-
 /* ── TOKENS ─────────────────────────────────────────────── */
 :root {
   --g-primary:#2E7D32; --g-sec:#4CAF50; --g-dark:#1B5E20; --g-light:#E8F5E9;
@@ -15,13 +13,13 @@
 /* ── RESET ──────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
-body{font-family:'DM Sans',sans-serif;color:var(--dark);background:var(--bg);line-height:1.6;overflow-x:hidden;}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--dark);background:var(--bg);line-height:1.6;overflow-x:hidden;}
 img,video{max-width:100%;display:block;}
 a{text-decoration:none;color:inherit;}
 ul{list-style:none;}
-button{font-family:'DM Sans',sans-serif;cursor:pointer;}
-input,select,textarea{font-family:'DM Sans',sans-serif;}
-h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.2;color:var(--dark);}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;line-height:1.2;color:var(--dark);}
 h1{font-size:clamp(2rem,5.5vw,3.6rem);font-weight:800;}
 h2{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;}
 h3{font-size:clamp(1.1rem,2vw,1.3rem);font-weight:600;}
@@ -61,7 +59,7 @@ p{color:var(--gray);line-height:1.7;}
 .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:10px 0;transition:var(--ease);}
 .navbar.scrolled{background:rgba(27,94,32,.97);backdrop-filter:blur(18px);box-shadow:0 2px 16px rgba(0,0,0,.18);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.nav-logo{display:inline-flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:#fff;flex-shrink:0;}
+.nav-logo{display:inline-flex;align-items:center;gap:10px;font-family:Georgia,"Times New Roman",serif;font-size:1.15rem;font-weight:700;color:#fff;flex-shrink:0;}
 .nav-logo-img{height:42px;width:42px;object-fit:contain;border-radius:var(--r8);}
 .nav-logo-placeholder{width:40px;height:40px;background:rgba(220,231,117,.2);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
 .nav-name{display:flex;gap:4px;flex-wrap:wrap;line-height:1.1;}
@@ -81,13 +79,13 @@ p{color:var(--gray);line-height:1.7;}
   .hamburger{display:flex;}
   .nav-links{
     display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
-    flex-direction:column;align-items:stretch;padding:20px 16px 32px;
+    flex-direction:column;align-items:stretch;padding:26px clamp(20px,6vw,34px) 42px;
     background:rgba(27,94,32,.98);backdrop-filter:blur(20px);
-    gap:4px;overflow-y:auto;z-index:999;
+    gap:10px;overflow-y:auto;z-index:999;
   }
   .nav-links.nav-open{display:flex;}
-  .nav-link{font-size:1rem;padding:14px 16px;border-radius:var(--r12);}
-  .nav-cta-btn{margin:8px 0 0;padding:15px;font-size:.96rem;border-radius:var(--r12);}
+  .nav-link{font-size:1rem;padding:16px 18px;border-radius:var(--r12);background:rgba(255,255,255,.06);}
+  .nav-cta-btn{margin:12px 0 0;padding:16px;font-size:.96rem;border-radius:var(--r12);}
   .nav-logo{max-width:calc(100vw - 96px);}
   .nav-name{font-size:.98rem;}
 }
@@ -130,7 +128,7 @@ p{color:var(--gray);line-height:1.7;}
 .footer-social{display:flex;gap:10px;margin-top:20px;}
 .social-link{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;transition:var(--ease);}
 .social-link:hover{background:var(--g-sec);transform:translateY(-2px);}
-.footer-col h4{font-family:'DM Sans',sans-serif;font-weight:700;color:#fff;margin-bottom:16px;font-size:.84rem;text-transform:uppercase;letter-spacing:.08em;}
+.footer-col h4{font-family:inherit;font-weight:700;color:#fff;margin-bottom:16px;font-size:.84rem;text-transform:uppercase;letter-spacing:.08em;}
 .footer-col ul{display:flex;flex-direction:column;gap:9px;}
 .footer-col ul a{font-size:.88rem;color:rgba(255,255,255,.6);transition:var(--ease);}
 .footer-col ul a:hover{color:var(--lime);padding-left:3px;}

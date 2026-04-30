@@ -108,6 +108,9 @@ async function lookupStatus() {
 }
 
 (async function () {
+  NHS.initLocal();
+  renderNav('admission-status.html');
+  renderFooter();
   await NHS.init();
   renderNav('admission-status.html');
   renderFooter();
