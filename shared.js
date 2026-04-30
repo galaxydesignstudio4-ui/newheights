@@ -145,6 +145,7 @@ const NHS = (function () {
     emailjsTemplateId: "",
     emailjsPublicKey: "",
     emailjsSenderName: "New Heights School",
+    examEmailMessage: "Your child may be required to visit New Heights School for an admission examination or class assessment before final admission is confirmed. Our admissions team will contact you with the date, time, and any documents to bring.",
     adminEmail: "newheights218@gmail.com",
     adminUsers: REQUIRED_ADMIN_USERS,
     applications: [],
@@ -194,6 +195,7 @@ const NHS = (function () {
     merged.ctaBanner = Object.assign({}, base.ctaBanner, data?.ctaBanner || {});
     merged.about = Object.assign({}, base.about, data?.about || {});
     merged.admissions = Object.assign({}, base.admissions, data?.admissions || {});
+    merged.examEmailMessage = data?.examEmailMessage || base.examEmailMessage;
     merged.adminUsers = ensureRequiredAdmins(data?.adminUsers || base.adminUsers || []);
     if (!merged.contactEmail2) merged.contactEmail2 = "galaxydesignstudio4@gmail.com";
     if (!merged.googleMapEmbed || merged.googleMapEmbed.includes('2sNew%20Dawhenya')) {
@@ -621,9 +623,14 @@ const NHS = (function () {
     });
   }
 
-  async function sendStatusEmail(app, overrideStatus) {
+  async function sendStatusEmail(app, overrideStatus, options) {
     const d = get();
     const status = String(overrideStatus || app?.status || 'pending').toLowerCase();
+    const mode = options?.mode || 'status';
+    const note = options?.message || (mode === 'exam' ? d.examEmailMessage : '');
+    const subject = mode === 'exam'
+      ? `Admission Examination Notice - ${d.schoolName} ${d.schoolTagline}`.trim()
+      : `Admission Status Update - ${d.schoolName} ${d.schoolTagline}`.trim();
     if (!app?.email) throw new Error('Parent email is missing.');
     if (!d.emailjsPublicKey || !d.emailjsServiceId || !d.emailjsTemplateId) {
       throw new Error('Email settings are not configured in admin notifications.');
@@ -641,6 +648,12 @@ const NHS = (function () {
       school_phone: d.contactPhone1,
       school_email: d.contactEmail1,
       tracking_code: app.applicationCode || '',
+      subject,
+      email_subject: subject,
+      message: note,
+      email_message: note,
+      admission_note: note,
+      notice_type: mode === 'exam' ? 'Admission Examination' : 'Admission Status',
       to_email: app.email,
       to_name: app.parentName || app.studentName || '',
       sender_name: d.emailjsSenderName || `${d.schoolName} ${d.schoolTagline}`.trim()

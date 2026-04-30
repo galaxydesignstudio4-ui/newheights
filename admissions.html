@@ -58,6 +58,10 @@
 .mini-list{display:grid;gap:12px;margin-top:18px;}
 .mini-item{padding:14px 16px;border-radius:16px;background:var(--lgray);}
 .mini-item strong{display:block;color:var(--dark);margin-bottom:4px;}
+.access-code-card{margin-top:18px;padding:22px;border-radius:18px;background:#fff;border:2px dashed var(--g-primary);box-shadow:var(--sh1);text-align:center;}
+.access-code-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);font-weight:800;}
+.access-code-value{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.1rem,9vw,3.4rem);line-height:1;color:var(--g-dark);letter-spacing:.12em;margin:8px 0 10px;font-weight:800;}
+.access-code-card p{font-size:.92rem;margin:0 auto;max-width:460px;color:var(--gray);}
 @media(max-width:980px){
   .admission-grid{grid-template-columns:1fr;}
 }
@@ -97,7 +101,28 @@
       <h2>Four Simple Steps to Enrolment</h2>
       <p>Submit the form, meet the admissions team, receive your decision, then confirm your child's place at New Heights School.</p>
     </div>
-    <div class="steps-wrap" id="stepsWrap"></div>
+    <div class="steps-wrap" id="stepsWrap">
+      <div class="step-box reveal">
+        <div class="step-circle">1</div>
+        <h3>Complete Application</h3>
+        <p>Fill out the admission form with accurate details about your child, parent or guardian, and previous schooling.</p>
+      </div>
+      <div class="step-box reveal">
+        <div class="step-circle">2</div>
+        <h3>Interview & Assessment</h3>
+        <p>Your child may attend a friendly age-appropriate assessment while parents meet the admissions team.</p>
+      </div>
+      <div class="step-box reveal">
+        <div class="step-circle">3</div>
+        <h3>Receive Decision</h3>
+        <p>The school reviews the application and sends the admission status or examination notice to the parent.</p>
+      </div>
+      <div class="step-box reveal">
+        <div class="step-circle">4</div>
+        <h3>Confirm & Enrol</h3>
+        <p>Submit required documents, pay the enrolment fee, and officially join the New Heights School family.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -511,21 +536,21 @@ async function submitApp() {
     const saved = await NHS.addApplication(getFormData());
     successEl.style.display = 'block';
     successEl.innerHTML = `
-      <strong>Application submitted successfully.</strong><br/>
-      Admission Code: <strong>${saved.applicationCode}</strong><br/>
-      <span style="font-weight:400;font-size:.92rem;">Please keep this 6-digit code safe. You will use it to check whether the application is pending, approved, or declined.</span>
+      <strong>Application submitted successfully.</strong>
+      <div class="access-code-card">
+        <div class="access-code-label">Your access code</div>
+        <div class="access-code-value">${saved.applicationCode}</div>
+        <p>Please keep this 6-digit code safe. You will use it to check whether the application is pending, approved, or declined.</p>
+      </div>
     `;
     try {
       await NHS.sendStatusEmail(saved, 'pending');
     } catch (_err) {
       // Email configuration is optional on the public side.
     }
-    document.querySelectorAll('input, textarea, select').forEach((field) => {
-      if (field.type === 'checkbox') field.checked = false;
-      else if (!field.closest('.status-card')) field.value = '';
-    });
-    currentStep = 0;
     updateWizardUI();
+    successEl.style.display = 'block';
+    successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (err) {
     showError(`Application submission failed: ${err.message || err}`);
   } finally {
@@ -645,7 +670,8 @@ function renderAdmissionsContent() {
   const D = NHS.get();
   const adm = D.admissions || {};
   const defaultSteps = NHS.DEFAULT.admissions.steps;
-  const steps = (adm.steps && adm.steps.length ? adm.steps : defaultSteps);
+  const savedSteps = (adm.steps || []).filter((step) => step?.num && step?.title && step?.text);
+  const steps = savedSteps.length === 4 ? savedSteps : defaultSteps;
   document.getElementById('stepsWrap').innerHTML = steps.map((step) => `
     <div class="step-box reveal">
       <div class="step-circle">${step.num}</div>

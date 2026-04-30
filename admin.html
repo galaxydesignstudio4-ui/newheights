@@ -638,6 +638,11 @@ img{max-width:100%;display:block;}
             <h3 style="font-size:.9rem;color:var(--text);margin-bottom:8px;">SMS via Supabase Edge Function</h3>
             <p style="font-size:.78rem;color:var(--dim);">SMS notifications require Supabase + an SMS provider (e.g. Arkesel for Ghana). Once your Supabase project is set up, SMS will be triggered automatically when you accept an application.</p>
           </div>
+          <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:18px;">
+            <h3 style="font-size:.9rem;color:var(--text);margin-bottom:8px;">Admission Examination Email</h3>
+            <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px;line-height:1.6;">This message is added when you click the Exam Email button on an application. Your EmailJS/Gmail template should include {{email_message}} or {{message}}.</p>
+            <div class="af"><label>Exam Email Message</label><textarea id="nExamMessage" rows="5" placeholder="Enter examination instruction for parents"></textarea></div>
+          </div>
         </div>
       </div>
 
@@ -1390,6 +1395,7 @@ loadApplications = function(){
         <div class="quick-actions">
           <button class="tiny-btn" onclick="downloadApplicationPdf('${a.id}')">PDF</button>
           <button class="tiny-btn" onclick="sendStatusUpdate('${a.id}')">Email</button>
+          <button class="tiny-btn" onclick="sendExamNotice('${a.id}')">Exam Email</button>
           <button class="tiny-btn danger" onclick="deleteApp('${a.id}')">Delete</button>
         </div>
       </td>
@@ -1427,6 +1433,20 @@ async function sendStatusUpdate(appId){
     alert(`Status email sent to ${app.email}.`);
   }catch(err){
     alert('Email send failed: ' + (err.message || err));
+  }
+}
+
+async function sendExamNotice(appId){
+  const app = (D.applications || []).find((entry) => entry.id === appId);
+  if(!app) return;
+  try{
+    await NHS.sendStatusEmail(app, app.status || 'pending', {
+      mode: 'exam',
+      message: D.examEmailMessage || NHS.get().examEmailMessage
+    });
+    alert(`Admission examination email sent to ${app.email}.`);
+  }catch(err){
+    alert('Exam email send failed: ' + (err.message || err));
   }
 }
 
@@ -1600,6 +1620,7 @@ function loadNotifications(){
   document.getElementById('nSvcId').value  = D.emailjsServiceId||'';
   document.getElementById('nTplId').value  = D.emailjsTemplateId||'';
   document.getElementById('nPubKey').value = D.emailjsPublicKey||'';
+  document.getElementById('nExamMessage').value = D.examEmailMessage || NHS.DEFAULT.examEmailMessage;
 }
 function collectNotifications(){
   D.adminEmail         = v('nAdminEmail');
@@ -1607,6 +1628,7 @@ function collectNotifications(){
   D.emailjsServiceId   = v('nSvcId');
   D.emailjsTemplateId  = v('nTplId');
   D.emailjsPublicKey   = v('nPubKey');
+  D.examEmailMessage   = v('nExamMessage') || NHS.DEFAULT.examEmailMessage;
 }
 
 function renderAdminUsers(){
