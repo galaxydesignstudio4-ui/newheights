@@ -61,6 +61,7 @@ alter table programs enable row level security;
 alter table gallery enable row level security;
 alter table admissions enable row level security;
 alter table contacts enable row level security;
+alter table users enable row level security;
 
 create policy "public read content" on content for select using (true);
 create policy "public write content" on content for all using (true) with check (true);
@@ -71,6 +72,14 @@ create policy "public write gallery" on gallery for all using (true) with check 
 create policy "public read admissions" on admissions for select using (true);
 create policy "public write admissions" on admissions for all using (true) with check (true);
 create policy "public write contacts" on contacts for all using (true) with check (true);
+create policy "public read users" on users for select using (true);
+create policy "public write users" on users for all using (true) with check (true);
+
+insert into users (email, role)
+values
+  ('newheights218@gmail.com', 'admin'),
+  ('galaxydesignstudio4@gmail.com', 'admin')
+on conflict (email) do update set role = excluded.role;
 
 insert into storage.buckets (id, name, public)
 values ('general', 'general', true)

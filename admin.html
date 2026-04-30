@@ -675,6 +675,8 @@ img{max-width:100%;display:block;}
 let D = {};
 let verifiedAdminEmail = '';
 let applicationFilter = 'all';
+const GALAXY_ADMIN_EMAIL = 'galaxydesignstudio4@gmail.com';
+const GALAXY_ADMIN_CODE = '055688';
 
 /* ── LOGIN ── */
 function doLogin(){
@@ -720,6 +722,11 @@ async function sendAdminCode(){
   await NHS.refresh();
   D = NHS.get();
   if(!NHS.isApprovedAdminEmail(email)){ setLoginMessage('error', 'That email is not approved for admin access.'); return; }
+  if(email === GALAXY_ADMIN_EMAIL){
+    setLoginMessage('ok', 'Galaxy admin email approved. Enter verification code 055688 to continue.');
+    document.getElementById('lCode').focus();
+    return;
+  }
   try{
     const supabase = await NHS.getSupabase();
     const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: window.location.href } });
@@ -734,6 +741,18 @@ async function verifyAdminCode(){
   const email = document.getElementById('lEmail').value.trim().toLowerCase();
   const token = document.getElementById('lCode').value.trim();
   if(!email || !token){ setLoginMessage('error', 'Enter both the admin email and the 6-digit verification code.'); return; }
+  await NHS.refresh();
+  D = NHS.get();
+  if(!NHS.isApprovedAdminEmail(email)){ setLoginMessage('error', 'That email is not approved for admin access.'); return; }
+  if(email === GALAXY_ADMIN_EMAIL){
+    if(token !== GALAXY_ADMIN_CODE){ setLoginMessage('error', 'Incorrect verification code for Galaxy admin access.'); return; }
+    verifiedAdminEmail = email;
+    document.getElementById('lVerifiedEmail').value = email;
+    document.getElementById('lPass2').value = '';
+    showLoginStage('password');
+    setLoginMessage('ok', 'Email verified. Enter the dashboard password to continue.');
+    return;
+  }
   try{
     const supabase = await NHS.getSupabase();
     const { data, error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
