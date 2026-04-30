@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admissions — New Heights School</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+/* STEPS */
+.steps-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-bottom:clamp(48px,6vw,72px);}
+.steps-wrap::before{content:'';position:absolute;top:35px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--g-primary),var(--g-sec));z-index:0;}
+.step-box{text-align:center;padding:0 clamp(8px,2vw,20px);position:relative;z-index:1;}
+.step-circle{width:70px;height:70px;border-radius:50%;background:var(--g-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;margin:0 auto 16px;box-shadow:0 6px 20px rgba(46,125,50,.35);}
+.step-box h3{margin-bottom:7px;font-size:clamp(.9rem,1.8vw,1.05rem);}
+.step-box p{font-size:clamp(.78rem,1.5vw,.88rem);}
+/* FEES */
+.fees-card{background:var(--white);border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh2);}
+.fees-card table{width:100%;border-collapse:collapse;}
+.fees-card thead th{background:var(--g-primary);color:#fff;padding:14px 18px;text-align:left;font-size:.82rem;font-weight:700;letter-spacing:.04em;}
+.fees-card tbody td{padding:12px 18px;font-size:.88rem;border-bottom:1px solid rgba(0,0,0,.05);}
+.fees-card tbody tr:last-child td{border-bottom:none;}
+.fees-card tbody tr:nth-child(even) td{background:var(--lgray);}
+.fees-card tbody tr:hover td{background:var(--g-light);}
+.fees-note{text-align:center;margin-top:14px;font-size:.82rem;color:var(--gray);}
+/* APPLICATION FORM */
+.app-card{background:var(--white);border-radius:var(--r24);padding:clamp(24px,5vw,52px);box-shadow:var(--sh2);max-width:860px;margin:0 auto;}
+.app-section{margin-bottom:clamp(24px,4vw,36px);}
+.app-section-title{font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g-primary);padding-bottom:10px;border-bottom:2px solid var(--g-light);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.req-note{font-size:.78rem;color:var(--gray);margin-bottom:20px;}
+@media(max-width:700px){.steps-wrap{grid-template-columns:1fr 1fr;}.steps-wrap::before{display:none;}}
+@media(max-width:380px){.steps-wrap{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="navPlaceholder"></div>
+<div class="page-hero">
+  <div class="container">
+    <span class="label label-light">Join Us</span>
+    <h1>Admissions 2025 / 2026</h1>
+    <p>Simple steps to secure your child's place at New Heights School, New Dawhenya.</p>
+  </div>
+</div>
+
+<!-- STEPS -->
+<section class="section section-white">
+  <div class="container">
+    <div class="section-head center text-center reveal">
+      <span class="label">How It Works</span>
+      <h2>Four Simple Steps to Enrolment</h2>
+    </div>
+    <div class="steps-wrap" id="stepsWrap"></div>
+  </div>
+</section>
+
+<!-- FEES -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head center text-center reveal">
+      <span class="label">Fee Structure</span>
+      <h2>Transparent, Affordable Fees</h2>
+      <p>Individual fee breakdown for every level. Contact us for the current term's exact amounts.</p>
+    </div>
+    <div class="fees-card" style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Level</th><th>Tuition / Term</th><th>Levies</th><th>Feeding Fee</th><th>Enrolment (Once)</th>
+          </tr>
+        </thead>
+        <tbody id="feesBody"></tbody>
+      </table>
+    </div>
+    <p class="fees-note" id="feesNote"></p>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn btn-outline" onclick="downloadFees()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Fee Schedule (CSV)
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION FORM -->
+<section class="section section-white">
+  <div class="container">
+    <div class="section-head center text-center reveal">
+      <span class="label">Apply Now</span>
+      <h2>Student Application Form</h2>
+      <p>Please fill in all required fields accurately. Our team will contact you within 48 hours.</p>
+    </div>
+    <div class="app-card">
+      <p class="req-note">Fields marked <strong>*</strong> are required.</p>
+
+      <!-- STUDENT INFO -->
+      <div class="app-section">
+        <div class="app-section-title">👦 Student Information</div>
+        <div class="form-grid-2">
+          <div class="form-field"><label>First Name *</label><input type="text" id="aFName" placeholder="e.g. Kwame"/></div>
+          <div class="form-field"><label>Last Name *</label><input type="text" id="aLName" placeholder="e.g. Mensah"/></div>
+          <div class="form-field"><label>Date of Birth *</label><input type="date" id="aDob"/></div>
+          <div class="form-field">
+            <label>Gender *</label>
+            <select id="aGender">
+              <option value="">Select gender</option>
+              <option>Male</option><option>Female</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Nationality</label>
+            <input type="text" id="aNat" placeholder="e.g. Ghanaian" value="Ghanaian"/>
+          </div>
+          <div class="form-field">
+            <label>Religion</label>
+            <input type="text" id="aReligion" placeholder="e.g. Christianity"/>
+          </div>
+          <div class="form-field full">
+            <label>Home / Residential Address *</label>
+            <input type="text" id="aAddress" placeholder="e.g. New Dawhenya, Tema"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACADEMIC INFO -->
+      <div class="app-section">
+        <div class="app-section-title">📚 Academic Information</div>
+        <div class="form-grid-2">
+          <div class="form-field">
+            <label>Applying for Class *</label>
+            <select id="aClass">
+              <option value="">Select class</option>
+              <option>Nursery 1</option><option>Nursery 2</option>
+              <option>Kindergarten 1</option><option>Kindergarten 2</option>
+              <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
+              <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
+              <option>JHS 1</option><option>JHS 2</option><option>JHS 3</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Academic Year</label>
+            <select id="aYear">
+              <option>2025 / 2026</option><option>2026 / 2027</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Previous School (if any)</label><input type="text" id="aPrevSchool" placeholder="Name of last school attended"/></div>
+          <div class="form-field"><label>Last Class Attended</label><input type="text" id="aPrevClass" placeholder="e.g. Primary 3"/></div>
+          <div class="form-field full"><label>Reason for Leaving Previous School</label><textarea id="aLeaveReason" style="min-height:70px;" placeholder="Optional"></textarea></div>
+        </div>
+      </div>
+
+      <!-- PARENT/GUARDIAN INFO -->
+      <div class="app-section">
+        <div class="app-section-title">👨‍👩‍👧 Parent / Guardian Information</div>
+        <div class="form-grid-2">
+          <div class="form-field"><label>Parent / Guardian Full Name *</label><input type="text" id="aParent" placeholder="e.g. Mr. Kofi Mensah"/></div>
+          <div class="form-field">
+            <label>Relationship to Student *</label>
+            <select id="aRelation">
+              <option value="">Select</option>
+              <option>Father</option><option>Mother</option><option>Guardian</option>
+              <option>Uncle</option><option>Aunt</option><option>Grandparent</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Phone Number (Primary) *</label><input type="tel" id="aPhone" placeholder="+233 244 000 000"/></div>
+          <div class="form-field"><label>Phone Number (Secondary)</label><input type="tel" id="aPhone2" placeholder="+233 200 000 000"/></div>
+          <div class="form-field"><label>Email Address *</label><input type="email" id="aEmail" placeholder="parent@email.com"/></div>
+          <div class="form-field"><label>WhatsApp Number</label><input type="tel" id="aWhatsapp" placeholder="+233 244 000 000"/></div>
+          <div class="form-field"><label>Occupation</label><input type="text" id="aOccupation" placeholder="e.g. Teacher, Trader, Engineer"/></div>
+          <div class="form-field"><label>Place of Work</label><input type="text" id="aWorkplace" placeholder="Employer / Company name"/></div>
+        </div>
+      </div>
+
+      <!-- EMERGENCY CONTACT -->
+      <div class="app-section">
+        <div class="app-section-title">🚨 Emergency Contact</div>
+        <div class="form-grid-2">
+          <div class="form-field"><label>Emergency Contact Name *</label><input type="text" id="aEmgName" placeholder="Full name"/></div>
+          <div class="form-field"><label>Relationship</label><input type="text" id="aEmgRel" placeholder="e.g. Aunt, Uncle"/></div>
+          <div class="form-field"><label>Emergency Phone *</label><input type="tel" id="aEmgPhone" placeholder="+233 244 000 000"/></div>
+          <div class="form-field"><label>Alternate Emergency Phone</label><input type="tel" id="aEmgPhone2" placeholder="Optional"/></div>
+        </div>
+      </div>
+
+      <!-- HEALTH INFO -->
+      <div class="app-section">
+        <div class="app-section-title">🏥 Health Information</div>
+        <div class="form-grid-2">
+          <div class="form-field"><label>Blood Group</label>
+            <select id="aBlood">
+              <option value="">Unknown / Not Sure</option>
+              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+            </select>
+          </div>
+          <div class="form-field"><label>Any Known Allergies?</label><input type="text" id="aAllergies" placeholder="e.g. Nuts, Penicillin — or 'None'"/></div>
+          <div class="form-field full"><label>Any Medical Conditions / Special Needs the School Should Know About?</label><textarea id="aMedical" style="min-height:80px;" placeholder="Optional — e.g. Asthma, hearing impairment, learning needs..."></textarea></div>
+        </div>
+      </div>
+
+      <!-- ADDITIONAL -->
+      <div class="app-section">
+        <div class="app-section-title">📝 Additional Information</div>
+        <div class="form-field"><label>How did you hear about New Heights School?</label>
+          <select id="aHear">
+            <option value="">Select</option>
+            <option>Friend / Family Referral</option><option>Social Media (Facebook)</option>
+            <option>Social Media (Instagram)</option><option>WhatsApp</option>
+            <option>Passing by the School</option><option>Community Notice Board</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-field"><label>Any Additional Comments or Questions?</label><textarea id="aComments" style="min-height:90px;" placeholder="Tell us anything else you'd like us to know..."></textarea></div>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-top:4px;">
+          <input type="checkbox" id="aConsent" style="width:18px;height:18px;margin-top:2px;accent-color:var(--g-primary);flex-shrink:0;"/>
+          <label for="aConsent" style="font-size:.84rem;color:var(--gray);cursor:pointer;">I confirm that all information provided is accurate and I consent to New Heights School contacting me via phone, email, and WhatsApp regarding this application. *</label>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:8px;">
+        <button class="btn btn-primary" style="padding:16px 44px;font-size:1rem;" onclick="submitApp()">Submit Application →</button>
+      </div>
+      <div class="msg-success" id="appSuccess">
+        ✅ Thank you! Your application has been received.<br/>
+        <span style="font-weight:400;font-size:.9rem;">We'll contact you on the number provided within 48 hours. Check your email too!</span>
+      </div>
+      <div class="msg-error" id="appError"></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="container">
+    <h2>Have Questions About Admissions?</h2>
+    <p>Call us on <strong>+233 552 517 018</strong> or send an email to <strong>newheights218@gmail.com</strong></p>
+    <a href="contact.html" class="btn btn-lime">Contact Us →</a>
+  </div>
+</section>
+
+<div id="footerPlaceholder"></div>
+<script src="shared.js"></script>
+<script>
+(async function () {
+await NHS.init();
+renderNav('admissions.html'); renderFooter();
+const D = NHS.get(); const adm = D.admissions;
+
+// STEPS
+document.getElementById('stepsWrap').innerHTML = adm.steps.map(s=>`
+  <div class="step-box reveal">
+    <div class="step-circle">${s.num}</div>
+    <h3>${s.title}</h3>
+    <p>${s.text}</p>
+  </div>`).join('');
+
+// FEES
+document.getElementById('feesBody').innerHTML = adm.fees.map(f=>`
+  <tr><td><strong>${f.level}</strong></td><td>${f.tuition}</td><td>${f.levies}</td><td>${f.feeding}</td><td>${f.enrolment}</td></tr>`).join('');
+document.getElementById('feesNote').textContent = adm.feesNote;
+})();
+
+// SUBMIT
+async function submitApp() {
+  const required = [
+    {id:'aFName',    label:'First Name'},
+    {id:'aLName',    label:'Last Name'},
+    {id:'aDob',      label:'Date of Birth'},
+    {id:'aGender',   label:'Gender'},
+    {id:'aAddress',  label:'Home Address'},
+    {id:'aClass',    label:'Class applying for'},
+    {id:'aParent',   label:'Parent/Guardian Name'},
+    {id:'aRelation', label:'Relationship'},
+    {id:'aPhone',    label:'Primary Phone'},
+    {id:'aEmail',    label:'Email Address'},
+    {id:'aEmgName',  label:'Emergency Contact Name'},
+    {id:'aEmgPhone', label:'Emergency Phone'},
+  ];
+  const errEl = document.getElementById('appError');
+  errEl.style.display='none';
+
+  for (const f of required) {
+    const el = document.getElementById(f.id);
+    if (!el.value.trim()) {
+      errEl.textContent = `⚠️ Please fill in: ${f.label}`;
+      errEl.style.display='block';
+      el.focus(); el.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+  }
+  if (!document.getElementById('aConsent').checked) {
+    errEl.textContent = '⚠️ Please confirm your consent at the bottom of the form.';
+    errEl.style.display='block'; return;
+  }
+
+  const app = {
+    studentName:  document.getElementById('aFName').value.trim() + ' ' + document.getElementById('aLName').value.trim(),
+    firstName:    document.getElementById('aFName').value.trim(),
+    lastName:     document.getElementById('aLName').value.trim(),
+    dob:          document.getElementById('aDob').value,
+    gender:       document.getElementById('aGender').value,
+    nationality:  document.getElementById('aNat').value,
+    religion:     document.getElementById('aReligion').value,
+    address:      document.getElementById('aAddress').value.trim(),
+    applyClass:   document.getElementById('aClass').value,
+    academicYear: document.getElementById('aYear').value,
+    prevSchool:   document.getElementById('aPrevSchool').value,
+    prevClass:    document.getElementById('aPrevClass').value,
+    leaveReason:  document.getElementById('aLeaveReason').value,
+    parentName:   document.getElementById('aParent').value.trim(),
+    relation:     document.getElementById('aRelation').value,
+    phone:        document.getElementById('aPhone').value.trim(),
+    phone2:       document.getElementById('aPhone2').value,
+    email:        document.getElementById('aEmail').value.trim(),
+    whatsapp:     document.getElementById('aWhatsapp').value,
+    occupation:   document.getElementById('aOccupation').value,
+    workplace:    document.getElementById('aWorkplace').value,
+    emgName:      document.getElementById('aEmgName').value.trim(),
+    emgRel:       document.getElementById('aEmgRel').value,
+    emgPhone:     document.getElementById('aEmgPhone').value.trim(),
+    emgPhone2:    document.getElementById('aEmgPhone2').value,
+    bloodGroup:   document.getElementById('aBlood').value,
+    allergies:    document.getElementById('aAllergies').value,
+    medical:      document.getElementById('aMedical').value,
+    heardFrom:    document.getElementById('aHear').value,
+    comments:     document.getElementById('aComments').value,
+  };
+
+  try {
+    await NHS.addApplication(app);
+    document.getElementById('appSuccess').style.display='block';
+    errEl.style.display='none';
+    document.getElementById('appSuccess').scrollIntoView({behavior:'smooth',block:'center'});
+
+    document.querySelectorAll('.app-card input, .app-card select, .app-card textarea').forEach(el=>{
+      if(el.type==='checkbox') el.checked=false; else el.value='';
+    });
+  } catch (err) {
+    errEl.textContent = `Application submit failed: ${err.message || err}`;
+    errEl.style.display='block';
+  }
+}
+
+function downloadFees() {
+  const fees = NHS.get().admissions.fees;
+  let csv = 'Level,Tuition (Per Term),Levies,Feeding Fee,Enrolment (Once)\n';
+  fees.forEach(f=>{ csv+=`"${f.level}","${f.tuition}","${f.levies}","${f.feeding}","${f.enrolment}"\n`; });
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download='NewHeights_FeeSchedule.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+initReveal();
+</script>
+</body>
+</html>

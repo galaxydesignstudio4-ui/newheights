@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Panel — New Heights School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0d1a0e; --sb:#111f12; --card:#162418; --card2:#1c2e1e;
+  --border:rgba(255,255,255,.07); --text:#ddeedd; --dim:#7a9c7a;
+  --green:#2E7D32; --gsec:#4CAF50; --gdark:#1B5E20; --lime:#DCE775;
+  --red:#ef4444; --orange:#f59e0b; --blue:#3b82f6; --ok:#22c55e;
+  --r:10px; --ease:.25s ease;
+  --sb-w:256px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+button{font-family:'DM Sans',sans-serif;cursor:pointer;}
+input,select,textarea{font-family:'DM Sans',sans-serif;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,var(--gdark),#071008);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+.lcard{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:clamp(32px,6vw,52px) clamp(24px,5vw,48px);width:100%;max-width:420px;text-align:center;}
+.llogo{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:4px;}
+.llogo em{color:var(--lime);font-style:normal;}
+.lsub{color:rgba(255,255,255,.45);font-size:.82rem;margin-bottom:32px;}
+.lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;text-align:left;}
+.lf label{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.6);}
+.lf input{padding:12px 14px;border:1.5px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(255,255,255,.06);color:#fff;font-size:.92rem;outline:none;transition:var(--ease);}
+.lf input:focus{border-color:var(--lime);}
+.lbtn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:100px;font-weight:700;font-size:.96rem;margin-top:6px;transition:var(--ease);}
+.lbtn:hover{background:var(--gdark);transform:translateY(-1px);}
+.lerr{color:#f87171;font-size:.82rem;margin-top:10px;display:none;}
+.lhint{margin-top:20px;font-size:.72rem;color:rgba(255,255,255,.25);}
+
+/* ── LAYOUT ── */
+#adminApp{display:none;min-height:100vh;}
+#adminApp.show{display:flex;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;overflow-y:auto;transition:transform var(--ease);}
+.sb-logo{padding:22px 18px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-logo .sn{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:#fff;}
+.sb-logo .sn em{color:var(--lime);font-style:normal;}
+.sb-logo .st{font-size:.7rem;color:var(--dim);margin-top:2px;}
+.sb-section{padding:14px 12px 4px;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
+.ni{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:8px;margin:1px 8px;cursor:pointer;transition:var(--ease);font-size:.87rem;font-weight:500;color:var(--dim);position:relative;border:none;background:none;width:calc(100% - 16px);text-align:left;}
+.ni:hover{background:rgba(255,255,255,.05);color:var(--text);}
+.ni.active{background:var(--green);color:#fff;}
+.ni .icon{font-size:1rem;min-width:20px;text-align:center;}
+.ni .badge{margin-left:auto;background:var(--red);color:#fff;font-size:.66rem;font-weight:700;padding:2px 6px;border-radius:100px;min-width:18px;text-align:center;display:none;}
+.ni .badge.show{display:block;}
+.sb-foot{margin-top:auto;padding:16px 12px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-foot a{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--dim);padding:9px 8px;border-radius:8px;transition:var(--ease);}
+.sb-foot a:hover{color:var(--text);background:rgba(255,255,255,.05);}
+
+/* ── MOBILE OVERLAY ── */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199;}
+.sb-overlay.show{display:block;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--sb);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.menu-btn{background:none;border:none;color:var(--dim);font-size:1.3rem;padding:4px;border-radius:6px;display:none;transition:var(--ease);}
+.menu-btn:hover{color:var(--text);}
+.topbar h1{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text);}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.save-btn{background:var(--green);color:#fff;border:none;padding:9px 20px;border-radius:100px;font-weight:700;font-size:.83rem;display:flex;align-items:center;gap:7px;transition:var(--ease);}
+.save-btn:hover{background:var(--gdark);}
+.saved-msg{font-size:.78rem;color:var(--ok);display:none;align-items:center;gap:5px;white-space:nowrap;}
+.saved-msg.show{display:flex;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sb-w);flex:1;display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;}
+.content{padding:clamp(16px,3vw,28px);flex:1;}
+
+/* ── ADMIN PAGES ── */
+.apage{display:none;}
+.apage.active{display:block;}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:800;color:var(--lime);line-height:1;}
+.stat-lbl{font-size:.75rem;color:var(--dim);margin-top:4px;}
+
+/* ── CARDS ── */
+.acard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:clamp(16px,3vw,26px);margin-bottom:18px;}
+.acard h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:3px;background:var(--card2);border-radius:var(--r);padding:5px;margin-bottom:20px;flex-wrap:wrap;}
+.tab{flex:1;min-width:80px;padding:9px 6px;background:none;border:none;color:var(--dim);font-size:.8rem;font-weight:600;border-radius:7px;cursor:pointer;transition:var(--ease);text-align:center;}
+.tab.active{background:var(--green);color:#fff;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ── FORM ELEMENTS ── */
+.af{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.af label{font-size:.73rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;}
+.af input,.af textarea,.af select{padding:10px 13px;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:.88rem;outline:none;transition:var(--ease);width:100%;}
+.af input:focus,.af textarea:focus,.af select:focus{border-color:var(--lime);background:rgba(255,255,255,.08);}
+.af textarea{resize:vertical;min-height:75px;}
+.af select option{background:var(--card);color:var(--text);}
+.af-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.af-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* ── UPLOAD BUTTON ── */
+.upload-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(76,175,80,.15);border:1.5px dashed var(--gsec);color:var(--gsec);border-radius:8px;font-size:.84rem;font-weight:600;cursor:pointer;transition:var(--ease);width:100%;justify-content:center;}
+.upload-btn:hover{background:rgba(76,175,80,.25);}
+.upload-input{display:none;}
+.img-preview{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-top:8px;display:none;border:1px solid var(--border);}
+.img-preview.show{display:block;}
+.img-thumb{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
+
+/* ── REPEATER ITEMS ── */
+.item-list{display:flex;flex-direction:column;gap:10px;}
+.item-row{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:flex-start;gap:10px;}
+.item-fields{flex:1;display:flex;flex-direction:column;gap:10px;}
+.del-btn{background:none;border:none;color:#f87171;font-size:1rem;padding:3px 6px;border-radius:6px;transition:var(--ease);line-height:1;flex-shrink:0;}
+.del-btn:hover{background:rgba(239,68,68,.15);}
+.add-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:rgba(76,175,80,.1);border:1.5px dashed var(--gsec);color:var(--gsec);border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--ease);margin-top:8px;}
+.add-btn:hover{background:rgba(76,175,80,.2);}
+
+/* ── GALLERY ADMIN ── */
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:14px;}
+.gal-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--card2);}
+.gal-thumb img{width:100%;height:100%;object-fit:cover;}
+.gal-del{position:absolute;top:5px;right:5px;background:var(--red);color:#fff;border:none;width:24px;height:24px;border-radius:50%;font-size:.75rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--ease);}
+.gal-del:hover{transform:scale(1.1);}
+.gal-cap{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);color:#fff;font-size:.65rem;padding:4px 6px;text-align:center;}
+
+/* ── FEES TABLE ── */
+.fees-tbl{width:100%;border-collapse:collapse;}
+.fees-tbl th{text-align:left;padding:9px 10px;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--dim);border-bottom:1px solid var(--border);}
+.fees-tbl td{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.03);}
+.fees-tbl input{padding:7px 9px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.82rem;outline:none;width:100%;transition:var(--ease);}
+.fees-tbl input:focus{border-color:var(--lime);}
+
+/* ── APPLICATIONS ── */
+.apps-tbl{width:100%;border-collapse:collapse;}
+.apps-tbl th{text-align:left;padding:10px 14px;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);}
+.apps-tbl td{padding:12px 14px;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top;}
+.apps-tbl tr:hover td{background:rgba(255,255,255,.02);}
+.status{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:.72rem;font-weight:700;text-transform:uppercase;}
+.s-pending{background:rgba(245,158,11,.15);color:var(--orange);}
+.s-accepted{background:rgba(34,197,94,.15);color:var(--ok);}
+.s-denied{background:rgba(239,68,68,.15);color:var(--red);}
+.action-sel{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.78rem;padding:5px 8px;cursor:pointer;outline:none;}
+.unseen-dot{display:inline-block;width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:5px;vertical-align:middle;}
+.expand-btn{background:none;border:none;color:var(--lime);font-size:.76rem;cursor:pointer;padding:2px 6px;border-radius:4px;}
+.expand-btn:hover{background:rgba(220,231,117,.1);}
+.app-detail{display:none;background:var(--card2);border-radius:8px;padding:14px;margin-top:8px;font-size:.8rem;line-height:1.9;color:var(--dim);}
+.app-detail strong{color:var(--text);}
+
+/* ── MESSAGES ── */
+.msg-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
+.msg-card.unread{border-left:3px solid var(--lime);}
+.msg-meta{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.msg-name{font-weight:700;font-size:.9rem;}
+.msg-date{font-size:.74rem;color:var(--dim);}
+.msg-subj{font-size:.78rem;color:var(--gsec);font-weight:600;margin-bottom:6px;}
+.msg-body{font-size:.84rem;color:var(--dim);line-height:1.6;}
+.msg-acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.reply-link{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(76,175,80,.12);border:1px solid var(--gsec);color:var(--gsec);border-radius:6px;font-size:.76rem;font-weight:600;}
+.del-msg{background:none;border:1px solid rgba(239,68,68,.3);color:#f87171;padding:6px 12px;border-radius:6px;font-size:.76rem;cursor:pointer;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .menu-btn{display:flex;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .two-col,.af-row{grid-template-columns:1fr;}
+  .three-col,.af-row3{grid-template-columns:1fr 1fr;}
+  .topbar h1{font-size:1rem;}
+}
+@media(max-width:520px){
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .three-col,.af-row3{grid-template-columns:1fr;}
+  .tabs{gap:2px;}
+  .tab{font-size:.72rem;padding:8px 4px;}
+  .gal-grid{grid-template-columns:repeat(3,1fr);}
+  .apps-tbl th:nth-child(4),.apps-tbl td:nth-child(4),
+  .apps-tbl th:nth-child(5),.apps-tbl td:nth-child(5){display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lcard">
+    <div class="llogo">New <em>Heights</em></div>
+    <div class="lsub">Admin Dashboard · Authorised Access Only</div>
+    <div class="lf"><label>Username</label><input type="text" id="lUser" value="admin" placeholder="admin"/></div>
+    <div class="lf"><label>Password</label><input type="password" id="lPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <button class="lbtn" onclick="doLogin()">Sign In →</button>
+    <div class="lerr" id="lErr">❌ Incorrect credentials. Please try again.</div>
+    <p class="lhint">Press Ctrl + Shift + A from any page to open admin</p>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sn">New <em>Heights</em></div>
+      <div class="st">🔐 Admin Dashboard</div>
+    </div>
+    <div class="sb-section">Overview</div>
+    <button class="ni active" onclick="gotoPage('dashboard',this)"><span class="icon">📊</span> Dashboard</button>
+    <div class="sb-section">Site Content</div>
+    <button class="ni" onclick="gotoPage('general',this)"><span class="icon">⚙️</span> General &amp; Logo</button>
+    <button class="ni" onclick="gotoPage('homepage',this)"><span class="icon">🏠</span> Homepage</button>
+    <button class="ni" onclick="gotoPage('about',this)"><span class="icon">🏫</span> About Page</button>
+    <button class="ni" onclick="gotoPage('programs',this)"><span class="icon">📚</span> Programs</button>
+    <button class="ni" onclick="gotoPage('gallery',this)"><span class="icon">🖼️</span> Gallery</button>
+    <button class="ni" onclick="gotoPage('admissions',this)"><span class="icon">📝</span> Admissions &amp; Fees</button>
+    <button class="ni" onclick="gotoPage('contact',this)"><span class="icon">📞</span> Contact Info</button>
+    <div class="sb-section">Inbox</div>
+    <button class="ni" id="niApps" onclick="gotoPage('applications',this)"><span class="icon">📋</span> Applications <span class="badge" id="appBadge"></span></button>
+    <button class="ni" id="niMsgs" onclick="gotoPage('messages',this)"><span class="icon">✉️</span> Messages <span class="badge" id="msgBadge"></span></button>
+    <div class="sb-section">System</div>
+    <button class="ni" onclick="gotoPage('notifications',this)"><span class="icon">🔔</span> Notifications</button>
+    <button class="ni" onclick="gotoPage('password',this)"><span class="icon">🔑</span> Change Password</button>
+    <div class="sb-foot">
+      <a href="index.html" target="_blank">↗ View Website</a>
+      <a href="#" onclick="doLogout()" style="color:#f87171;margin-top:4px;">⏻ Sign Out</a>
+    </div>
+  </aside>
+  <div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <h1 id="topTitle">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="saved-msg" id="savedMsg">✅ Saved!</span>
+        <button class="save-btn" onclick="saveAll()">💾 Save Changes</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="apage active" id="page-dashboard">
+        <div class="stat-row" id="dashStats"></div>
+        <div class="two-col">
+          <div class="acard"><h2>📋 Recent Applications</h2><div id="dashApps"></div></div>
+          <div class="acard"><h2>✉️ Recent Messages</h2><div id="dashMsgs"></div></div>
+        </div>
+      </div>
+
+      <!-- GENERAL & LOGO -->
+      <div class="apage" id="page-general">
+        <div class="acard">
+          <h2>🏷️ School Identity</h2>
+          <div class="af-row">
+            <div class="af"><label>School Name (Part 1)</label><input id="gName" type="text"/></div>
+            <div class="af"><label>School Tagline (Accent)</label><input id="gTag" type="text"/></div>
+          </div>
+          <div class="af"><label>School Motto</label><input id="gMotto" type="text"/></div>
+        </div>
+        <div class="acard">
+          <h2>🖼️ School Logo</h2>
+          <p style="font-size:.82rem;color:var(--dim);margin-bottom:14px;">Upload a logo with transparent background (PNG recommended). It will appear in the navbar and footer on all pages.</p>
+          <label class="upload-btn" for="logoUpload">📤 Upload Logo (PNG / SVG / WebP)</label>
+          <input type="file" id="logoUpload" class="upload-input" accept="image/png,image/svg+xml,image/webp,image/jpeg" onchange="handleLogoUpload(this)"/>
+          <img id="logoPreview" class="img-preview"/>
+          <div id="logoStatus" style="font-size:.8rem;color:var(--dim);margin-top:8px;"></div>
+        </div>
+        <div class="acard">
+          <h2>🔗 Social Media Links</h2>
+          <div class="af-row">
+            <div class="af"><label>Facebook URL</label><input id="gFb" type="url"/></div>
+            <div class="af"><label>Twitter / X URL</label><input id="gTw" type="url"/></div>
+          </div>
+          <div class="af-row">
+            <div class="af"><label>Instagram URL</label><input id="gIg" type="url"/></div>
+            <div class="af"><label>WhatsApp Link (wa.me/...)</label><input id="gWa" type="url"/></div>
+          </div>
+        </div>
+        <div class="acard">
+          <h2>🌐 Footer & Credits</h2>
+          <div class="af"><label>Footer About Text</label><textarea id="gFooterAbout"></textarea></div>
+          <div class="af"><label>Footer Copyright Text</label><input id="gFooterCopy" type="text"/></div>
+          <div class="af"><label>Galaxy Studio Website URL</label><input id="gGalaxy" type="url" placeholder="https://galaxystudio.com"/></div>
+        </div>
+        <div class="acard">
+          <h2>🔗 Navigation Links</h2>
+          <div class="item-list" id="navEditor"></div>
+          <button class="add-btn" onclick="addNavLink()">+ Add Nav Link</button>
+        </div>
+      </div>
+
+      <!-- HOMEPAGE -->
+      <div class="apage" id="page-homepage">
+        <div class="tabs">
+          <button class="tab active" onclick="swTab('hp','hero',this)">Hero</button>
+          <button class="tab" onclick="swTab('hp','trust',this)">Stats</button>
+          <button class="tab" onclick="swTab('hp','why',this)">Why Cards</button>
+          <button class="tab" onclick="swTab('hp','abprev',this)">About Preview</button>
+          <button class="tab" onclick="swTab('hp','video',this)">Video</button>
+          <button class="tab" onclick="swTab('hp','cta',this)">CTA</button>
+        </div>
+
+        <div class="tab-pane active" id="hp-hero">
+          <div class="acard">
+            <h2>🖼️ Hero Section</h2>
+            <div class="af">
+              <label>Background Image (Upload)</label>
+              <label class="upload-btn" for="heroBgUpload">📤 Upload Hero Background Image</label>
+              <input type="file" id="heroBgUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this,'heroBgPreview','hero','bgImage')"/>
+              <img id="heroBgPreview" class="img-preview"/>
+            </div>
+            <div class="af"><label>Badge / Location Text</label><input id="hBadge" type="text"/></div>
+            <div class="af"><label>Main Heading</label><input id="hHead" type="text"/></div>
+            <div class="af"><label>Accent Word in Heading (will be highlighted)</label><input id="hAccent" type="text" placeholder="e.g. Affordable"/></div>
+            <div class="af"><label>Subtitle / Tagline</label><textarea id="hSub"></textarea></div>
+            <div class="af-row">
+              <div class="af"><label>Button 1 Text</label><input id="hB1" type="text"/></div>
+              <div class="af"><label>Button 1 Link</label><input id="hB1L" type="text"/></div>
+            </div>
+            <div class="af-row">
+              <div class="af"><label>Button 2 Text</label><input id="hB2" type="text"/></div>
+              <div class="af"><label>Button 2 Link</label><input id="hB2L" type="text"/></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane" id="hp-trust">
+          <div class="acard">
+            <h2>📊 Trust Bar Statistics</h2>
+            <div class="item-list" id="trustEditor"></div>
+            <button class="add-btn" onclick="addTrust()">+ Add Statistic</button>
+          </div>
+        </div>
+
+        <div class="tab-pane" id="hp-why">
+          <div class="acard">
+            <h2>✅ Why Choose Us Cards</h2>
+            <div class="item-list" id="whyEditor"></div>
+            <button class="add-btn" onclick="addWhy()">+ Add Card</button>
+          </div>
+        </div>
+
+        <div class="tab-pane" id="hp-abprev">
+          <div class="acard">
+            <h2>📖 About Preview Section</h2>
+            <div class="af">
+              <label>About Preview Image (Upload)</label>
+              <label class="upload-btn" for="abPrevUpload">📤 Upload Image</label>
+              <input type="file" id="abPrevUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this,'abPrevImg','aboutPreview','image')"/>
+              <img id="abPrevImg" class="img-preview"/>
+            </div>
+            <div class="af-row">
+              <div class="af"><label>Floating Badge (e.g. 12+)</label><input id="abBadge" type="text"/></div>
+              <div class="af"><label>Badge Label</label><input id="abBadgeLbl" type="text"/></div>
+            </div>
+            <div class="af"><label>Section Heading</label><input id="abHead" type="text"/></div>
+            <div class="af"><label>Paragraph 1</label><textarea id="abP1"></textarea></div>
+            <div class="af"><label>Paragraph 2</label><textarea id="abP2"></textarea></div>
+            <div class="af"><label>Value Point 1</label><input id="abV1" type="text"/></div>
+            <div class="af"><label>Value Point 2</label><input id="abV2" type="text"/></div>
+            <div class="af"><label>Value Point 3</label><input id="abV3" type="text"/></div>
+          </div>
+        </div>
+
+        <div class="tab-pane" id="hp-video">
+          <div class="acard">
+            <h2>▶️ Video Section</h2>
+            <div class="af">
+              <label>YouTube Video URL or Link</label>
+              <input id="hVidUrl" type="url" placeholder="https://www.youtube.com/watch?v=XXXXXXXXXXX"/>
+              <button class="add-btn" onclick="processYouTube()" style="margin-top:8px;">Load YouTube Video</button>
+            </div>
+            <div id="ytPreviewBox" style="margin-top:12px;display:none;">
+              <img id="ytThumb" style="width:100%;max-width:400px;border-radius:8px;border:1px solid var(--border);" src="" alt="Thumbnail"/>
+              <p style="font-size:.78rem;color:var(--ok);margin-top:6px;">✅ YouTube video loaded successfully</p>
+            </div>
+            <div class="af"><label>Section Heading</label><input id="hVidHead" type="text"/></div>
+            <div class="af"><label>Section Subtext</label><textarea id="hVidSub"></textarea></div>
+          </div>
+        </div>
+
+        <div class="tab-pane" id="hp-cta">
+          <div class="acard">
+            <h2>📣 CTA Banner</h2>
+            <div class="af"><label>Label Badge Text</label><input id="hCtaLbl" type="text"/></div>
+            <div class="af"><label>Heading</label><input id="hCtaHead" type="text"/></div>
+            <div class="af"><label>Body Text</label><textarea id="hCtaText"></textarea></div>
+            <div class="af-row">
+              <div class="af"><label>Button Text</label><input id="hCtaBtn" type="text"/></div>
+              <div class="af"><label>Button Link</label><input id="hCtaBtnL" type="text"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT PAGE -->
+      <div class="apage" id="page-about">
+        <div class="tabs">
+          <button class="tab active" onclick="swTab('ab','mv',this)">Mission &amp; Vision</button>
+          <button class="tab" onclick="swTab('ab','curr',this)">Curriculum</button>
+          <button class="tab" onclick="swTab('ab','tl',this)">Timeline</button>
+          <button class="tab" onclick="swTab('ab','team',this)">Team</button>
+        </div>
+        <div class="tab-pane active" id="ab-mv">
+          <div class="acard">
+            <h2>📖 Mission &amp; Vision</h2>
+            <div class="af">
+              <label>About Page Image (Upload)</label>
+              <label class="upload-btn" for="abImgUpload">📤 Upload Image</label>
+              <input type="file" id="abImgUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this,'abImgPrev','about','image')"/>
+              <img id="abImgPrev" class="img-preview"/>
+            </div>
+            <div class="af"><label>Mission Statement</label><textarea id="abMission" style="min-height:110px;"></textarea></div>
+            <div class="af"><label>Vision Statement</label><textarea id="abVision" style="min-height:110px;"></textarea></div>
+          </div>
+        </div>
+        <div class="tab-pane" id="ab-curr">
+          <div class="acard">
+            <h2>📚 Curriculum Description</h2>
+            <div class="af"><label>Curriculum Description</label><textarea id="abCurr" style="min-height:120px;"></textarea></div>
+            <div class="af"><label>Extracurricular Activities (one per line)</label><textarea id="abExtra" style="min-height:90px;" placeholder="Cadet Corps&#10;Cultural Troops&#10;School Choir"></textarea></div>
+          </div>
+        </div>
+        <div class="tab-pane" id="ab-tl">
+          <div class="acard">
+            <h2>📅 School Timeline</h2>
+            <div class="item-list" id="tlEditor"></div>
+            <button class="add-btn" onclick="addTimeline()">+ Add Milestone</button>
+          </div>
+        </div>
+        <div class="tab-pane" id="ab-team">
+          <div class="acard">
+            <h2>👥 Leadership Team</h2>
+            <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Upload portrait photos for each team member. Photos display in a tall card style.</p>
+            <div class="item-list" id="teamEditor"></div>
+            <button class="add-btn" onclick="addTeam()">+ Add Team Member</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRAMS -->
+      <div class="apage" id="page-programs">
+        <div class="acard">
+          <h2>📚 Academic Programs</h2>
+          <div class="item-list" id="progEditor"></div>
+          <button class="add-btn" onclick="addProg()">+ Add Program</button>
+        </div>
+      </div>
+
+      <!-- GALLERY -->
+      <div class="apage" id="page-gallery">
+        <div class="acard">
+          <h2>🖼️ Gallery Images</h2>
+          <div class="gal-grid" id="galGrid"></div>
+          <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+            <div class="af-row">
+              <div class="af">
+                <label>Upload New Image(s)</label>
+                <label class="upload-btn" for="galUpload">📤 Choose Image File(s)</label>
+                <input type="file" id="galUpload" class="upload-input" accept="image/*" multiple onchange="handleGalleryUpload(this)"/>
+              </div>
+              <div class="af"><label>Caption for New Image</label><input id="galCap" type="text" placeholder="e.g. Students in the lab"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMISSIONS & FEES -->
+      <div class="apage" id="page-admissions">
+        <div class="tabs">
+          <button class="tab active" onclick="swTab('adm','steps',this)">Steps</button>
+          <button class="tab" onclick="swTab('adm','fees',this)">Fee Table</button>
+          <button class="tab" onclick="swTab('adm','fnote',this)">Fee Note</button>
+        </div>
+        <div class="tab-pane active" id="adm-steps">
+          <div class="acard">
+            <h2>📋 Admissions Steps</h2>
+            <div class="item-list" id="stepsEditor"></div>
+            <button class="add-btn" onclick="addStep()">+ Add Step</button>
+          </div>
+        </div>
+        <div class="tab-pane" id="adm-fees">
+          <div class="acard">
+            <h2>💰 Fee Structure — Every Level Editable Separately</h2>
+            <div style="overflow-x:auto;">
+              <table class="fees-tbl">
+                <thead><tr><th>Level</th><th>Tuition/Term</th><th>Levies</th><th>Feeding</th><th>Enrolment</th><th></th></tr></thead>
+                <tbody id="feesEditor"></tbody>
+              </table>
+            </div>
+            <button class="add-btn" onclick="addFeeRow()" style="margin-top:12px;">+ Add Level</button>
+          </div>
+        </div>
+        <div class="tab-pane" id="adm-fnote">
+          <div class="acard">
+            <h2>📌 Fee Disclaimer Note</h2>
+            <div class="af"><label>Note shown below fee table</label><textarea id="admNote" style="min-height:80px;"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="apage" id="page-contact">
+        <div class="acard">
+          <h2>📍 Contact Details</h2>
+          <div class="af"><label>Address</label><textarea id="cAddr" style="min-height:60px;"></textarea></div>
+          <div class="af-row">
+            <div class="af"><label>Phone 1</label><input id="cPh1" type="tel"/></div>
+            <div class="af"><label>Phone 2</label><input id="cPh2" type="tel"/></div>
+          </div>
+          <div class="af-row">
+            <div class="af"><label>Email 1</label><input id="cEm1" type="email"/></div>
+            <div class="af"><label>Email 2</label><input id="cEm2" type="email"/></div>
+          </div>
+        </div>
+        <div class="acard">
+          <h2>🗺️ Google Maps Embed</h2>
+          <div class="af">
+            <label>Embed URL (from Google Maps → Share → Embed a map → copy only the src="..." value)</label>
+            <input id="cMap" type="url" placeholder="https://www.google.com/maps/embed?pb=..."/>
+          </div>
+          <div style="border-radius:8px;overflow:hidden;margin-top:10px;">
+            <iframe id="mapPrev" src="" style="width:100%;height:200px;border:none;display:block;"></iframe>
+          </div>
+          <button class="add-btn" onclick="previewMap()" style="margin-top:8px;">Preview Map</button>
+        </div>
+        <div class="acard">
+          <h2>🕐 Office Hours</h2>
+          <div class="item-list" id="hoursEditor"></div>
+          <button class="add-btn" onclick="addHour()">+ Add Row</button>
+        </div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div class="apage" id="page-applications">
+        <div class="acard">
+          <h2>📋 Student Applications</h2>
+          <div style="overflow-x:auto;">
+            <table class="apps-tbl">
+              <thead><tr><th>Student</th><th>Class</th><th>Parent</th><th>Phone</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="appsBody"></tbody>
+            </table>
+          </div>
+          <div id="appsEmpty" style="text-align:center;padding:40px;color:var(--dim);display:none;">No applications received yet.</div>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="apage" id="page-messages">
+        <div class="acard">
+          <h2>✉️ Contact Messages</h2>
+          <div id="msgsList"></div>
+          <div id="msgsEmpty" style="text-align:center;padding:40px;color:var(--dim);display:none;">No messages yet.</div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="apage" id="page-notifications">
+        <div class="acard">
+          <h2>🔔 Email &amp; SMS Notifications</h2>
+          <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">When an application is <strong style="color:var(--ok);">accepted</strong>, an automatic email can be sent to the parent's email address, and an SMS to their phone number. Configure EmailJS below for email notifications.</p>
+          <div class="af"><label>Admin Notification Email</label><input id="nAdminEmail" type="email"/></div>
+          <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+            <h3 style="font-size:.9rem;color:var(--text);margin-bottom:14px;">EmailJS Configuration (for parent email notifications)</h3>
+            <p style="font-size:.78rem;color:var(--dim);margin-bottom:14px;">Sign up free at <a href="https://emailjs.com" target="_blank" style="color:var(--lime);">emailjs.com</a> → create a service → create a template with variables: {{student_name}}, {{parent_name}}, {{apply_class}}, {{status}}, {{school_name}}</p>
+            <div class="af-row3">
+              <div class="af"><label>Service ID</label><input id="nSvcId" type="text" placeholder="service_xxxxxxx"/></div>
+              <div class="af"><label>Template ID</label><input id="nTplId" type="text" placeholder="template_xxxxxxx"/></div>
+              <div class="af"><label>Public Key</label><input id="nPubKey" type="text" placeholder="your_public_key"/></div>
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
+            <h3 style="font-size:.9rem;color:var(--text);margin-bottom:8px;">SMS via Supabase Edge Function</h3>
+            <p style="font-size:.78rem;color:var(--dim);">SMS notifications require Supabase + an SMS provider (e.g. Arkesel for Ghana). Once your Supabase project is set up, SMS will be triggered automatically when you accept an application.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="apage" id="page-password">
+        <div class="acard" style="max-width:440px;">
+          <h2>🔑 Change Password</h2>
+          <div class="af"><label>Current Password</label><input id="pwCur" type="password"/></div>
+          <div class="af"><label>New Password</label><input id="pwNew" type="password"/></div>
+          <div class="af"><label>Confirm New Password</label><input id="pwConf" type="password"/></div>
+          <button class="save-btn" onclick="changePw()" style="width:100%;justify-content:center;margin-top:4px;">Update Password</button>
+          <div id="pwMsg" style="font-size:.84rem;text-align:center;margin-top:12px;display:none;"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /adminApp -->
+
+<script src="shared.js"></script>
+<script>
+let D = {};
+
+/* ── LOGIN ── */
+function doLogin(){
+  const u=document.getElementById('lUser').value.trim();
+  const p=document.getElementById('lPass').value;
+  const d=NHS.get();
+  if(u==='admin' && p===d.adminPassword){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminApp').classList.add('show');
+    loadAll();
+  } else {
+    document.getElementById('lErr').style.display='block';
+  }
+}
+function doLogout(){
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('adminApp').classList.remove('show');
+}
+
+/* ── SIDEBAR ── */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('show');
+}
+
+/* ── PAGE NAV ── */
+function gotoPage(name, el){
+  document.querySelectorAll('.apage').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  document.getElementById('topTitle').textContent = el ? el.textContent.trim() : name;
+  closeSidebar();
+  if(name==='applications') markAppsSeen();
+  if(name==='messages') markMsgsSeen();
+}
+
+function swTab(prefix, tab, btn){
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(p=>p.classList.remove('active'));
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`${prefix}-${tab}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── IMAGE UPLOAD HANDLERS ── */
+async function handleLogoUpload(input){
+  const file = input.files[0]; if(!file) return;
+  const url = await NHS.uploadImage(file, 'general', 'logos');
+  D.logoDataUrl = url;
+  const prev = document.getElementById('logoPreview');
+  prev.src=url; prev.classList.add('show');
+  NHS.setFavicon(url);
+  document.getElementById('logoStatus').textContent = `✅ Logo loaded: ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+}
+
+async function handleImgUpload(input, previewId, section, field){
+  const file = input.files[0]; if(!file) return;
+  const url = await NHS.uploadImage(file, 'general', 'content');
+  if(section === 'hero') D.hero[field] = url;
+  else if(section === 'aboutPreview') D.aboutPreview[field] = url;
+  else if(section === 'about') D.about[field] = url;
+  const prev = document.getElementById(previewId);
+  if(prev){ prev.src=url; prev.classList.add('show'); }
+}
+
+async function handleGalleryUpload(input){
+  const files = Array.from(input.files);
+  const cap = document.getElementById('galCap').value || 'School Photo';
+  if(!files.length) return;
+  D.galleryImages = await NHS.addGalleryImages(files, cap);
+  document.getElementById('galCap').value='';
+  input.value='';
+  renderGallery();
+}
+
+/* ── YOUTUBE ── */
+function processYouTube(){
+  const url = document.getElementById('hVidUrl').value.trim();
+  const id = NHS.youtubeId(url);
+  if(!id){ alert('Could not find a valid YouTube video ID in that URL.'); return; }
+  D.videoYoutubeId = id;
+  D.videoUrl = NHS.youtubeEmbed(id);
+  const thumb = NHS.youtubeThumb(id);
+  D.videoThumb = thumb;
+  document.getElementById('ytThumb').src = thumb;
+  document.getElementById('ytPreviewBox').style.display='block';
+}
+
+/* ── LOAD ALL ── */
+async function loadAll(){
+  await NHS.refresh();
+  D = NHS.get();
+  loadGeneral(); loadHomepage(); loadAbout(); loadPrograms();
+  renderGallery(); loadAdmissions(); loadContact();
+  loadApplications(); loadMessages(); loadDashboard();
+  updateBadges();
+}
+
+/* ── GENERAL ── */
+function loadGeneral(){
+  document.getElementById('gName').value = D.schoolName;
+  document.getElementById('gTag').value  = D.schoolTagline;
+  document.getElementById('gMotto').value= D.schoolMotto||'';
+  if(D.logoDataUrl){ const p=document.getElementById('logoPreview'); p.src=D.logoDataUrl; p.classList.add('show'); }
+  document.getElementById('gFb').value  = D.socialLinks.facebook;
+  document.getElementById('gTw').value  = D.socialLinks.twitter;
+  document.getElementById('gIg').value  = D.socialLinks.instagram;
+  document.getElementById('gWa').value  = D.socialLinks.whatsapp;
+  document.getElementById('gFooterAbout').value = D.footerAbout;
+  document.getElementById('gFooterCopy').value  = D.footerCopyright;
+  document.getElementById('gGalaxy').value      = D.galaxyStudioUrl;
+  renderNavEditor();
+}
+function collectGeneral(){
+  D.schoolName    = v('gName'); D.schoolTagline = v('gTag'); D.schoolMotto = v('gMotto');
+  D.socialLinks   = { facebook:v('gFb'), twitter:v('gTw'), instagram:v('gIg'), whatsapp:v('gWa') };
+  D.footerAbout   = v('gFooterAbout'); D.footerCopyright = v('gFooterCopy'); D.galaxyStudioUrl = v('gGalaxy');
+  D.navLinks      = collectNavLinks();
+}
+
+function renderNavEditor(){
+  document.getElementById('navEditor').innerHTML = D.navLinks.map((l,i)=>`
+    <div class="item-row">
+      <div class="item-fields">
+        <div class="af-row">
+          <div class="af"><label>Label</label><input type="text" value="${l.label}" id="nl_l_${i}"/></div>
+          <div class="af"><label>URL</label><input type="text" value="${l.href}" id="nl_h_${i}"/></div>
+        </div>
+      </div>
+      <button class="del-btn" onclick="removeNavLink(${i})">🗑</button>
+    </div>`).join('');
+}
+function collectNavLinks(){
+  const links=[];
+  document.querySelectorAll('[id^="nl_l_"]').forEach(el=>{
+    const i=el.id.split('_')[2];
+    links.push({label:el.value, href:document.getElementById(`nl_h_${i}`).value});
+  });
+  return links;
+}
+function addNavLink(){ D.navLinks.push({label:'New Page',href:'page.html'}); renderNavEditor(); }
+function removeNavLink(i){ D.navLinks.splice(i,1); renderNavEditor(); }
+
+/* ── HOMEPAGE ── */
+function loadHomepage(){
+  const h=D.hero;
+  if(h.bgImage){ const p=document.getElementById('heroBgPreview'); p.src=h.bgImage; p.classList.add('show'); }
+  document.getElementById('hBadge').value  = h.badge;
+  document.getElementById('hHead').value   = h.heading;
+  document.getElementById('hAccent').value = h.headingAccent;
+  document.getElementById('hSub').value    = h.subtext;
+  document.getElementById('hB1').value=h.btn1Text; document.getElementById('hB1L').value=h.btn1Link;
+  document.getElementById('hB2').value=h.btn2Text; document.getElementById('hB2L').value=h.btn2Link;
+  const ab=D.aboutPreview;
+  if(ab.image){ const p=document.getElementById('abPrevImg'); p.src=ab.image; p.classList.add('show'); }
+  document.getElementById('abBadge').value   = ab.badge;
+  document.getElementById('abBadgeLbl').value= ab.badgeLabel;
+  document.getElementById('abHead').value    = ab.heading;
+  document.getElementById('abP1').value      = ab.para1;
+  document.getElementById('abP2').value      = ab.para2;
+  document.getElementById('abV1').value      = ab.values[0]||'';
+  document.getElementById('abV2').value      = ab.values[1]||'';
+  document.getElementById('abV3').value      = ab.values[2]||'';
+  document.getElementById('hVidUrl').value   = D.videoYoutubeId ? `https://youtube.com/watch?v=${D.videoYoutubeId}` : '';
+  if(D.videoThumb){ document.getElementById('ytThumb').src=D.videoThumb; document.getElementById('ytPreviewBox').style.display='block'; }
+  document.getElementById('hVidHead').value  = D.videoHeading;
+  document.getElementById('hVidSub').value   = D.videoSubtext;
+  const cta=D.ctaBanner;
+  document.getElementById('hCtaLbl').value   = cta.label;
+  document.getElementById('hCtaHead').value  = cta.heading;
+  document.getElementById('hCtaText').value  = cta.text;
+  document.getElementById('hCtaBtn').value   = cta.btnText;
+  document.getElementById('hCtaBtnL').value  = cta.btnLink;
+  renderTrust(); renderWhy();
+}
+function collectHomepage(){
+  D.hero = { bgImage:D.hero.bgImage, bgColor:'#1B5E20', badge:v('hBadge'), heading:v('hHead'), headingAccent:v('hAccent'), subtext:v('hSub'), btn1Text:v('hB1'), btn1Link:v('hB1L'), btn2Text:v('hB2'), btn2Link:v('hB2L') };
+  D.aboutPreview = { image:D.aboutPreview.image, badge:v('abBadge'), badgeLabel:v('abBadgeLbl'), heading:v('abHead'), para1:v('abP1'), para2:v('abP2'), values:[v('abV1'),v('abV2'),v('abV3')] };
+  D.videoHeading=v('hVidHead'); D.videoSubtext=v('hVidSub');
+  D.ctaBanner={ label:v('hCtaLbl'), heading:v('hCtaHead'), text:v('hCtaText'), btnText:v('hCtaBtn'), btnLink:v('hCtaBtnL') };
+  D.trustStats = collectTrust();
+  D.whyCards   = collectWhy();
+}
+
+function renderTrust(){
+  document.getElementById('trustEditor').innerHTML=D.trustStats.map((s,i)=>`
+    <div class="item-row">
+      <div class="item-fields"><div class="af-row">
+        <div class="af"><label>Number</label><input type="text" value="${s.num}" id="ts_n_${i}"/></div>
+        <div class="af"><label>Label</label><input type="text" value="${s.label}" id="ts_l_${i}"/></div>
+      </div></div>
+      <button class="del-btn" onclick="removeTrust(${i})">🗑</button>
+    </div>`).join('');
+}
+function collectTrust(){
+  const a=[];
+  document.querySelectorAll('[id^="ts_n_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({num:el.value,label:document.getElementById(`ts_l_${i}`).value}); });
+  return a;
+}
+function addTrust(){ D.trustStats.push({num:'0+',label:'New Stat'}); renderTrust(); }
+function removeTrust(i){ D.trustStats.splice(i,1); renderTrust(); }
+
+function renderWhy(){
+  document.getElementById('whyEditor').innerHTML=D.whyCards.map((c,i)=>`
+    <div class="item-row">
+      <div class="item-fields">
+        <div class="af-row">
+          <div class="af"><label>Icon (emoji)</label><input type="text" value="${c.icon}" id="wc_i_${i}"/></div>
+          <div class="af"><label>Title</label><input type="text" value="${c.title}" id="wc_t_${i}"/></div>
+        </div>
+        <div class="af"><label>Description</label><textarea id="wc_d_${i}">${c.text}</textarea></div>
+      </div>
+      <button class="del-btn" onclick="removeWhy(${i})">🗑</button>
+    </div>`).join('');
+}
+function collectWhy(){
+  const a=[];
+  document.querySelectorAll('[id^="wc_i_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({icon:el.value,title:document.getElementById(`wc_t_${i}`).value,text:document.getElementById(`wc_d_${i}`).value}); });
+  return a;
+}
+function addWhy(){ D.whyCards.push({icon:'⭐',title:'New Feature',text:'Description here.'}); renderWhy(); }
+function removeWhy(i){ D.whyCards.splice(i,1); renderWhy(); }
+
+/* ── ABOUT ── */
+function loadAbout(){
+  if(D.about.image){ const p=document.getElementById('abImgPrev'); p.src=D.about.image; p.classList.add('show'); }
+  document.getElementById('abMission').value = D.about.mission;
+  document.getElementById('abVision').value  = D.about.vision;
+  document.getElementById('abCurr').value    = D.about.curriculum;
+  document.getElementById('abExtra').value   = (D.about.extracurricular||[]).join('\n');
+  renderTimeline(); renderTeam();
+}
+function collectAbout(){
+  D.about.mission      = v('abMission');
+  D.about.vision       = v('abVision');
+  D.about.curriculum   = v('abCurr');
+  D.about.extracurricular = v('abExtra').split('\n').map(s=>s.trim()).filter(Boolean);
+  D.about.timeline     = collectTimeline();
+  D.about.team         = collectTeam();
+}
+
+function renderTimeline(){
+  document.getElementById('tlEditor').innerHTML=D.about.timeline.map((t,i)=>`
+    <div class="item-row">
+      <div class="item-fields">
+        <div class="af-row">
+          <div class="af"><label>Year</label><input type="text" value="${t.year}" id="tl_y_${i}"/></div>
+          <div class="af"><label>Title</label><input type="text" value="${t.title}" id="tl_t_${i}"/></div>
+        </div>
+        <div class="af"><label>Description</label><textarea id="tl_d_${i}">${t.text}</textarea></div>
+      </div>
+      <button class="del-btn" onclick="removeTl(${i})">🗑</button>
+    </div>`).join('');
+}
+function collectTimeline(){
+  const a=[];
+  document.querySelectorAll('[id^="tl_y_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({year:el.value,title:document.getElementById(`tl_t_${i}`).value,text:document.getElementById(`tl_d_${i}`).value}); });
+  return a;
+}
+function addTimeline(){ D.about.timeline.push({year:new Date().getFullYear()+'',title:'New Milestone',text:'Description.'}); renderTimeline(); }
+function removeTl(i){ D.about.timeline.splice(i,1); renderTimeline(); }
+
+const ROLES=['Principal','Vice Principal','Headmistress','Director','Head of Academics','Head of Nursery','Head of Primary','Head of JHS','Director of Operations','Accountant','Counsellor','ICT Coordinator','Sports Coach','Secretary','Teacher','Staff'];
+
+function renderTeam(){
+  document.getElementById('teamEditor').innerHTML=D.about.team.map((m,i)=>`
+    <div class="item-row">
+      <div class="item-fields">
+        ${m.image?`<img src="${m.image}" style="width:80px;height:90px;object-fit:cover;border-radius:8px;margin-bottom:8px;object-position:top;"/>` : ''}
+        <div class="af">
+          <label>Photo (Upload portrait)</label>
+          <label class="upload-btn" for="tm_img_${i}" style="font-size:.78rem;padding:8px 14px;">📤 Upload Photo</label>
+          <input type="file" id="tm_img_${i}" class="upload-input" accept="image/*" onchange="handleTeamPhoto(this,${i})"/>
+        </div>
+        <div class="af-row">
+          <div class="af"><label>Full Name</label><input type="text" value="${m.name}" id="tm_n_${i}"/></div>
+          <div class="af"><label>Role / Title</label>
+            <select id="tm_r_${i}">${ROLES.map(r=>`<option value="${r}" ${r===m.role?'selected':''}>${r}</option>`).join('')}<option value="Other">Other</option></select>
+          </div>
+        </div>
+        <div class="af"><label>Bio / Description</label><textarea id="tm_b_${i}">${m.bio}</textarea></div>
+      </div>
+      <button class="del-btn" onclick="removeTeam(${i})">🗑</button>
+    </div>`).join('');
+}
+async function handleTeamPhoto(input, idx){
+  const file=input.files[0]; if(!file) return;
+  // Removed 600 KB photo size check
+  const b64=await NHS.fileToBase64(file);
+  D.about.team[idx].image=b64;
+  renderTeam();
+}
+function collectTeam(){
+  const a=[];
+  document.querySelectorAll('[id^="tm_n_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({image:D.about.team[i]?.image||'',name:el.value,role:document.getElementById(`tm_r_${i}`).value,bio:document.getElementById(`tm_b_${i}`).value}); });
+  return a;
+}
+function addTeam(){ D.about.team.push({image:'',name:'New Member',role:'Teacher',bio:'Bio here.'}); renderTeam(); }
+function removeTeam(i){ D.about.team.splice(i,1); renderTeam(); }
+
+/* ── PROGRAMS ── */
+function loadPrograms(){ renderProgs(); }
+function renderProgs(){
+  document.getElementById('progEditor').innerHTML=D.programs.map((p,i)=>`
+    <div class="item-row">
+      <div class="item-fields">
+        ${p.image?`<img src="${p.image}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/>`:'' }
+        <div class="af">
+          <label>Program Image (Upload)</label>
+          <label class="upload-btn" for="pr_img_${i}" style="font-size:.78rem;padding:8px 14px;">📤 Upload Image</label>
+          <input type="file" id="pr_img_${i}" class="upload-input" accept="image/*" onchange="handleProgImg(this,${i})"/>
+        </div>
+        <div class="af-row">
+          <div class="af"><label>Program Title</label><input type="text" value="${p.title}" id="pr_t_${i}"/></div>
+          <div class="af"><label>Badge Text</label><input type="text" value="${p.badge}" id="pr_b_${i}"/></div>
+        </div>
+        <div class="af"><label>Description</label><textarea id="pr_d_${i}">${p.text}</textarea></div>
+      </div>
+      <button class="del-btn" onclick="removeProg(${i})">🗑</button>
+    </div>`).join('');
+}
+async function handleProgImg(input,idx){
+  const file=input.files[0]; if(!file) return;
+  // Removed 600 KB image size check
+  const b64=await NHS.fileToBase64(file);
+  D.programs[idx].image=b64; renderProgs();
+}
+function collectProgs(){
+  const a=[];
+  document.querySelectorAll('[id^="pr_t_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({image:D.programs[i]?.image||'',title:el.value,badge:document.getElementById(`pr_b_${i}`).value,text:document.getElementById(`pr_d_${i}`).value}); });
+  return a;
+}
+function addProg(){ D.programs.push({image:'',title:'New Program',badge:'Level',text:'Description.'}); renderProgs(); }
+function removeProg(i){ D.programs.splice(i,1); renderProgs(); }
+
+/* ── GALLERY ── */
+function renderGallery(){
+  const imgs=D.galleryImages||[];
+  document.getElementById('galGrid').innerHTML=imgs.map((g,i)=>`
+    <div class="gal-thumb">
+      <img src="${g.url}" alt="${g.caption}" loading="lazy"/>
+      <button class="gal-del" onclick="removeGal(${i})">✕</button>
+      <div class="gal-cap">${g.caption}</div>
+    </div>`).join('');
+}
+async function removeGal(i){
+  const item = D.galleryImages[i];
+  if(!item) return;
+  try{
+    await NHS.removeGalleryImage(item);
+    D.galleryImages.splice(i,1);
+    renderGallery();
+  }catch(e){ alert('Delete failed: '+e.message); }
+}
+
+/* ── ADMISSIONS ── */
+function loadAdmissions(){
+  renderSteps(); renderFees();
+  document.getElementById('admNote').value=D.admissions.feesNote;
+}
+function renderSteps(){
+  document.getElementById('stepsEditor').innerHTML=D.admissions.steps.map((s,i)=>`
+    <div class="item-row">
+      <div class="item-fields">
+        <div class="af-row">
+          <div class="af"><label>Step #</label><input type="text" value="${s.num}" id="st_n_${i}"/></div>
+          <div class="af"><label>Title</label><input type="text" value="${s.title}" id="st_t_${i}"/></div>
+        </div>
+        <div class="af"><label>Description</label><textarea id="st_d_${i}">${s.text}</textarea></div>
+      </div>
+      <button class="del-btn" onclick="removeStep(${i})">🗑</button>
+    </div>`).join('');
+}
+function collectSteps(){
+  const a=[];
+  document.querySelectorAll('[id^="st_n_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({num:el.value,title:document.getElementById(`st_t_${i}`).value,text:document.getElementById(`st_d_${i}`).value}); });
+  return a;
+}
+function addStep(){ D.admissions.steps.push({num:String(D.admissions.steps.length+1),title:'New Step',text:'Description.'}); renderSteps(); }
+function removeStep(i){ D.admissions.steps.splice(i,1); renderSteps(); }
+
+function renderFees(){
+  document.getElementById('feesEditor').innerHTML=D.admissions.fees.map((f,i)=>`
+    <tr>
+      <td><input type="text" value="${f.level}" id="fe_lv_${i}" style="min-width:100px;"/></td>
+      <td><input type="text" value="${f.tuition}" id="fe_tu_${i}"/></td>
+      <td><input type="text" value="${f.levies}" id="fe_le_${i}"/></td>
+      <td><input type="text" value="${f.feeding}" id="fe_fd_${i}"/></td>
+      <td><input type="text" value="${f.enrolment}" id="fe_en_${i}"/></td>
+      <td><button class="del-btn" onclick="removeFee(${i})">🗑</button></td>
+    </tr>`).join('');
+}
+function collectFees(){
+  const a=[];
+  document.querySelectorAll('[id^="fe_lv_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({level:el.value,tuition:document.getElementById(`fe_tu_${i}`).value,levies:document.getElementById(`fe_le_${i}`).value,feeding:document.getElementById(`fe_fd_${i}`).value,enrolment:document.getElementById(`fe_en_${i}`).value}); });
+  return a;
+}
+function addFeeRow(){ D.admissions.fees.push({level:'New Level',tuition:'GH₵ —',levies:'GH₵ —',feeding:'GH₵ —',enrolment:'GH₵ —'}); renderFees(); }
+function removeFee(i){ D.admissions.fees.splice(i,1); renderFees(); }
+function collectAdmissions(){ D.admissions.steps=collectSteps(); D.admissions.fees=collectFees(); D.admissions.feesNote=v('admNote'); }
+
+/* ── CONTACT ── */
+function loadContact(){
+  document.getElementById('cAddr').value = D.contactAddress;
+  document.getElementById('cPh1').value  = D.contactPhone1;
+  document.getElementById('cPh2').value  = D.contactPhone2;
+  document.getElementById('cEm1').value  = D.contactEmail1;
+  document.getElementById('cEm2').value  = D.contactEmail2;
+  document.getElementById('cMap').value  = D.googleMapEmbed;
+  document.getElementById('mapPrev').src = D.googleMapEmbed;
+  renderHours();
+}
+function collectContact(){
+  D.contactAddress  = v('cAddr'); D.contactPhone1 = v('cPh1');
+  D.contactPhone2   = v('cPh2'); D.contactEmail1 = v('cEm1');
+  D.contactEmail2   = v('cEm2'); D.googleMapEmbed= v('cMap');
+  D.officeHours     = collectHours();
+}
+function renderHours(){
+  document.getElementById('hoursEditor').innerHTML=(D.officeHours||[]).map((h,i)=>`
+    <div class="item-row">
+      <div class="item-fields"><div class="af-row">
+        <div class="af"><label>Day(s)</label><input type="text" value="${h.day}" id="oh_d_${i}"/></div>
+        <div class="af"><label>Hours</label><input type="text" value="${h.hours}" id="oh_h_${i}"/></div>
+      </div></div>
+      <button class="del-btn" onclick="removeHour(${i})">🗑</button>
+    </div>`).join('');
+}
+function collectHours(){
+  const a=[];
+  document.querySelectorAll('[id^="oh_d_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({day:el.value,hours:document.getElementById(`oh_h_${i}`).value}); });
+  return a;
+}
+function addHour(){ D.officeHours.push({day:'Monday',hours:'8:00 AM – 5:00 PM'}); renderHours(); }
+function removeHour(i){ D.officeHours.splice(i,1); renderHours(); }
+function previewMap(){ document.getElementById('mapPrev').src=document.getElementById('cMap').value; }
+
+/* ── APPLICATIONS ── */
+function loadApplications(){
+  const apps=D.applications||[];
+  const body=document.getElementById('appsBody');
+  const empty=document.getElementById('appsEmpty');
+  if(!apps.length){ body.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  body.innerHTML=apps.map((a,i)=>`
+    <tr>
+      <td>
+        <strong>${a.studentName}</strong>${!a.seen?'<span class="unseen-dot"></span>':''}
+        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender||''} · ${a.dob||''}</span>
+        <br/><button class="expand-btn" onclick="toggleDetail(${i})">View Details ▾</button>
+        <div class="app-detail" id="ad_${i}">
+          <strong>Class:</strong> ${a.applyClass} (${a.academicYear||''})<br/>
+          <strong>Address:</strong> ${a.address||'—'}<br/>
+          <strong>Prev School:</strong> ${a.prevSchool||'—'}<br/>
+          <strong>Parent:</strong> ${a.parentName} (${a.relation||''})<br/>
+          <strong>Phone 2:</strong> ${a.phone2||'—'}<br/>
+          <strong>Email:</strong> ${a.email||'—'}<br/>
+          <strong>WhatsApp:</strong> ${a.whatsapp||'—'}<br/>
+          <strong>Occupation:</strong> ${a.occupation||'—'}<br/>
+          <strong>Emergency:</strong> ${a.emgName||'—'} — ${a.emgPhone||'—'}<br/>
+          <strong>Blood Group:</strong> ${a.bloodGroup||'—'}<br/>
+          <strong>Allergies:</strong> ${a.allergies||'—'}<br/>
+          <strong>Medical:</strong> ${a.medical||'—'}<br/>
+          <strong>Heard From:</strong> ${a.heardFrom||'—'}<br/>
+          ${a.comments?`<strong>Comments:</strong> ${a.comments}`:''}
+        </div>
+      </td>
+      <td>${a.applyClass}</td>
+      <td>${a.parentName}<br/><span style="font-size:.74rem;color:var(--dim);">${a.relation||''}</span></td>
+      <td><a href="tel:${a.phone}" style="color:var(--lime);">${a.phone}</a></td>
+      <td style="font-size:.76rem;color:var(--dim);">${a.date}</td>
+      <td><span class="status s-${a.status}">${a.status}</span></td>
+      <td>
+        <select class="action-sel" onchange="updateStatus(${i},this.value)">
+          <option value="pending" ${a.status==='pending'?'selected':''}>Pending</option>
+          <option value="accepted" ${a.status==='accepted'?'selected':''}>Accept ✓</option>
+          <option value="denied" ${a.status==='denied'?'selected':''}>Deny ✗</option>
+        </select>
+        <br/>
+        <button class="del-btn" style="margin-top:4px;" onclick="deleteApp(${i})">🗑 Del</button>
+      </td>
+    </tr>`).join('');
+}
+
+function toggleDetail(i){
+  const el=document.getElementById(`ad_${i}`);
+  el.style.display=el.style.display==='block'?'none':'block';
+}
+
+function updateStatus(i, status){
+  D.applications[i].status=status;
+  NHS.save(D);
+  if(status==='accepted') sendAcceptanceEmail(D.applications[i]);
+  loadApplications();
+}
+
+function sendAcceptanceEmail(app){
+  const d=NHS.get();
+  if(!d.emailjsPublicKey||!d.emailjsServiceId||!d.emailjsTemplateId){ return; }
+  // EmailJS integration
+  if(typeof emailjs !== 'undefined'){
+    emailjs.init(d.emailjsPublicKey);
+    emailjs.send(d.emailjsServiceId, d.emailjsTemplateId, {
+      student_name: app.studentName,
+      parent_name:  app.parentName,
+      apply_class:  app.applyClass,
+      status:       'ACCEPTED',
+      school_name:  'New Heights School',
+      school_phone: d.contactPhone1,
+      school_email: d.contactEmail1,
+      to_email:     app.email,
+      to_name:      app.parentName
+    }).then(()=>alert('✅ Acceptance email sent to '+app.email))
+      .catch(e=>alert('Email error: '+e.text));
+  }
+}
+
+function deleteApp(i){ if(!confirm('Delete this application permanently?')) return; D.applications.splice(i,1); NHS.save(D); loadApplications(); updateBadges(); }
+function markAppsSeen(){ (D.applications||[]).forEach(a=>a.seen=true); NHS.save(D); loadApplications(); updateBadges(); }
+
+/* ── MESSAGES ── */
+function loadMessages(){
+  const msgs=D.contactMessages||[];
+  const list=document.getElementById('msgsList');
+  const empty=document.getElementById('msgsEmpty');
+  if(!msgs.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.innerHTML=msgs.map((m,i)=>`
+    <div class="msg-card ${m.seen?'':'unread'}">
+      <div class="msg-meta">
+        <div class="msg-name">${m.name}${!m.seen?'<span class="unseen-dot"></span>':''} <span style="font-weight:400;font-size:.8rem;color:var(--dim);">${m.phone||''}</span></div>
+        <div class="msg-date">${m.date}</div>
+      </div>
+      <div class="msg-subj">${m.subject||'General Enquiry'}</div>
+      <div class="msg-body">${m.message}</div>
+      <div class="msg-acts">
+        ${m.email?`<a href="mailto:${m.email}?subject=Re: ${m.subject||'Your Enquiry'}&body=Dear ${m.name}," class="reply-link">✉️ Reply by Email</a>`:''}
+        ${m.phone?`<a href="tel:${m.phone}" class="reply-link">📞 Call</a>`:''}
+        ${m.phone?`<a href="https://wa.me/${m.phone.replace(/[^0-9]/g,'')}" target="_blank" class="reply-link">WhatsApp</a>`:''}
+        <button class="del-msg" onclick="deleteMsg(${i})">🗑 Delete</button>
+      </div>
+    </div>`).join('');
+}
+function deleteMsg(i){ if(!confirm('Delete this message?')) return; D.contactMessages.splice(i,1); NHS.save(D); loadMessages(); updateBadges(); }
+function markMsgsSeen(){ (D.contactMessages||[]).forEach(m=>m.seen=true); NHS.save(D); loadMessages(); updateBadges(); }
+
+/* ── DASHBOARD ── */
+function loadDashboard(){
+  const apps=D.applications||[], msgs=D.contactMessages||[];
+  document.getElementById('dashStats').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${apps.length}</div><div class="stat-lbl">Total Applications</div></div>
+    <div class="stat-card"><div class="stat-num">${apps.filter(a=>a.status==='pending').length}</div><div class="stat-lbl">Pending Review</div></div>
+    <div class="stat-card"><div class="stat-num">${apps.filter(a=>a.status==='accepted').length}</div><div class="stat-lbl">Accepted</div></div>
+    <div class="stat-card"><div class="stat-num">${msgs.length}</div><div class="stat-lbl">Messages</div></div>`;
+  document.getElementById('dashApps').innerHTML=apps.slice(0,6).map(a=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);gap:8px;">
+      <div><strong style="font-size:.86rem;">${a.studentName}</strong><br/><span style="font-size:.74rem;color:var(--dim);">${a.applyClass} · ${a.date}</span></div>
+      <span class="status s-${a.status}">${a.status}</span>
+    </div>`).join('')||'<p style="color:var(--dim);font-size:.84rem;padding:16px 0;">No applications yet.</p>';
+  document.getElementById('dashMsgs').innerHTML=msgs.slice(0,5).map(m=>`
+    <div style="padding:9px 0;border-bottom:1px solid var(--border);">
+      <strong style="font-size:.86rem;">${m.name}</strong> <span style="font-size:.74rem;color:var(--dim);">${m.subject||'Enquiry'}</span>
+      <br/><span style="font-size:.8rem;color:var(--dim);">${m.message.substring(0,70)}…</span>
+    </div>`).join('')||'<p style="color:var(--dim);font-size:.84rem;padding:16px 0;">No messages yet.</p>';
+}
+
+/* ── BADGES ── */
+function updateBadges(){
+  const apps=(D.applications||[]).filter(a=>!a.seen).length;
+  const msgs=(D.contactMessages||[]).filter(m=>!m.seen).length;
+  const ab=document.getElementById('appBadge');
+  const mb=document.getElementById('msgBadge');
+  ab.textContent=apps; ab.classList.toggle('show',apps>0);
+  mb.textContent=msgs; mb.classList.toggle('show',msgs>0);
+}
+
+/* ── NOTIFICATIONS PAGE ── */
+function loadNotifications(){
+  document.getElementById('nAdminEmail').value = D.adminEmail||'';
+  document.getElementById('nSvcId').value  = D.emailjsServiceId||'';
+  document.getElementById('nTplId').value  = D.emailjsTemplateId||'';
+  document.getElementById('nPubKey').value = D.emailjsPublicKey||'';
+}
+function collectNotifications(){
+  D.adminEmail         = v('nAdminEmail');
+  D.emailjsServiceId   = v('nSvcId');
+  D.emailjsTemplateId  = v('nTplId');
+  D.emailjsPublicKey   = v('nPubKey');
+}
+
+/* ── PASSWORD ── */
+function changePw(){
+  const cur=document.getElementById('pwCur').value;
+  const nw=document.getElementById('pwNew').value;
+  const cf=document.getElementById('pwConf').value;
+  const msg=document.getElementById('pwMsg');
+  if(cur!==D.adminPassword){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='❌ Current password is incorrect.';return; }
+  if(nw.length<6){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='❌ New password must be at least 6 characters.';return; }
+  if(nw!==cf){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='❌ Passwords do not match.';return; }
+  D.adminPassword=nw; NHS.save(D);
+  msg.style.display='block';msg.style.color='var(--ok)';msg.textContent='✅ Password updated successfully.';
+  document.getElementById('pwCur').value='';document.getElementById('pwNew').value='';document.getElementById('pwConf').value='';
+}
+
+/* ── SAVE ALL ── */
+async function saveAll(){
+  try{
+    collectGeneral(); collectHomepage(); collectAbout();
+    D.programs = collectProgs();
+    collectAdmissions(); collectContact(); collectNotifications();
+    const ok = await NHS.save(D);
+    if(ok){
+      const sm=document.getElementById('savedMsg');
+      sm.classList.add('show'); setTimeout(()=>sm.classList.remove('show'),2800);
+      loadDashboard(); updateBadges();
+    }
+  }catch(e){ alert('Save error: '+e.message); console.error(e); }
+}
+
+/* ── UTILITY ── */
+function v(id){ const el=document.getElementById(id); return el?el.value:''; }
+
+/* ── CTRL+SHIFT+A ── */
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('adminApp').classList.remove('show');
+  }
+});
+
+(async function(){
+  await NHS.init();
+  D = NHS.get();
+})();
+</script>
+</body>
+</html>

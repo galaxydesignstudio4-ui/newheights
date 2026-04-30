@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="New Heights School — Quality & Affordable Education in New Dawhenya, Ghana. Higher and Higher Still."/>
+<title>New Heights School — Higher and Higher Still</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+/* ── HERO ── */
+.hero{min-height:100svh;position:relative;display:flex;align-items:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(27,94,32,.95) 0%,rgba(46,125,50,.82) 60%,rgba(27,94,32,.9) 100%);}
+.hero-content{position:relative;z-index:2;padding:calc(var(--nav-h) + clamp(56px,10vw,80px)) 0 clamp(48px,8vw,72px);}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(220,231,117,.18);border:1px solid rgba(220,231,117,.35);color:var(--lime);padding:7px 16px;border-radius:var(--r100);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;backdrop-filter:blur(8px);}
+.hero h1{color:#fff;margin-bottom:18px;max-width:680px;}
+.hero h1 em{color:var(--lime);font-style:normal;}
+.hero-sub{font-size:clamp(.95rem,2.5vw,1.12rem);color:rgba(255,255,255,.82);margin-bottom:36px;max-width:580px;font-weight:300;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.45);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;animation:hb 2.2s infinite;}
+.hero-scroll::after{content:'';width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.45),transparent);}
+.hero-no-img{background:linear-gradient(135deg,var(--g-dark) 0%,#224c24 100%);}
+@keyframes hb{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* ── TRUST BAR ── */
+.trust-bar{background:var(--g-dark);padding:clamp(24px,4vw,36px) 0;}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;}
+.trust-item{padding:8px 16px;border-right:1px solid rgba(255,255,255,.12);}
+.trust-item:last-child{border-right:none;}
+.trust-num{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;color:var(--lime);line-height:1;}
+.trust-lbl{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:4px;letter-spacing:.04em;}
+@media(max-width:560px){.trust-grid{grid-template-columns:1fr 1fr;}.trust-item:nth-child(2){border-right:none;}.trust-item{border-bottom:1px solid rgba(255,255,255,.08);padding:14px 12px;}.trust-item:nth-child(3),.trust-item:last-child{border-bottom:none;}}
+
+/* ── WHY CARDS ── */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.5vw,24px);}
+.why-card{background:var(--white);border-radius:var(--r16);padding:clamp(24px,3vw,32px);box-shadow:var(--sh1);border:1px solid rgba(0,0,0,.04);transition:var(--ease);position:relative;overflow:hidden;}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g-primary),var(--g-sec));transform:scaleX(0);transform-origin:left;transition:var(--ease);}
+.why-card:hover{transform:translateY(-5px);box-shadow:var(--sh3);}
+.why-card:hover::before{transform:scaleX(1);}
+.why-icon{width:52px;height:52px;border-radius:var(--r12);background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;transition:var(--ease);}
+.why-card:hover .why-icon{background:var(--g-primary);}
+.why-card h3{margin-bottom:8px;font-size:1.05rem;}
+.why-card p{font-size:.88rem;line-height:1.65;}
+@media(max-width:860px){.why-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.why-grid{grid-template-columns:1fr;}}
+
+/* ── PROGRAMS ── */
+.prog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,22px);}
+.prog-card{border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh1);background:var(--white);transition:var(--ease);}
+.prog-card:hover{transform:translateY(-6px);box-shadow:var(--sh3);}
+.prog-img{height:170px;overflow:hidden;position:relative;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.prog-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;position:absolute;inset:0;}
+.prog-card:hover .prog-img img{transform:scale(1.06);}
+.prog-badge{position:absolute;top:12px;left:12px;background:var(--g-primary);color:#fff;padding:4px 11px;border-radius:var(--r100);font-size:.72rem;font-weight:700;}
+.prog-body{padding:clamp(16px,2vw,22px);}
+.prog-body h3{margin-bottom:7px;font-size:1rem;}
+.prog-body p{font-size:.84rem;line-height:1.6;margin-bottom:14px;}
+.prog-link{display:inline-flex;align-items:center;gap:5px;color:var(--g-primary);font-weight:600;font-size:.84rem;transition:var(--ease);}
+.prog-link:hover{gap:9px;}
+@media(max-width:900px){.prog-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.prog-grid{grid-template-columns:1fr;}}
+
+/* ── ABOUT PREVIEW ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,72px);align-items:center;}
+.about-img-wrap{position:relative;}
+.about-img-box{border-radius:var(--r24);overflow:hidden;box-shadow:var(--sh3);aspect-ratio:4/5;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:5rem;}
+.about-img-box img{width:100%;height:100%;object-fit:cover;}
+.about-float{position:absolute;bottom:-18px;right:-14px;background:var(--g-primary);color:#fff;border-radius:var(--r16);padding:18px 22px;box-shadow:var(--sh3);text-align:center;}
+.about-float .fn{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;line-height:1;color:var(--lime);}
+.about-float .fl{font-size:.72rem;color:rgba(255,255,255,.8);margin-top:3px;}
+.about-vals{display:flex;flex-direction:column;gap:10px;margin:24px 0 28px;}
+.about-val{display:flex;align-items:center;gap:12px;background:var(--g-light);border-radius:var(--r12);padding:12px 16px;}
+.about-val span{font-weight:600;font-size:.88rem;color:var(--g-dark);}
+@media(max-width:760px){.about-grid{grid-template-columns:1fr;}.about-float{right:0;bottom:-14px;}}
+
+/* ── VIDEO ── */
+.video-section{background:var(--g-dark);padding:clamp(56px,8vw,96px) 0;}
+.video-inner{text-align:center;}
+.video-inner h2,.video-inner .vlabel{color:#fff;}
+.video-sub{color:rgba(255,255,255,.7);max-width:520px;margin:12px auto 36px;font-size:.96rem;}
+.video-wrap{max-width:800px;margin:0 auto;border-radius:var(--r24);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.4);aspect-ratio:16/9;background:#000;position:relative;cursor:pointer;}
+.video-thumb{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.video-play-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;transition:var(--ease);border:none;}
+.video-play-btn:hover{transform:scale(1.1);background:#fff;}
+.video-play-btn svg{margin-left:4px;}
+.video-wrap iframe{width:100%;height:100%;border:none;}
+.no-video{padding:48px 20px;color:rgba(255,255,255,.4);font-size:.9rem;}
+</style>
+</head>
+<body>
+<div id="navPlaceholder"></div>
+
+<!-- HERO -->
+<section class="hero" id="heroSection">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge fade-up" id="heroBadge"></div>
+      <h1 class="reveal" id="heroHeading"></h1>
+      <p class="hero-sub reveal" id="heroSub"></p>
+      <div class="hero-actions reveal" id="heroActions"></div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="container"><div class="trust-grid" id="trustGrid"></div></div>
+</div>
+
+<!-- WHY CHOOSE US -->
+<section class="section section-white">
+  <div class="container">
+    <div class="section-head center text-center reveal">
+      <span class="label">Why New Heights</span>
+      <h2>A School That Truly Cares</h2>
+      <p>Six reasons why families in New Dawhenya and beyond choose New Heights School for their children.</p>
+    </div>
+    <div class="why-grid" id="whyGrid"></div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="label">Our Programs</span>
+      <h2>Education for Every Stage of Growth</h2>
+      <p>From Nursery to JHS — a complete academic journey in one school, under one caring roof.</p>
+    </div>
+    <div class="prog-grid" id="progGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT PREVIEW -->
+<section class="section section-white">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal-left">
+        <div class="about-img-box" id="aboutImgBox">🏫</div>
+        <div class="about-float">
+          <div class="fn" id="aboutBadge"></div>
+          <div class="fl" id="aboutBadgeLabel"></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <span class="label">Our Story</span>
+        <h2 id="aboutHead"></h2>
+        <p style="margin:14px 0 10px" id="aboutP1"></p>
+        <p id="aboutP2"></p>
+        <div class="about-vals" id="aboutVals"></div>
+        <a href="about.html" class="btn btn-outline">Discover Our Story →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section">
+  <div class="container">
+    <div class="video-inner reveal">
+      <span class="label label-light">School Tour</span>
+      <h2 id="vidHead"></h2>
+      <p class="video-sub" id="vidSub"></p>
+      <div class="video-wrap" id="videoWrap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="container reveal">
+    <span class="label label-light" style="background:rgba(255,255,255,.15);color:#fff;" id="ctaLabel"></span>
+    <h2 id="ctaHead"></h2>
+    <p id="ctaText"></p>
+    <a id="ctaBtn" href="#" class="btn btn-lime"></a>
+  </div>
+</section>
+
+<div id="footerPlaceholder"></div>
+<script src="shared.js"></script>
+<script>
+(async function () {
+await NHS.init();
+renderNav('index.html');
+renderFooter();
+const D = NHS.get();
+
+// HERO
+const hbg = document.getElementById('heroBg');
+if (D.hero.bgImage) { hbg.style.backgroundImage=`url('${D.hero.bgImage}')`; }
+else { document.getElementById('heroSection').classList.add('hero-no-img'); hbg.style.display='none'; }
+
+document.getElementById('heroBadge').textContent = D.hero.badge;
+const hw = D.hero.heading.split(' ');
+const acc = D.hero.headingAccent;
+document.getElementById('heroHeading').innerHTML = hw.map(w => w===acc ? `<em>${w}</em>` : w).join(' ');
+document.getElementById('heroSub').textContent = D.hero.subtext;
+document.getElementById('heroActions').innerHTML = `
+  <a href="${D.hero.btn1Link}" class="btn btn-primary">${D.hero.btn1Text} →</a>
+  <a href="${D.hero.btn2Link}" class="btn btn-secondary">${D.hero.btn2Text}</a>`;
+
+// TRUST
+document.getElementById('trustGrid').innerHTML = D.trustStats.map(s=>`
+  <div class="trust-item">
+    <div class="trust-num">${s.num}</div>
+    <div class="trust-lbl">${s.label}</div>
+  </div>`).join('');
+
+// WHY
+document.getElementById('whyGrid').innerHTML = D.whyCards.map((c,i)=>`
+  <div class="why-card reveal" style="transition-delay:${i*0.07}s">
+    <div class="why-icon">${c.icon}</div>
+    <h3>${c.title}</h3>
+    <p>${c.text}</p>
+  </div>`).join('');
+
+// PROGRAMS
+document.getElementById('progGrid').innerHTML = D.programs.map((p,i)=>`
+  <div class="prog-card reveal" style="transition-delay:${i*0.08}s">
+    <div class="prog-img">
+      ${p.image ? `<img src="${p.image}" alt="${p.title}" loading="lazy"/>` : ['🌱','📖','🔬','🏫'][i]}
+      <span class="prog-badge">${p.badge}</span>
+    </div>
+    <div class="prog-body">
+      <h3>${p.title}</h3>
+      <p>${p.text}</p>
+      <a href="programs.html" class="prog-link">Learn More →</a>
+    </div>
+  </div>`).join('');
+
+// ABOUT PREVIEW
+const ab = D.aboutPreview;
+const abBox = document.getElementById('aboutImgBox');
+if (ab.image) { abBox.innerHTML=`<img src="${ab.image}" alt="School"/>`; abBox.style.fontSize=''; }
+document.getElementById('aboutBadge').textContent = ab.badge;
+document.getElementById('aboutBadgeLabel').textContent = ab.badgeLabel;
+document.getElementById('aboutHead').textContent = ab.heading;
+document.getElementById('aboutP1').textContent = ab.para1;
+document.getElementById('aboutP2').textContent = ab.para2;
+document.getElementById('aboutVals').innerHTML = ab.values.map((v,i)=>`
+  <div class="about-val"><span>${['🌱','📐','❤️'][i]||'✅'}</span><span>${v}</span></div>`).join('');
+
+// VIDEO
+document.getElementById('vidHead').textContent = D.videoHeading;
+document.getElementById('vidSub').textContent = D.videoSubtext;
+const vw = document.getElementById('videoWrap');
+if (D.videoYoutubeId) {
+  const thumb = NHS.youtubeThumb(D.videoYoutubeId);
+  const embed  = NHS.youtubeEmbed(D.videoYoutubeId);
+  vw.innerHTML = `
+    <img class="video-thumb" src="${thumb}" alt="Video thumbnail" onerror="this.style.display='none'"/>
+    <div class="video-play">
+      <button class="video-play-btn" onclick="playVideo('${embed}')">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--g-primary)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>`;
+} else {
+  vw.innerHTML = `<div class="no-video">No video uploaded yet. Admin can add a YouTube link.</div>`;
+}
+function playVideo(src) {
+  document.getElementById('videoWrap').innerHTML = `<iframe src="${src}&autoplay=1" title="School Video" allowfullscreen></iframe>`;
+}
+
+// CTA
+const cta = D.ctaBanner;
+document.getElementById('ctaLabel').textContent = cta.label;
+document.getElementById('ctaHead').textContent  = cta.heading;
+document.getElementById('ctaText').textContent  = cta.text;
+document.getElementById('ctaBtn').textContent   = cta.btnText + ' →';
+document.getElementById('ctaBtn').href          = cta.btnLink;
+
+// Reveal init
+document.addEventListener('DOMContentLoaded', initReveal);
+initReveal();
+})();
+</script>
+</body>
+</html>

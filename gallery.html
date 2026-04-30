@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gallery - New Heights School</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.masonry{columns:4 220px;gap:14px;}
+.m-item{break-inside:avoid;margin-bottom:14px;border-radius:var(--r12);overflow:hidden;position:relative;cursor:pointer;background:var(--g-light);}
+.m-item img{width:100%;display:block;transition:transform .4s ease;}
+.m-item:hover img{transform:scale(1.05);}
+.m-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(27,94,32,.75) 0%,transparent 55%);opacity:0;transition:var(--ease);display:flex;align-items:flex-end;padding:14px;}
+.m-item:hover .m-overlay{opacity:1;}
+.m-overlay span{color:#fff;font-weight:600;font-size:.85rem;}
+.empty-gallery{text-align:center;padding:80px 20px;color:var(--gray);}
+.empty-gallery .eg-icon{font-size:4rem;margin-bottom:16px;opacity:.4;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9000;align-items:center;justify-content:center;padding:20px;}
+.lightbox.open{display:flex;}
+.lb-img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:var(--r12);box-shadow:var(--sh3);}
+.lb-close{position:absolute;top:18px;right:22px;color:#fff;font-size:2rem;background:none;border:none;line-height:1;padding:4px;cursor:pointer;opacity:.7;transition:var(--ease);}
+.lb-close:hover{opacity:1;}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:50px;height:50px;border-radius:50%;font-size:1.4rem;cursor:pointer;transition:var(--ease);display:flex;align-items:center;justify-content:center;}
+.lb-nav:hover{background:rgba(255,255,255,.25);}
+.lb-prev{left:16px;}.lb-next{right:16px;}
+.lb-cap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-weight:600;font-size:.88rem;background:rgba(0,0,0,.5);padding:7px 16px;border-radius:var(--r100);white-space:nowrap;}
+@media(max-width:600px){.masonry{columns:2 140px;}.lb-nav{width:38px;height:38px;font-size:1rem;}}
+</style>
+</head>
+<body>
+<div id="navPlaceholder"></div>
+<div class="page-hero">
+  <div class="container">
+    <span class="label label-light">Campus Life</span>
+    <h1>School Gallery</h1>
+    <p>Snapshots of learning, laughter, and growth at New Heights School.</p>
+  </div>
+</div>
+<section class="section section-white">
+  <div class="container" id="galContainer"></div>
+</section>
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLB()">×</button>
+  <button class="lb-nav lb-prev" onclick="navLB(-1)">‹</button>
+  <img class="lb-img" id="lbImg" src="" alt=""/>
+  <button class="lb-nav lb-next" onclick="navLB(1)">›</button>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+<div id="footerPlaceholder"></div>
+<script src="shared.js"></script>
+<script>
+let lbIdx = 0;
+let imgs = [];
+
+function openLB(i) {
+  lbIdx = i;
+  document.getElementById('lbImg').src = imgs[i].url;
+  document.getElementById('lbCap').textContent = imgs[i].caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLB() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function navLB(direction) {
+  lbIdx = (lbIdx + direction + imgs.length) % imgs.length;
+  openLB(lbIdx);
+}
+
+document.getElementById('lightbox').addEventListener('click', (event) => {
+  if (event.target === event.currentTarget) closeLB();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeLB();
+  if (event.key === 'ArrowRight' && imgs.length) navLB(1);
+  if (event.key === 'ArrowLeft' && imgs.length) navLB(-1);
+});
+
+(async function () {
+  await NHS.init();
+  renderNav('gallery.html');
+  renderFooter();
+  imgs = NHS.get().galleryImages || [];
+  const gc = document.getElementById('galContainer');
+  if (!imgs.length) {
+    gc.innerHTML = `<div class="empty-gallery"><div class="eg-icon">🖼️</div><p>No photos yet. The admin can upload school images from the admin panel.</p></div>`;
+    return;
+  }
+
+  gc.innerHTML = `<div class="masonry">${imgs.map((g, i) => `
+    <div class="m-item" onclick="openLB(${i})">
+      <img src="${g.url}" alt="${g.caption}" loading="lazy"/>
+      <div class="m-overlay"><span>${g.caption}</span></div>
+    </div>`).join('')}</div>`;
+})();
+</script>
+</body>
+</html>

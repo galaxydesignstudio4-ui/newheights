@@ -1,0 +1,24 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  color: #2E7D32;
+}
+ul {
+  margin-top: 24px;
+  padding-left: 0;
+}
+li {
+  margin-bottom: 12px;
+  list-style: none;
+}
+a {
+  color: #388e3c;
+  text-decoration: underline;
+}
+a:hover {
+  color: #1B5E20;
+}
