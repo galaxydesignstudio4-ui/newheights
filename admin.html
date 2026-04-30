@@ -677,6 +677,7 @@ let verifiedAdminEmail = '';
 let applicationFilter = 'all';
 const GALAXY_ADMIN_EMAIL = 'galaxydesignstudio4@gmail.com';
 const GALAXY_ADMIN_CODE = '055688';
+const GALAXY_ADMIN_PASSWORD = 'admin123';
 const LOCKED_ADMIN_EMAILS = ['newheights218@gmail.com', GALAXY_ADMIN_EMAIL];
 
 function isLockedAdminEmail(email){
@@ -793,7 +794,8 @@ doLogin = async function(){
   const d = NHS.get();
   const pass = document.getElementById('lPass2').value;
   if(!verifiedAdminEmail){ setLoginMessage('error', 'Verify an approved email before entering the dashboard password.'); return; }
-  if(pass !== d.adminPassword){ setLoginMessage('error', 'Incorrect dashboard password.'); return; }
+  const expectedPassword = verifiedAdminEmail === GALAXY_ADMIN_EMAIL ? GALAXY_ADMIN_PASSWORD : d.adminPassword;
+  if(pass !== expectedPassword){ setLoginMessage('error', 'Incorrect dashboard password.'); return; }
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('adminApp').classList.add('show');
   setLoginMessage();
