@@ -631,7 +631,7 @@ img{max-width:100%;display:block;}
       <div class="apage" id="page-notifications">
         <div class="acard">
           <h2>🔔 Email &amp; SMS Notifications</h2>
-          <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">When an application is <strong style="color:var(--ok);">accepted</strong>, an automatic email can be sent to the parent's email address, and an SMS to their phone number. Configure EmailJS below for email notifications.</p>
+          <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">Applications now support manual Gmail drafts directly from the Applications page. Use the settings below if you still want optional automatic EmailJS delivery, plus SMS to the parent's phone number.</p>
           <div class="af"><label>Admin Notification Email</label><input id="nAdminEmail" type="email"/></div>
           <div class="af"><label>Sender Name</label><input id="nSenderName" type="text" placeholder="New Heights School"/></div>
           <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
@@ -1546,6 +1546,148 @@ async function sendExamNotice(appId){
   }
 }
 
+function getApplicationById(appId){
+  return (D.applications || []).find((entry) => entry.id === appId) || null;
+}
+
+function getEmailDraftFields(appId){
+  return {
+    subject: document.getElementById(`mailSubject_${appId}`),
+    body: document.getElementById(`mailBody_${appId}`)
+  };
+}
+
+function fillEmailDraft(appId, mode){
+  const app = getApplicationById(appId);
+  if(!app) return;
+  const fields = getEmailDraftFields(appId);
+  if(!fields.subject || !fields.body) return;
+  const draft = NHS.buildStatusEmailDraft(app, app.status || 'pending', {
+    mode: mode === 'exam' ? 'exam' : 'status',
+    message: mode === 'exam' ? (D.examEmailMessage || NHS.get().examEmailMessage) : ''
+  });
+  fields.subject.value = draft.subject;
+  fields.body.value = draft.body;
+}
+
+function openDraftInGmail(appId){
+  const app = getApplicationById(appId);
+  if(!app) return;
+  if(!app.email){
+    alert('This application does not have a parent email address yet.');
+    return;
+  }
+  const fields = getEmailDraftFields(appId);
+  if(!fields.subject || !fields.body){
+    alert('Open the application details first so you can review the draft before Gmail opens.');
+    return;
+  }
+  if(!fields.subject.value.trim() && !fields.body.value.trim()){
+    fillEmailDraft(appId, 'status');
+  }
+  NHS.openGmailDraft(app, app.status || 'pending', {
+    subject: fields.subject.value.trim(),
+    body: fields.body.value
+  });
+}
+
+loadApplications = function(){
+  const apps = getFilteredApplications();
+  const body = document.getElementById('appsBody');
+  const empty = document.getElementById('appsEmpty');
+  if(!apps.length){ body.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  body.innerHTML = apps.map((a) => {
+    const draft = NHS.buildStatusEmailDraft(a, a.status || 'pending');
+    return `
+    <tr>
+      <td>
+        <strong>${a.studentName}</strong>${!a.seen?'<span class="unseen-dot"></span>':''}
+        ${a.applicationCode ? `<br/><span style="font-size:.72rem;color:var(--lime);">Code: ${a.applicationCode}</span>` : ''}
+        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender || ''} Â· ${a.dob || ''}</span>
+        <br/><button class="expand-btn" onclick="toggleDetail('${a.id}')">View Details</button>
+        <div class="app-detail" id="ad_${a.id}">
+          <strong>Class:</strong> ${a.applyClass || 'â€”'} (${a.academicYear || ''})<br/>
+          <strong>Address:</strong> ${a.address || 'â€”'}<br/>
+          <strong>Previous School:</strong> ${a.prevSchool || 'â€”'}<br/>
+          <strong>Parent:</strong> ${a.parentName || 'â€”'} (${a.relation || ''})<br/>
+          <strong>Email:</strong> ${a.email || 'â€”'}<br/>
+          <strong>Phone 2:</strong> ${a.phone2 || 'â€”'}<br/>
+          <strong>WhatsApp:</strong> ${a.whatsapp || 'â€”'}<br/>
+          <strong>Occupation:</strong> ${a.occupation || 'â€”'}<br/>
+          <strong>Emergency:</strong> ${a.emgName || 'â€”'} â€” ${a.emgPhone || 'â€”'}<br/>
+          <strong>Blood Group:</strong> ${a.bloodGroup || 'â€”'}<br/>
+          <strong>Allergies:</strong> ${a.allergies || 'â€”'}<br/>
+          <strong>Medical:</strong> ${a.medical || 'â€”'}<br/>
+          <strong>Comments:</strong> ${a.comments || 'â€”'}<br/>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);">
+            <strong style="display:block;margin-bottom:8px;">Email Draft</strong>
+            <input id="mailSubject_${a.id}" type="text" value="${escapeAdminDraftValue(draft.subject)}" placeholder="Email subject" style="width:100%;margin-bottom:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);"/>
+            <textarea id="mailBody_${a.id}" rows="8" placeholder="Write your message to the parent here..." style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text);resize:vertical;">${escapeAdminDraftValue(draft.body)}</textarea>
+            <div class="quick-actions" style="margin-top:10px;">
+              <button class="tiny-btn" onclick="fillEmailDraft('${a.id}', 'status')">Load Status Draft</button>
+              <button class="tiny-btn" onclick="fillEmailDraft('${a.id}', 'exam')">Load Exam Draft</button>
+              <button class="tiny-btn" onclick="openDraftInGmail('${a.id}')">Open in Gmail</button>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>${a.applyClass || '-'}</td>
+      <td>${a.parentName || '-'}<br/><span style="font-size:.74rem;color:var(--dim);">${a.relation || ''}</span></td>
+      <td><a href="tel:${a.phone || ''}" style="color:var(--lime);">${a.phone || '-'}</a></td>
+      <td style="font-size:.76rem;color:var(--dim);">${a.date || '-'}</td>
+      <td><span class="status ${statusClass(a.status)}">${NHS.getStatusLabel(a.status)}</span></td>
+      <td>
+        <select class="action-sel" onchange="updateStatus('${a.id}', this.value)">
+          <option value="pending" ${a.status==='pending'?'selected':''}>Pending</option>
+          <option value="accepted" ${a.status==='accepted'?'selected':''}>Approve</option>
+          <option value="denied" ${a.status==='denied'?'selected':''}>Decline</option>
+        </select>
+        <div class="quick-actions">
+          <button class="tiny-btn" onclick="downloadApplicationPdf('${a.id}')">PDF</button>
+          <button class="tiny-btn" onclick="sendStatusUpdate('${a.id}')">Gmail Status</button>
+          <button class="tiny-btn" onclick="sendExamNotice('${a.id}')">Gmail Exam</button>
+          <button class="tiny-btn danger" onclick="deleteApp('${a.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+};
+
+updateStatus = async function(appId, status){
+  const app = getApplicationById(appId);
+  if(!app) return;
+  app.status = status;
+  app.seen = true;
+  try{
+    await NHS.saveApplication(app);
+    D = NHS.get();
+    loadApplications();
+    loadDashboard();
+    updateBadges();
+  }catch(err){
+    alert('Status update failed: ' + (err.message || err));
+  }
+};
+
+sendStatusUpdate = async function(appId){
+  try{
+    fillEmailDraft(appId, 'status');
+    openDraftInGmail(appId);
+  }catch(err){
+    alert('Could not open Gmail draft: ' + (err.message || err));
+  }
+};
+
+sendExamNotice = async function(appId){
+  try{
+    fillEmailDraft(appId, 'exam');
+    openDraftInGmail(appId);
+  }catch(err){
+    alert('Could not open Gmail exam draft: ' + (err.message || err));
+  }
+};
+
 async function deleteApp(appId){
   const app = (D.applications || []).find((entry) => entry.id === appId);
   if(!app || !confirm('Delete this application permanently?')) return;
@@ -1800,8 +1942,8 @@ function renderEmailConfigStatus(){
   if(!status) return;
   const issues = NHS.getEmailSettingsIssues ? NHS.getEmailSettingsIssues() : [];
   status.innerHTML = issues.length
-    ? `<strong style="color:#facc15;">Setup needed:</strong> add ${issues.join(', ')}.<br/>Template variables to include: <code>{{student_name}}</code>, <code>{{parent_name}}</code>, <code>{{apply_class}}</code>, <code>{{status}}</code>, <code>{{school_name}}</code>, <code>{{tracking_code}}</code>, <code>{{email_message}}</code>.`
-    : `<strong style="color:#86efac;">EmailJS looks ready.</strong> Save changes, then use the Email or Exam Email buttons in Applications.`;
+    ? `<strong style="color:#facc15;">EmailJS optional setup:</strong> add ${issues.join(', ')} if you want automatic sending.<br/>Manual Gmail drafting already works from Applications. Template variables to include: <code>{{student_name}}</code>, <code>{{parent_name}}</code>, <code>{{apply_class}}</code>, <code>{{status}}</code>, <code>{{school_name}}</code>, <code>{{tracking_code}}</code>, <code>{{email_message}}</code>.`
+    : `<strong style="color:#86efac;">EmailJS looks ready.</strong> Manual Gmail drafts are available in Applications, and automatic sending can still use this setup.`;
 }
 
 function loadNotifications(){
@@ -1905,6 +2047,14 @@ async function saveAll(){
 
 /* ── UTILITY ── */
 function v(id){ const el=document.getElementById(id); return el?el.value:''; }
+
+function escapeAdminDraftValue(value){
+  return String(value || '')
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
 
 /* ── CTRL+SHIFT+A ── */
 document.addEventListener('keydown',e=>{
