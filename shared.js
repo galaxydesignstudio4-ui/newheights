@@ -270,7 +270,7 @@ const NHS = (function () {
       return true;
     } catch (err) {
       if (err?.name === 'QuotaExceededError') {
-        alert('Browser storage is full. Remote save is still available, but some local caching may fail.');
+        console.warn('Browser storage is full. Remote save is still available, but some local caching may fail.');
       }
       return false;
     }
