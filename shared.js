@@ -806,41 +806,6 @@ function renderWebsiteNotice() {
     placeholder.id = 'siteNoticePlaceholder';
     document.body.appendChild(placeholder);
   }
-  if (!placeholder) return;
-  const notice = NHS.get().websiteNotice || {};
-  if (!isNoticeVisible(notice)) {
-    placeholder.innerHTML = '';
-    return;
-  }
-  const badge = String(notice.badge || 'Important Notice').trim();
-  const title = String(notice.title || 'Information from New Heights School').trim();
-  const message = String(notice.message || '').trim();
-  const linkText = String(notice.linkText || '').trim();
-  const linkUrl = String(notice.linkUrl || '').trim();
-  placeholder.innerHTML = `
-    <div class="site-notice-wrap" role="status" aria-live="polite">
-      <div class="site-notice-banner">
-          <div class="site-notice-icon" aria-hidden="true">🎒</div>
-          <div class="site-notice-copy">
-            <span class="site-notice-badge">${badge}</span>
-            <h2>${title}</h2>
-            <p>${message}</p>
-            ${linkText && linkUrl ? `<a href="${linkUrl}" class="site-notice-link">${linkText}</a>` : ''}
-          </div>
-          <button class="site-notice-close" type="button" aria-label="Close notice" onclick="closeWebsiteNotice()">×</button>
-        </div>
-      </div>
-    </section>`;
-}
-
-function renderWebsiteNotice() {
-  let placeholder = document.getElementById('siteNoticePlaceholder');
-  if (!placeholder) {
-    if (!document.body) return;
-    placeholder = document.createElement('div');
-    placeholder.id = 'siteNoticePlaceholder';
-    document.body.appendChild(placeholder);
-  }
   const notice = NHS.get().websiteNotice || {};
   if (!isNoticeVisible(notice)) {
     placeholder.innerHTML = '';

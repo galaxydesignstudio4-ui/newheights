@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Admin Panel — New Heights School</title>
+<title>Admin Panel â€” New Heights School</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
 <style>
@@ -21,7 +21,7 @@ input,select,textarea{font-family:'DM Sans',sans-serif;}
 a{color:inherit;text-decoration:none;}
 img{max-width:100%;display:block;}
 
-/* ── LOGIN ── */
+/* â”€â”€ LOGIN â”€â”€ */
 #loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,var(--gdark),#071008);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
 .lcard{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:clamp(32px,6vw,52px) clamp(24px,5vw,48px);width:100%;max-width:420px;text-align:center;}
 .llogo{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:4px;}
@@ -45,11 +45,11 @@ img{max-width:100%;display:block;}
 .login-back{background:none;border:none;color:var(--lime);font-size:.82rem;margin-top:12px;}
 .login-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(220,231,117,.12);color:var(--lime);font-size:.76rem;font-weight:700;margin-bottom:14px;}
 
-/* ── LAYOUT ── */
+/* â”€â”€ LAYOUT â”€â”€ */
 #adminApp{display:none;min-height:100vh;}
 #adminApp.show{display:flex;}
 
-/* ── SIDEBAR ── */
+/* â”€â”€ SIDEBAR â”€â”€ */
 .sidebar{width:var(--sb-w);min-width:var(--sb-w);background:var(--sb);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;overflow-y:auto;transition:transform var(--ease);}
 .sb-logo{padding:22px 18px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .sb-logo .sn{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:#fff;}
@@ -66,11 +66,11 @@ img{max-width:100%;display:block;}
 .sb-foot a{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--dim);padding:9px 8px;border-radius:8px;transition:var(--ease);}
 .sb-foot a:hover{color:var(--text);background:rgba(255,255,255,.05);}
 
-/* ── MOBILE OVERLAY ── */
+/* â”€â”€ MOBILE OVERLAY â”€â”€ */
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199;}
 .sb-overlay.show{display:block;}
 
-/* ── TOPBAR ── */
+/* â”€â”€ TOPBAR â”€â”€ */
 .topbar{background:var(--sb);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100;}
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .menu-btn{background:none;border:none;color:var(--dim);font-size:1.3rem;padding:4px;border-radius:6px;display:none;transition:var(--ease);}
@@ -82,34 +82,34 @@ img{max-width:100%;display:block;}
 .saved-msg{font-size:.78rem;color:var(--ok);display:none;align-items:center;gap:5px;white-space:nowrap;}
 .saved-msg.show{display:flex;}
 
-/* ── MAIN ── */
+/* â”€â”€ MAIN â”€â”€ */
 .main{margin-left:var(--sb-w);flex:1;display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;}
 .content{padding:clamp(16px,3vw,28px);flex:1;}
 
-/* ── ADMIN PAGES ── */
+/* â”€â”€ ADMIN PAGES â”€â”€ */
 .apage{display:none;}
 .apage.active{display:block;}
 
-/* ── STAT CARDS ── */
+/* â”€â”€ STAT CARDS â”€â”€ */
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;text-align:center;}
 .stat-num{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:800;color:var(--lime);line-height:1;}
 .stat-lbl{font-size:.75rem;color:var(--dim);margin-top:4px;}
 
-/* ── CARDS ── */
+/* â”€â”€ CARDS â”€â”€ */
 .acard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:clamp(16px,3vw,26px);margin-bottom:18px;}
 .acard h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 
-/* ── TABS ── */
+/* â”€â”€ TABS â”€â”€ */
 .tabs{display:flex;gap:3px;background:var(--card2);border-radius:var(--r);padding:5px;margin-bottom:20px;flex-wrap:wrap;}
 .tab{flex:1;min-width:80px;padding:9px 6px;background:none;border:none;color:var(--dim);font-size:.8rem;font-weight:600;border-radius:7px;cursor:pointer;transition:var(--ease);text-align:center;}
 .tab.active{background:var(--green);color:#fff;}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
 
-/* ── FORM ELEMENTS ── */
+/* â”€â”€ FORM ELEMENTS â”€â”€ */
 .af{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
 .af label{font-size:.73rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;}
 .af input,.af textarea,.af select{padding:10px 13px;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:.88rem;outline:none;transition:var(--ease);width:100%;}
@@ -119,7 +119,7 @@ img{max-width:100%;display:block;}
 .af-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .af-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 
-/* ── UPLOAD BUTTON ── */
+/* â”€â”€ UPLOAD BUTTON â”€â”€ */
 .upload-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(76,175,80,.15);border:1.5px dashed var(--gsec);color:var(--gsec);border-radius:8px;font-size:.84rem;font-weight:600;cursor:pointer;transition:var(--ease);width:100%;justify-content:center;}
 .upload-btn:hover{background:rgba(76,175,80,.25);}
 .upload-input{display:none;}
@@ -127,7 +127,7 @@ img{max-width:100%;display:block;}
 .img-preview.show{display:block;}
 .img-thumb{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
 
-/* ── REPEATER ITEMS ── */
+/* â”€â”€ REPEATER ITEMS â”€â”€ */
 .item-list{display:flex;flex-direction:column;gap:10px;}
 .item-row{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:flex-start;gap:10px;}
 .item-fields{flex:1;display:flex;flex-direction:column;gap:10px;}
@@ -136,7 +136,7 @@ img{max-width:100%;display:block;}
 .add-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:rgba(76,175,80,.1);border:1.5px dashed var(--gsec);color:var(--gsec);border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--ease);margin-top:8px;}
 .add-btn:hover{background:rgba(76,175,80,.2);}
 
-/* ── GALLERY ADMIN ── */
+/* â”€â”€ GALLERY ADMIN â”€â”€ */
 .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:14px;}
 .gal-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--card2);}
 .gal-thumb img{width:100%;height:100%;object-fit:cover;}
@@ -144,14 +144,14 @@ img{max-width:100%;display:block;}
 .gal-del:hover{transform:scale(1.1);}
 .gal-cap{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);color:#fff;font-size:.65rem;padding:4px 6px;text-align:center;}
 
-/* ── FEES TABLE ── */
+/* â”€â”€ FEES TABLE â”€â”€ */
 .fees-tbl{width:100%;border-collapse:collapse;}
 .fees-tbl th{text-align:left;padding:9px 10px;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--dim);border-bottom:1px solid var(--border);}
 .fees-tbl td{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.03);}
 .fees-tbl input{padding:7px 9px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.82rem;outline:none;width:100%;transition:var(--ease);}
 .fees-tbl input:focus{border-color:var(--lime);}
 
-/* ── APPLICATIONS ── */
+/* â”€â”€ APPLICATIONS â”€â”€ */
 .apps-tbl{width:100%;border-collapse:collapse;}
 .apps-tbl th{text-align:left;padding:10px 14px;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);}
 .apps-tbl td{padding:12px 14px;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top;}
@@ -179,7 +179,7 @@ img{max-width:100%;display:block;}
 .admin-user-meta strong{display:block;font-size:.88rem;color:var(--text);}
 .admin-user-meta span{font-size:.78rem;color:var(--dim);}
 
-/* ── MESSAGES ── */
+/* â”€â”€ MESSAGES â”€â”€ */
 .msg-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
 .msg-card.unread{border-left:3px solid var(--lime);}
 .msg-meta{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
@@ -191,10 +191,10 @@ img{max-width:100%;display:block;}
 .reply-link{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(76,175,80,.12);border:1px solid var(--gsec);color:var(--gsec);border-radius:6px;font-size:.76rem;font-weight:600;}
 .del-msg{background:none;border:1px solid rgba(239,68,68,.3);color:#f87171;padding:6px 12px;border-radius:6px;font-size:.76rem;cursor:pointer;}
 
-/* ── SCROLLBAR ── */
+/* â”€â”€ SCROLLBAR â”€â”€ */
 ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
 
-/* ── RESPONSIVE ── */
+/* â”€â”€ RESPONSIVE â”€â”€ */
 @media(max-width:860px){
   .sidebar{transform:translateX(-100%);}
   .sidebar.open{transform:translateX(0);}
@@ -224,7 +224,7 @@ img{max-width:100%;display:block;}
   <div class="lcard">
     <div class="llogo">New <em>Heights</em></div>
     <div class="login-stage active" id="loginStageEmail">
-      <div class="login-chip">Step 1 · Google Verification</div>
+      <div class="login-chip">Step 1 Â· Google Verification</div>
       <button class="lbtn google-btn" onclick="loginWithGoogle()">
         <span style="font-weight:800;">G</span>
         Continue with Google
@@ -236,18 +236,18 @@ img{max-width:100%;display:block;}
       <button class="lbtn" onclick="verifyAdminCode()">Verify Email</button>
     </div>
     <div class="login-stage" id="loginStagePassword">
-      <div class="login-chip">Step 2 · Password</div>
+      <div class="login-chip">Step 2 Â· Password</div>
       <div class="lf"><label>Verified Email</label><input type="text" id="lVerifiedEmail" readonly/></div>
       <div class="lf"><label>Password</label><input type="password" id="lPass2" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
       <button class="lbtn" onclick="doLogin()">Open Dashboard</button>
       <button class="login-back" onclick="backToEmailStep()">Use another email</button>
     </div>
     <div class="lok" id="lOk"></div>
-    <div class="lsub">Admin Dashboard · Authorised Access Only</div>
+    <div class="lsub">Admin Dashboard Â· Authorised Access Only</div>
     <div class="lf"><label>Username</label><input type="text" id="lUser" value="admin" placeholder="admin"/></div>
     <div class="lf"><label>Password</label><input type="password" id="lPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-    <button class="lbtn" onclick="doLogin()">Sign In →</button>
-    <div class="lerr" id="lErr">❌ Incorrect credentials. Please try again.</div>
+    <button class="lbtn" onclick="doLogin()">Sign In â†’</button>
+    <div class="lerr" id="lErr">âŒ Incorrect credentials. Please try again.</div>
     <p class="lhint">Press Ctrl + Shift + A from any page to open admin</p>
   </div>
 </div>
@@ -259,28 +259,28 @@ img{max-width:100%;display:block;}
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo">
       <div class="sn">New <em>Heights</em></div>
-      <div class="st">🔐 Admin Dashboard</div>
+      <div class="st">ðŸ” Admin Dashboard</div>
     </div>
     <div class="sb-section">Overview</div>
-    <button class="ni active" onclick="gotoPage('dashboard',this)"><span class="icon">📊</span> Dashboard</button>
+    <button class="ni active" onclick="gotoPage('dashboard',this)"><span class="icon">ðŸ“Š</span> Dashboard</button>
     <div class="sb-section">Site Content</div>
-    <button class="ni" onclick="gotoPage('general',this)"><span class="icon">⚙️</span> General &amp; Logo</button>
-    <button class="ni" onclick="gotoPage('homepage',this)"><span class="icon">🏠</span> Homepage</button>
-    <button class="ni" onclick="gotoPage('about',this)"><span class="icon">🏫</span> About Page</button>
-    <button class="ni" onclick="gotoPage('programs',this)"><span class="icon">📚</span> Programs</button>
-    <button class="ni" onclick="gotoPage('gallery',this)"><span class="icon">🖼️</span> Gallery</button>
-    <button class="ni" onclick="gotoPage('admissions',this)"><span class="icon">📝</span> Admissions &amp; Fees</button>
-    <button class="ni" onclick="gotoPage('contact',this)"><span class="icon">📞</span> Contact Info</button>
+    <button class="ni" onclick="gotoPage('general',this)"><span class="icon">âš™ï¸</span> General &amp; Logo</button>
+    <button class="ni" onclick="gotoPage('homepage',this)"><span class="icon">ðŸ </span> Homepage</button>
+    <button class="ni" onclick="gotoPage('about',this)"><span class="icon">ðŸ«</span> About Page</button>
+    <button class="ni" onclick="gotoPage('programs',this)"><span class="icon">ðŸ“š</span> Programs</button>
+    <button class="ni" onclick="gotoPage('gallery',this)"><span class="icon">ðŸ–¼ï¸</span> Gallery</button>
+    <button class="ni" onclick="gotoPage('admissions',this)"><span class="icon">ðŸ“</span> Admissions &amp; Fees</button>
+    <button class="ni" onclick="gotoPage('contact',this)"><span class="icon">ðŸ“ž</span> Contact Info</button>
     <div class="sb-section">Inbox</div>
-    <button class="ni" id="niApps" onclick="gotoPage('applications',this)"><span class="icon">📋</span> Applications <span class="badge" id="appBadge"></span></button>
-    <button class="ni" id="niMsgs" onclick="gotoPage('messages',this)"><span class="icon">✉️</span> Messages <span class="badge" id="msgBadge"></span></button>
+    <button class="ni" id="niApps" onclick="gotoPage('applications',this)"><span class="icon">ðŸ“‹</span> Applications <span class="badge" id="appBadge"></span></button>
+    <button class="ni" id="niMsgs" onclick="gotoPage('messages',this)"><span class="icon">âœ‰ï¸</span> Messages <span class="badge" id="msgBadge"></span></button>
     <div class="sb-section">System</div>
     <button class="ni" onclick="gotoPage('admin-access',this)"><span class="icon">Admins</span> Admin Access</button>
-    <button class="ni" onclick="gotoPage('notifications',this)"><span class="icon">🔔</span> Notifications</button>
-    <button class="ni" onclick="gotoPage('password',this)"><span class="icon">🔑</span> Change Password</button>
+    <button class="ni" onclick="gotoPage('notifications',this)"><span class="icon">ðŸ””</span> Notifications</button>
+    <button class="ni" onclick="gotoPage('password',this)"><span class="icon">ðŸ”‘</span> Change Password</button>
     <div class="sb-foot">
-      <a href="index.html" target="_blank">↗ View Website</a>
-      <a href="#" onclick="doLogout()" style="color:#f87171;margin-top:4px;">⏻ Sign Out</a>
+      <a href="index.html" target="_blank">â†— View Website</a>
+      <a href="#" onclick="doLogout()" style="color:#f87171;margin-top:4px;">â» Sign Out</a>
     </div>
   </aside>
   <div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
@@ -289,12 +289,12 @@ img{max-width:100%;display:block;}
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
-        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <button class="menu-btn" onclick="toggleSidebar()">â˜°</button>
         <h1 id="topTitle">Dashboard</h1>
       </div>
       <div class="topbar-right">
-        <span class="saved-msg" id="savedMsg">✅ Saved!</span>
-        <button class="save-btn" onclick="saveAll()">💾 Save Changes</button>
+        <span class="saved-msg" id="savedMsg">âœ… Saved!</span>
+        <button class="save-btn" onclick="saveAll()">ðŸ’¾ Save Changes</button>
       </div>
     </div>
 
@@ -304,15 +304,15 @@ img{max-width:100%;display:block;}
       <div class="apage active" id="page-dashboard">
         <div class="stat-row" id="dashStats"></div>
         <div class="two-col">
-          <div class="acard"><h2>📋 Recent Applications</h2><div id="dashApps"></div></div>
-          <div class="acard"><h2>✉️ Recent Messages</h2><div id="dashMsgs"></div></div>
+          <div class="acard"><h2>ðŸ“‹ Recent Applications</h2><div id="dashApps"></div></div>
+          <div class="acard"><h2>âœ‰ï¸ Recent Messages</h2><div id="dashMsgs"></div></div>
         </div>
       </div>
 
       <!-- GENERAL & LOGO -->
       <div class="apage" id="page-general">
         <div class="acard">
-          <h2>🏷️ School Identity</h2>
+          <h2>ðŸ·ï¸ School Identity</h2>
           <div class="af-row">
             <div class="af"><label>School Name (Part 1)</label><input id="gName" type="text"/></div>
             <div class="af"><label>School Tagline (Accent)</label><input id="gTag" type="text"/></div>
@@ -320,15 +320,15 @@ img{max-width:100%;display:block;}
           <div class="af"><label>School Motto</label><input id="gMotto" type="text"/></div>
         </div>
         <div class="acard">
-          <h2>🖼️ School Logo</h2>
+          <h2>ðŸ–¼ï¸ School Logo</h2>
           <p style="font-size:.82rem;color:var(--dim);margin-bottom:14px;">Upload a logo with transparent background (PNG recommended). It will appear in the navbar and footer on all pages.</p>
-          <label class="upload-btn" for="logoUpload">📤 Upload Logo (PNG / SVG / WebP)</label>
+          <label class="upload-btn" for="logoUpload">ðŸ“¤ Upload Logo (PNG / SVG / WebP)</label>
           <input type="file" id="logoUpload" class="upload-input" accept="image/png,image/svg+xml,image/webp,image/jpeg" onchange="handleLogoUpload(this)"/>
           <img id="logoPreview" class="img-preview"/>
           <div id="logoStatus" style="font-size:.8rem;color:var(--dim);margin-top:8px;"></div>
         </div>
         <div class="acard">
-          <h2>🔗 Social Media Links</h2>
+          <h2>ðŸ”— Social Media Links</h2>
           <div class="af-row">
             <div class="af"><label>Facebook URL</label><input id="gFb" type="url"/></div>
             <div class="af"><label>Twitter / X URL</label><input id="gTw" type="url"/></div>
@@ -339,13 +339,13 @@ img{max-width:100%;display:block;}
           </div>
         </div>
         <div class="acard">
-          <h2>🌐 Footer & Credits</h2>
+          <h2>ðŸŒ Footer & Credits</h2>
           <div class="af"><label>Footer About Text</label><textarea id="gFooterAbout"></textarea></div>
           <div class="af"><label>Footer Copyright Text</label><input id="gFooterCopy" type="text"/></div>
           <div class="af"><label>Galaxy Studio Website URL</label><input id="gGalaxy" type="url" placeholder="https://galaxystudio.com"/></div>
         </div>
         <div class="acard">
-          <h2>🔗 Navigation Links</h2>
+          <h2>ðŸ”— Navigation Links</h2>
           <div class="item-list" id="navEditor"></div>
           <button class="add-btn" onclick="addNavLink()">+ Add Nav Link</button>
         </div>
@@ -364,10 +364,10 @@ img{max-width:100%;display:block;}
 
         <div class="tab-pane active" id="hp-hero">
           <div class="acard">
-            <h2>🖼️ Hero Section</h2>
+            <h2>ðŸ–¼ï¸ Hero Section</h2>
             <div class="af">
               <label>Background Image (Upload)</label>
-              <label class="upload-btn" for="heroBgUpload">📤 Upload Hero Background Image</label>
+              <label class="upload-btn" for="heroBgUpload">ðŸ“¤ Upload Hero Background Image</label>
               <input type="file" id="heroBgUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this,'heroBgPreview','hero','bgImage')"/>
               <img id="heroBgPreview" class="img-preview"/>
             </div>
@@ -388,7 +388,7 @@ img{max-width:100%;display:block;}
 
         <div class="tab-pane" id="hp-trust">
           <div class="acard">
-            <h2>📊 Trust Bar Statistics</h2>
+            <h2>ðŸ“Š Trust Bar Statistics</h2>
             <div class="item-list" id="trustEditor"></div>
             <button class="add-btn" onclick="addTrust()">+ Add Statistic</button>
           </div>
@@ -396,7 +396,7 @@ img{max-width:100%;display:block;}
 
         <div class="tab-pane" id="hp-why">
           <div class="acard">
-            <h2>✅ Why Choose Us Cards</h2>
+            <h2>âœ… Why Choose Us Cards</h2>
             <div class="item-list" id="whyEditor"></div>
             <button class="add-btn" onclick="addWhy()">+ Add Card</button>
           </div>
@@ -404,10 +404,10 @@ img{max-width:100%;display:block;}
 
         <div class="tab-pane" id="hp-abprev">
           <div class="acard">
-            <h2>📖 About Preview Section</h2>
+            <h2>ðŸ“– About Preview Section</h2>
             <div class="af">
               <label>About Preview Image (Upload)</label>
-              <label class="upload-btn" for="abPrevUpload">📤 Upload Image</label>
+              <label class="upload-btn" for="abPrevUpload">ðŸ“¤ Upload Image</label>
               <input type="file" id="abPrevUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this,'abPrevImg','aboutPreview','image')"/>
               <img id="abPrevImg" class="img-preview"/>
             </div>
@@ -426,7 +426,7 @@ img{max-width:100%;display:block;}
 
         <div class="tab-pane" id="hp-video">
           <div class="acard">
-            <h2>▶️ Video Section</h2>
+            <h2>â–¶ï¸ Video Section</h2>
             <div class="af">
               <label>YouTube Video URL or Link</label>
               <input id="hVidUrl" type="url" placeholder="https://www.youtube.com/watch?v=XXXXXXXXXXX"/>
@@ -434,7 +434,7 @@ img{max-width:100%;display:block;}
             </div>
             <div id="ytPreviewBox" style="margin-top:12px;display:none;">
               <img id="ytThumb" style="width:100%;max-width:400px;border-radius:8px;border:1px solid var(--border);" src="" alt="Thumbnail"/>
-              <p style="font-size:.78rem;color:var(--ok);margin-top:6px;">✅ YouTube video loaded successfully</p>
+              <p style="font-size:.78rem;color:var(--ok);margin-top:6px;">âœ… YouTube video loaded successfully</p>
             </div>
             <div class="af"><label>Section Heading</label><input id="hVidHead" type="text"/></div>
             <div class="af"><label>Section Subtext</label><textarea id="hVidSub"></textarea></div>
@@ -443,7 +443,7 @@ img{max-width:100%;display:block;}
 
         <div class="tab-pane" id="hp-cta">
           <div class="acard">
-            <h2>📣 CTA Banner</h2>
+            <h2>ðŸ“£ CTA Banner</h2>
             <div class="af"><label>Label Badge Text</label><input id="hCtaLbl" type="text"/></div>
             <div class="af"><label>Heading</label><input id="hCtaHead" type="text"/></div>
             <div class="af"><label>Body Text</label><textarea id="hCtaText"></textarea></div>
@@ -465,10 +465,10 @@ img{max-width:100%;display:block;}
         </div>
         <div class="tab-pane active" id="ab-mv">
           <div class="acard">
-            <h2>📖 Mission &amp; Vision</h2>
+            <h2>ðŸ“– Mission &amp; Vision</h2>
             <div class="af">
               <label>About Page Image (Upload)</label>
-              <label class="upload-btn" for="abImgUpload">📤 Upload Image</label>
+              <label class="upload-btn" for="abImgUpload">ðŸ“¤ Upload Image</label>
               <input type="file" id="abImgUpload" class="upload-input" accept="image/*" onchange="handleImgUpload(this,'abImgPrev','about','image')"/>
               <img id="abImgPrev" class="img-preview"/>
             </div>
@@ -478,21 +478,21 @@ img{max-width:100%;display:block;}
         </div>
         <div class="tab-pane" id="ab-curr">
           <div class="acard">
-            <h2>📚 Curriculum Description</h2>
+            <h2>ðŸ“š Curriculum Description</h2>
             <div class="af"><label>Curriculum Description</label><textarea id="abCurr" style="min-height:120px;"></textarea></div>
             <div class="af"><label>Extracurricular Activities (one per line)</label><textarea id="abExtra" style="min-height:90px;" placeholder="Cadet Corps&#10;Cultural Troops&#10;School Choir"></textarea></div>
           </div>
         </div>
         <div class="tab-pane" id="ab-tl">
           <div class="acard">
-            <h2>📅 School Timeline</h2>
+            <h2>ðŸ“… School Timeline</h2>
             <div class="item-list" id="tlEditor"></div>
             <button class="add-btn" onclick="addTimeline()">+ Add Milestone</button>
           </div>
         </div>
         <div class="tab-pane" id="ab-team">
           <div class="acard">
-            <h2>👥 Leadership Team</h2>
+            <h2>ðŸ‘¥ Leadership Team</h2>
             <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Upload portrait photos for each team member. Photos display in a tall card style.</p>
             <div class="item-list" id="teamEditor"></div>
             <button class="add-btn" onclick="addTeam()">+ Add Team Member</button>
@@ -503,7 +503,7 @@ img{max-width:100%;display:block;}
       <!-- PROGRAMS -->
       <div class="apage" id="page-programs">
         <div class="acard">
-          <h2>📚 Academic Programs</h2>
+          <h2>ðŸ“š Academic Programs</h2>
           <div class="item-list" id="progEditor"></div>
           <button class="add-btn" onclick="addProg()">+ Add Program</button>
         </div>
@@ -512,13 +512,13 @@ img{max-width:100%;display:block;}
       <!-- GALLERY -->
       <div class="apage" id="page-gallery">
         <div class="acard">
-          <h2>🖼️ Gallery Images</h2>
+          <h2>ðŸ–¼ï¸ Gallery Images</h2>
           <div class="gal-grid" id="galGrid"></div>
           <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
             <div class="af-row">
               <div class="af">
                 <label>Upload New Image(s)</label>
-                <label class="upload-btn" for="galUpload">📤 Choose Image File(s)</label>
+                <label class="upload-btn" for="galUpload">ðŸ“¤ Choose Image File(s)</label>
                 <input type="file" id="galUpload" class="upload-input" accept="image/*" multiple onchange="handleGalleryUpload(this)"/>
               </div>
               <div class="af"><label>Caption for New Image</label><input id="galCap" type="text" placeholder="e.g. Students in the lab"/></div>
@@ -536,14 +536,14 @@ img{max-width:100%;display:block;}
         </div>
         <div class="tab-pane active" id="adm-steps">
           <div class="acard">
-            <h2>📋 Admissions Steps</h2>
+            <h2>ðŸ“‹ Admissions Steps</h2>
             <div class="item-list" id="stepsEditor"></div>
             <button class="add-btn" onclick="addStep()">+ Add Step</button>
           </div>
         </div>
         <div class="tab-pane" id="adm-fees">
           <div class="acard">
-            <h2>💰 Fee Structure — Every Level Editable Separately</h2>
+            <h2>ðŸ’° Fee Structure â€” Every Level Editable Separately</h2>
             <div style="overflow-x:auto;">
               <table class="fees-tbl">
                 <thead><tr><th>Level</th><th>Tuition/Term</th><th>Levies</th><th>Feeding</th><th>Enrolment</th><th></th></tr></thead>
@@ -555,7 +555,7 @@ img{max-width:100%;display:block;}
         </div>
         <div class="tab-pane" id="adm-fnote">
           <div class="acard">
-            <h2>📌 Fee Disclaimer Note</h2>
+            <h2>ðŸ“Œ Fee Disclaimer Note</h2>
             <div class="af"><label>Note shown below fee table</label><textarea id="admNote" style="min-height:80px;"></textarea></div>
           </div>
         </div>
@@ -564,7 +564,7 @@ img{max-width:100%;display:block;}
       <!-- CONTACT -->
       <div class="apage" id="page-contact">
         <div class="acard">
-          <h2>📍 Contact Details</h2>
+          <h2>ðŸ“ Contact Details</h2>
           <div class="af"><label>Address</label><textarea id="cAddr" style="min-height:60px;"></textarea></div>
           <div class="af-row">
             <div class="af"><label>Phone 1</label><input id="cPh1" type="tel"/></div>
@@ -576,9 +576,9 @@ img{max-width:100%;display:block;}
           </div>
         </div>
         <div class="acard">
-          <h2>🗺️ Google Maps Embed</h2>
+          <h2>ðŸ—ºï¸ Google Maps Embed</h2>
           <div class="af">
-            <label>Embed URL (from Google Maps → Share → Embed a map → copy only the src="..." value)</label>
+            <label>Embed URL (from Google Maps â†’ Share â†’ Embed a map â†’ copy only the src="..." value)</label>
             <input id="cMap" type="url" placeholder="https://www.google.com/maps/embed?pb=..."/>
           </div>
           <div style="border-radius:8px;overflow:hidden;margin-top:10px;">
@@ -587,7 +587,7 @@ img{max-width:100%;display:block;}
           <button class="add-btn" onclick="previewMap()" style="margin-top:8px;">Preview Map</button>
         </div>
         <div class="acard">
-          <h2>🕐 Office Hours</h2>
+          <h2>ðŸ• Office Hours</h2>
           <div class="item-list" id="hoursEditor"></div>
           <button class="add-btn" onclick="addHour()">+ Add Row</button>
         </div>
@@ -596,7 +596,7 @@ img{max-width:100%;display:block;}
       <!-- APPLICATIONS -->
       <div class="apage" id="page-applications">
         <div class="acard">
-          <h2>📋 Student Applications</h2>
+          <h2>ðŸ“‹ Student Applications</h2>
           <div class="apps-toolbar">
             <div class="apps-filter-tabs">
               <button class="filter-chip active" data-app-filter="all" onclick="setApplicationFilter('all', this)">All</button>
@@ -621,7 +621,7 @@ img{max-width:100%;display:block;}
       <!-- MESSAGES -->
       <div class="apage" id="page-messages">
         <div class="acard">
-          <h2>✉️ Contact Messages</h2>
+          <h2>âœ‰ï¸ Contact Messages</h2>
           <div id="msgsList"></div>
           <div id="msgsEmpty" style="text-align:center;padding:40px;color:var(--dim);display:none;">No messages yet.</div>
         </div>
@@ -630,13 +630,13 @@ img{max-width:100%;display:block;}
       <!-- NOTIFICATIONS -->
       <div class="apage" id="page-notifications">
         <div class="acard">
-          <h2>🔔 Email &amp; SMS Notifications</h2>
+          <h2>ðŸ”” Email &amp; SMS Notifications</h2>
           <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">Applications now support manual Gmail drafts directly from the Applications page. Use the settings below if you still want optional automatic EmailJS delivery, plus SMS to the parent's phone number.</p>
           <div class="af"><label>Admin Notification Email</label><input id="nAdminEmail" type="email"/></div>
           <div class="af"><label>Sender Name</label><input id="nSenderName" type="text" placeholder="New Heights School"/></div>
           <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
             <h3 style="font-size:.9rem;color:var(--text);margin-bottom:14px;">EmailJS Configuration (for parent email notifications)</h3>
-            <p style="font-size:.78rem;color:var(--dim);margin-bottom:14px;">Sign up free at <a href="https://emailjs.com" target="_blank" style="color:var(--lime);">emailjs.com</a> → create a service → create a template with variables: {{student_name}}, {{parent_name}}, {{apply_class}}, {{status}}, {{school_name}}</p>
+            <p style="font-size:.78rem;color:var(--dim);margin-bottom:14px;">Sign up free at <a href="https://emailjs.com" target="_blank" style="color:var(--lime);">emailjs.com</a> â†’ create a service â†’ create a template with variables: {{student_name}}, {{parent_name}}, {{apply_class}}, {{status}}, {{school_name}}</p>
             <div class="af-row3">
               <div class="af"><label>Service ID</label><input id="nSvcId" type="text" placeholder="service_xxxxxxx"/></div>
               <div class="af"><label>Template ID</label><input id="nTplId" type="text" placeholder="template_xxxxxxx"/></div>
@@ -682,7 +682,7 @@ img{max-width:100%;display:block;}
       <!-- PASSWORD -->
       <div class="apage" id="page-password">
         <div class="acard" style="max-width:440px;">
-          <h2>🔑 Change Password</h2>
+          <h2>ðŸ”‘ Change Password</h2>
           <div class="af"><label>Current Password</label><input id="pwCur" type="password"/></div>
           <div class="af"><label>New Password</label><input id="pwNew" type="password"/></div>
           <div class="af"><label>Confirm New Password</label><input id="pwConf" type="password"/></div>
@@ -693,7 +693,7 @@ img{max-width:100%;display:block;}
 
       <div class="apage" id="page-admin-access">
         <div class="acard">
-          <h2>ðŸ‘¥ Approved Admin Emails</h2>
+          <h2>Approved Admin Emails</h2>
           <p style="font-size:.84rem;color:var(--dim);margin-bottom:20px;line-height:1.7;">Only emails listed here can complete step 1 of the admin login. After email verification, they still need the shared dashboard password.</p>
           <div class="af-row">
             <div class="af"><label>Admin Name</label><input id="newAdminName" type="text" placeholder="e.g. Admissions Officer"/></div>
@@ -758,7 +758,7 @@ async function openDashboardFor(email){
   await loadAll();
 }
 
-/* ── LOGIN ── */
+/* â”€â”€ LOGIN â”€â”€ */
 function doLogin(){
   const u=document.getElementById('lUser').value.trim();
   const p=document.getElementById('lPass').value;
@@ -914,7 +914,7 @@ doLogout = async function(){
   document.getElementById('adminApp').classList.remove('show');
 };
 
-/* ── SIDEBAR ── */
+/* â”€â”€ SIDEBAR â”€â”€ */
 function toggleSidebar(){
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sbOverlay').classList.toggle('show');
@@ -924,7 +924,7 @@ function closeSidebar(){
   document.getElementById('sbOverlay').classList.remove('show');
 }
 
-/* ── PAGE NAV ── */
+/* â”€â”€ PAGE NAV â”€â”€ */
 function gotoPage(name, el){
   document.querySelectorAll('.apage').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
@@ -943,7 +943,7 @@ function swTab(prefix, tab, btn){
   btn.classList.add('active');
 }
 
-/* ── IMAGE UPLOAD HANDLERS ── */
+/* â”€â”€ IMAGE UPLOAD HANDLERS â”€â”€ */
 async function handleLogoUpload(input){
   const file = input.files[0]; if(!file) return;
   const url = await NHS.uploadImage(file, 'general', 'logos');
@@ -951,7 +951,7 @@ async function handleLogoUpload(input){
   const prev = document.getElementById('logoPreview');
   prev.src=url; prev.classList.add('show');
   NHS.setFavicon(url);
-  document.getElementById('logoStatus').textContent = `✅ Logo loaded: ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+  document.getElementById('logoStatus').textContent = `âœ… Logo loaded: ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
 }
 
 async function handleImgUpload(input, previewId, section, field){
@@ -974,7 +974,7 @@ async function handleGalleryUpload(input){
   renderGallery();
 }
 
-/* ── YOUTUBE ── */
+/* â”€â”€ YOUTUBE â”€â”€ */
 function processYouTube(){
   const url = document.getElementById('hVidUrl').value.trim();
   const id = NHS.youtubeId(url);
@@ -987,7 +987,7 @@ function processYouTube(){
   document.getElementById('ytPreviewBox').style.display='block';
 }
 
-/* ── LOAD ALL ── */
+/* â”€â”€ LOAD ALL â”€â”€ */
 async function loadAll(){
   await NHS.refresh();
   D = NHS.get();
@@ -997,7 +997,7 @@ async function loadAll(){
   updateBadges();
 }
 
-/* ── GENERAL ── */
+/* â”€â”€ GENERAL â”€â”€ */
 function loadGeneral(){
   document.getElementById('gName').value = D.schoolName;
   document.getElementById('gTag').value  = D.schoolTagline;
@@ -1028,7 +1028,7 @@ function renderNavEditor(){
           <div class="af"><label>URL</label><input type="text" value="${l.href}" id="nl_h_${i}"/></div>
         </div>
       </div>
-      <button class="del-btn" onclick="removeNavLink(${i})">🗑</button>
+      <button class="del-btn" onclick="removeNavLink(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 function collectNavLinks(){
@@ -1042,7 +1042,7 @@ function collectNavLinks(){
 function addNavLink(){ D.navLinks.push({label:'New Page',href:'page.html'}); renderNavEditor(); }
 function removeNavLink(i){ D.navLinks.splice(i,1); renderNavEditor(); }
 
-/* ── HOMEPAGE ── */
+/* â”€â”€ HOMEPAGE â”€â”€ */
 function loadHomepage(){
   const h=D.hero;
   if(h.bgImage){ const p=document.getElementById('heroBgPreview'); p.src=h.bgImage; p.classList.add('show'); }
@@ -1090,7 +1090,7 @@ function renderTrust(){
         <div class="af"><label>Number</label><input type="text" value="${s.num}" id="ts_n_${i}"/></div>
         <div class="af"><label>Label</label><input type="text" value="${s.label}" id="ts_l_${i}"/></div>
       </div></div>
-      <button class="del-btn" onclick="removeTrust(${i})">🗑</button>
+      <button class="del-btn" onclick="removeTrust(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 function collectTrust(){
@@ -1111,7 +1111,7 @@ function renderWhy(){
         </div>
         <div class="af"><label>Description</label><textarea id="wc_d_${i}">${c.text}</textarea></div>
       </div>
-      <button class="del-btn" onclick="removeWhy(${i})">🗑</button>
+      <button class="del-btn" onclick="removeWhy(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 function collectWhy(){
@@ -1119,10 +1119,10 @@ function collectWhy(){
   document.querySelectorAll('[id^="wc_i_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({icon:el.value,title:document.getElementById(`wc_t_${i}`).value,text:document.getElementById(`wc_d_${i}`).value}); });
   return a;
 }
-function addWhy(){ D.whyCards.push({icon:'⭐',title:'New Feature',text:'Description here.'}); renderWhy(); }
+function addWhy(){ D.whyCards.push({icon:'â­',title:'New Feature',text:'Description here.'}); renderWhy(); }
 function removeWhy(i){ D.whyCards.splice(i,1); renderWhy(); }
 
-/* ── ABOUT ── */
+/* â”€â”€ ABOUT â”€â”€ */
 function loadAbout(){
   if(D.about.image){ const p=document.getElementById('abImgPrev'); p.src=D.about.image; p.classList.add('show'); }
   document.getElementById('abMission').value = D.about.mission;
@@ -1150,7 +1150,7 @@ function renderTimeline(){
         </div>
         <div class="af"><label>Description</label><textarea id="tl_d_${i}">${t.text}</textarea></div>
       </div>
-      <button class="del-btn" onclick="removeTl(${i})">🗑</button>
+      <button class="del-btn" onclick="removeTl(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 function collectTimeline(){
@@ -1170,7 +1170,7 @@ function renderTeam(){
         ${m.image?`<img src="${m.image}" style="width:80px;height:90px;object-fit:cover;border-radius:8px;margin-bottom:8px;object-position:top;"/>` : ''}
         <div class="af">
           <label>Photo (Upload portrait)</label>
-          <label class="upload-btn" for="tm_img_${i}" style="font-size:.78rem;padding:8px 14px;">📤 Upload Photo</label>
+          <label class="upload-btn" for="tm_img_${i}" style="font-size:.78rem;padding:8px 14px;">ðŸ“¤ Upload Photo</label>
           <input type="file" id="tm_img_${i}" class="upload-input" accept="image/*" onchange="handleTeamPhoto(this,${i})"/>
         </div>
         <div class="af-row">
@@ -1181,7 +1181,7 @@ function renderTeam(){
         </div>
         <div class="af"><label>Bio / Description</label><textarea id="tm_b_${i}">${m.bio}</textarea></div>
       </div>
-      <button class="del-btn" onclick="removeTeam(${i})">🗑</button>
+      <button class="del-btn" onclick="removeTeam(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 async function handleTeamPhoto(input, idx){
@@ -1199,7 +1199,7 @@ function collectTeam(){
 function addTeam(){ D.about.team.push({image:'',name:'New Member',role:'Teacher',bio:'Bio here.'}); renderTeam(); }
 function removeTeam(i){ D.about.team.splice(i,1); renderTeam(); }
 
-/* ── PROGRAMS ── */
+/* â”€â”€ PROGRAMS â”€â”€ */
 function loadPrograms(){ renderProgs(); }
 function renderProgs(){
   document.getElementById('progEditor').innerHTML=D.programs.map((p,i)=>`
@@ -1208,7 +1208,7 @@ function renderProgs(){
         ${p.image?`<img src="${p.image}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/>`:'' }
         <div class="af">
           <label>Program Image (Upload)</label>
-          <label class="upload-btn" for="pr_img_${i}" style="font-size:.78rem;padding:8px 14px;">📤 Upload Image</label>
+          <label class="upload-btn" for="pr_img_${i}" style="font-size:.78rem;padding:8px 14px;">ðŸ“¤ Upload Image</label>
           <input type="file" id="pr_img_${i}" class="upload-input" accept="image/*" onchange="handleProgImg(this,${i})"/>
         </div>
         <div class="af-row">
@@ -1217,7 +1217,7 @@ function renderProgs(){
         </div>
         <div class="af"><label>Description</label><textarea id="pr_d_${i}">${p.text}</textarea></div>
       </div>
-      <button class="del-btn" onclick="removeProg(${i})">🗑</button>
+      <button class="del-btn" onclick="removeProg(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 async function handleProgImg(input,idx){
@@ -1234,13 +1234,13 @@ function collectProgs(){
 function addProg(){ D.programs.push({image:'',title:'New Program',badge:'Level',text:'Description.'}); renderProgs(); }
 function removeProg(i){ D.programs.splice(i,1); renderProgs(); }
 
-/* ── GALLERY ── */
+/* â”€â”€ GALLERY â”€â”€ */
 function renderGallery(){
   const imgs=D.galleryImages||[];
   document.getElementById('galGrid').innerHTML=imgs.map((g,i)=>`
     <div class="gal-thumb">
       <img src="${g.url}" alt="${g.caption}" loading="lazy"/>
-      <button class="gal-del" onclick="removeGal(${i})">✕</button>
+      <button class="gal-del" onclick="removeGal(${i})">âœ•</button>
       <div class="gal-cap">${g.caption}</div>
     </div>`).join('');
 }
@@ -1254,7 +1254,7 @@ async function removeGal(i){
   }catch(e){ alert('Delete failed: '+e.message); }
 }
 
-/* ── ADMISSIONS ── */
+/* â”€â”€ ADMISSIONS â”€â”€ */
 function loadAdmissions(){
   renderSteps(); renderFees();
   document.getElementById('admNote').value=D.admissions.feesNote;
@@ -1269,7 +1269,7 @@ function renderSteps(){
         </div>
         <div class="af"><label>Description</label><textarea id="st_d_${i}">${s.text}</textarea></div>
       </div>
-      <button class="del-btn" onclick="removeStep(${i})">🗑</button>
+      <button class="del-btn" onclick="removeStep(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 function collectSteps(){
@@ -1288,7 +1288,7 @@ function renderFees(){
       <td><input type="text" value="${f.levies}" id="fe_le_${i}"/></td>
       <td><input type="text" value="${f.feeding}" id="fe_fd_${i}"/></td>
       <td><input type="text" value="${f.enrolment}" id="fe_en_${i}"/></td>
-      <td><button class="del-btn" onclick="removeFee(${i})">🗑</button></td>
+      <td><button class="del-btn" onclick="removeFee(${i})">ðŸ—‘</button></td>
     </tr>`).join('');
 }
 function collectFees(){
@@ -1296,11 +1296,11 @@ function collectFees(){
   document.querySelectorAll('[id^="fe_lv_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({level:el.value,tuition:document.getElementById(`fe_tu_${i}`).value,levies:document.getElementById(`fe_le_${i}`).value,feeding:document.getElementById(`fe_fd_${i}`).value,enrolment:document.getElementById(`fe_en_${i}`).value}); });
   return a;
 }
-function addFeeRow(){ D.admissions.fees.push({level:'New Level',tuition:'GH₵ —',levies:'GH₵ —',feeding:'GH₵ —',enrolment:'GH₵ —'}); renderFees(); }
+function addFeeRow(){ D.admissions.fees.push({level:'New Level',tuition:'GHâ‚µ â€”',levies:'GHâ‚µ â€”',feeding:'GHâ‚µ â€”',enrolment:'GHâ‚µ â€”'}); renderFees(); }
 function removeFee(i){ D.admissions.fees.splice(i,1); renderFees(); }
 function collectAdmissions(){ D.admissions.steps=collectSteps(); D.admissions.fees=collectFees(); D.admissions.feesNote=v('admNote'); }
 
-/* ── CONTACT ── */
+/* â”€â”€ CONTACT â”€â”€ */
 function loadContact(){
   document.getElementById('cAddr').value = D.contactAddress;
   document.getElementById('cPh1').value  = D.contactPhone1;
@@ -1324,7 +1324,7 @@ function renderHours(){
         <div class="af"><label>Day(s)</label><input type="text" value="${h.day}" id="oh_d_${i}"/></div>
         <div class="af"><label>Hours</label><input type="text" value="${h.hours}" id="oh_h_${i}"/></div>
       </div></div>
-      <button class="del-btn" onclick="removeHour(${i})">🗑</button>
+      <button class="del-btn" onclick="removeHour(${i})">ðŸ—‘</button>
     </div>`).join('');
 }
 function collectHours(){
@@ -1332,11 +1332,11 @@ function collectHours(){
   document.querySelectorAll('[id^="oh_d_"]').forEach(el=>{ const i=el.id.split('_')[2]; a.push({day:el.value,hours:document.getElementById(`oh_h_${i}`).value}); });
   return a;
 }
-function addHour(){ D.officeHours.push({day:'Monday',hours:'8:00 AM – 5:00 PM'}); renderHours(); }
+function addHour(){ D.officeHours.push({day:'Monday',hours:'8:00 AM â€“ 5:00 PM'}); renderHours(); }
 function removeHour(i){ D.officeHours.splice(i,1); renderHours(); }
 function previewMap(){ document.getElementById('mapPrev').src=document.getElementById('cMap').value; }
 
-/* ── APPLICATIONS ── */
+/* â”€â”€ APPLICATIONS â”€â”€ */
 function loadApplications(){
   const apps=D.applications||[];
   const body=document.getElementById('appsBody');
@@ -1347,22 +1347,22 @@ function loadApplications(){
     <tr>
       <td>
         <strong>${a.studentName}</strong>${!a.seen?'<span class="unseen-dot"></span>':''}
-        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender||''} · ${a.dob||''}</span>
-        <br/><button class="expand-btn" onclick="toggleDetail(${i})">View Details ▾</button>
+        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender||''} Â· ${a.dob||''}</span>
+        <br/><button class="expand-btn" onclick="toggleDetail(${i})">View Details â–¾</button>
         <div class="app-detail" id="ad_${i}">
           <strong>Class:</strong> ${a.applyClass} (${a.academicYear||''})<br/>
-          <strong>Address:</strong> ${a.address||'—'}<br/>
-          <strong>Prev School:</strong> ${a.prevSchool||'—'}<br/>
+          <strong>Address:</strong> ${a.address||'â€”'}<br/>
+          <strong>Prev School:</strong> ${a.prevSchool||'â€”'}<br/>
           <strong>Parent:</strong> ${a.parentName} (${a.relation||''})<br/>
-          <strong>Phone 2:</strong> ${a.phone2||'—'}<br/>
-          <strong>Email:</strong> ${a.email||'—'}<br/>
-          <strong>WhatsApp:</strong> ${a.whatsapp||'—'}<br/>
-          <strong>Occupation:</strong> ${a.occupation||'—'}<br/>
-          <strong>Emergency:</strong> ${a.emgName||'—'} — ${a.emgPhone||'—'}<br/>
-          <strong>Blood Group:</strong> ${a.bloodGroup||'—'}<br/>
-          <strong>Allergies:</strong> ${a.allergies||'—'}<br/>
-          <strong>Medical:</strong> ${a.medical||'—'}<br/>
-          <strong>Heard From:</strong> ${a.heardFrom||'—'}<br/>
+          <strong>Phone 2:</strong> ${a.phone2||'â€”'}<br/>
+          <strong>Email:</strong> ${a.email||'â€”'}<br/>
+          <strong>WhatsApp:</strong> ${a.whatsapp||'â€”'}<br/>
+          <strong>Occupation:</strong> ${a.occupation||'â€”'}<br/>
+          <strong>Emergency:</strong> ${a.emgName||'â€”'} â€” ${a.emgPhone||'â€”'}<br/>
+          <strong>Blood Group:</strong> ${a.bloodGroup||'â€”'}<br/>
+          <strong>Allergies:</strong> ${a.allergies||'â€”'}<br/>
+          <strong>Medical:</strong> ${a.medical||'â€”'}<br/>
+          <strong>Heard From:</strong> ${a.heardFrom||'â€”'}<br/>
           ${a.comments?`<strong>Comments:</strong> ${a.comments}`:''}
         </div>
       </td>
@@ -1374,11 +1374,11 @@ function loadApplications(){
       <td>
         <select class="action-sel" onchange="updateStatus(${i},this.value)">
           <option value="pending" ${a.status==='pending'?'selected':''}>Pending</option>
-          <option value="accepted" ${a.status==='accepted'?'selected':''}>Accept ✓</option>
-          <option value="denied" ${a.status==='denied'?'selected':''}>Deny ✗</option>
+          <option value="accepted" ${a.status==='accepted'?'selected':''}>Accept âœ“</option>
+          <option value="denied" ${a.status==='denied'?'selected':''}>Deny âœ—</option>
         </select>
         <br/>
-        <button class="del-btn" style="margin-top:4px;" onclick="deleteApp(${i})">🗑 Del</button>
+        <button class="del-btn" style="margin-top:4px;" onclick="deleteApp(${i})">ðŸ—‘ Del</button>
       </td>
     </tr>`).join('');
 }
@@ -1411,7 +1411,7 @@ function sendAcceptanceEmail(app){
       school_email: d.contactEmail1,
       to_email:     app.email,
       to_name:      app.parentName
-    }).then(()=>alert('✅ Acceptance email sent to '+app.email))
+    }).then(()=>alert('âœ… Acceptance email sent to '+app.email))
       .catch(e=>alert('Email error: '+e.text));
   }
 }
@@ -1459,22 +1459,22 @@ loadApplications = function(){
       <td>
         <strong>${a.studentName}</strong>${!a.seen?'<span class="unseen-dot"></span>':''}
         ${a.applicationCode ? `<br/><span style="font-size:.72rem;color:var(--lime);">Code: ${a.applicationCode}</span>` : ''}
-        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender || ''} · ${a.dob || ''}</span>
+        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender || ''} Â· ${a.dob || ''}</span>
         <br/><button class="expand-btn" onclick="toggleDetail('${a.id}')">View Details</button>
         <div class="app-detail" id="ad_${a.id}">
-          <strong>Class:</strong> ${a.applyClass || '—'} (${a.academicYear || ''})<br/>
-          <strong>Address:</strong> ${a.address || '—'}<br/>
-          <strong>Previous School:</strong> ${a.prevSchool || '—'}<br/>
-          <strong>Parent:</strong> ${a.parentName || '—'} (${a.relation || ''})<br/>
-          <strong>Email:</strong> ${a.email || '—'}<br/>
-          <strong>Phone 2:</strong> ${a.phone2 || '—'}<br/>
-          <strong>WhatsApp:</strong> ${a.whatsapp || '—'}<br/>
-          <strong>Occupation:</strong> ${a.occupation || '—'}<br/>
-          <strong>Emergency:</strong> ${a.emgName || '—'} — ${a.emgPhone || '—'}<br/>
-          <strong>Blood Group:</strong> ${a.bloodGroup || '—'}<br/>
-          <strong>Allergies:</strong> ${a.allergies || '—'}<br/>
-          <strong>Medical:</strong> ${a.medical || '—'}<br/>
-          <strong>Comments:</strong> ${a.comments || '—'}<br/>
+          <strong>Class:</strong> ${a.applyClass || 'â€”'} (${a.academicYear || ''})<br/>
+          <strong>Address:</strong> ${a.address || 'â€”'}<br/>
+          <strong>Previous School:</strong> ${a.prevSchool || 'â€”'}<br/>
+          <strong>Parent:</strong> ${a.parentName || 'â€”'} (${a.relation || ''})<br/>
+          <strong>Email:</strong> ${a.email || 'â€”'}<br/>
+          <strong>Phone 2:</strong> ${a.phone2 || 'â€”'}<br/>
+          <strong>WhatsApp:</strong> ${a.whatsapp || 'â€”'}<br/>
+          <strong>Occupation:</strong> ${a.occupation || 'â€”'}<br/>
+          <strong>Emergency:</strong> ${a.emgName || 'â€”'} â€” ${a.emgPhone || 'â€”'}<br/>
+          <strong>Blood Group:</strong> ${a.bloodGroup || 'â€”'}<br/>
+          <strong>Allergies:</strong> ${a.allergies || 'â€”'}<br/>
+          <strong>Medical:</strong> ${a.medical || 'â€”'}<br/>
+          <strong>Comments:</strong> ${a.comments || 'â€”'}<br/>
         </div>
       </td>
       <td>${a.applyClass || '-'}</td>
@@ -1490,8 +1490,8 @@ loadApplications = function(){
         </select>
         <div class="quick-actions">
           <button class="tiny-btn" onclick="downloadApplicationPdf('${a.id}')">PDF</button>
-          <button class="tiny-btn" onclick="sendStatusUpdate('${a.id}')">Email</button>
-          <button class="tiny-btn" onclick="sendExamNotice('${a.id}')">Exam Email</button>
+          <button class="tiny-btn" onclick="sendStatusUpdate('${a.id}')">Gmail Status</button>
+          <button class="tiny-btn" onclick="sendExamNotice('${a.id}')">Gmail Exam</button>
           <button class="tiny-btn danger" onclick="deleteApp('${a.id}')">Delete</button>
         </div>
       </td>
@@ -1604,22 +1604,22 @@ loadApplications = function(){
       <td>
         <strong>${a.studentName}</strong>${!a.seen?'<span class="unseen-dot"></span>':''}
         ${a.applicationCode ? `<br/><span style="font-size:.72rem;color:var(--lime);">Code: ${a.applicationCode}</span>` : ''}
-        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender || ''} Â· ${a.dob || ''}</span>
+        <br/><span style="font-size:.74rem;color:var(--dim);">${a.gender || ''} · ${a.dob || ''}</span>
         <br/><button class="expand-btn" onclick="toggleDetail('${a.id}')">View Details</button>
         <div class="app-detail" id="ad_${a.id}">
-          <strong>Class:</strong> ${a.applyClass || 'â€”'} (${a.academicYear || ''})<br/>
-          <strong>Address:</strong> ${a.address || 'â€”'}<br/>
-          <strong>Previous School:</strong> ${a.prevSchool || 'â€”'}<br/>
-          <strong>Parent:</strong> ${a.parentName || 'â€”'} (${a.relation || ''})<br/>
-          <strong>Email:</strong> ${a.email || 'â€”'}<br/>
-          <strong>Phone 2:</strong> ${a.phone2 || 'â€”'}<br/>
-          <strong>WhatsApp:</strong> ${a.whatsapp || 'â€”'}<br/>
-          <strong>Occupation:</strong> ${a.occupation || 'â€”'}<br/>
-          <strong>Emergency:</strong> ${a.emgName || 'â€”'} â€” ${a.emgPhone || 'â€”'}<br/>
-          <strong>Blood Group:</strong> ${a.bloodGroup || 'â€”'}<br/>
-          <strong>Allergies:</strong> ${a.allergies || 'â€”'}<br/>
-          <strong>Medical:</strong> ${a.medical || 'â€”'}<br/>
-          <strong>Comments:</strong> ${a.comments || 'â€”'}<br/>
+          <strong>Class:</strong> ${a.applyClass || '—'} (${a.academicYear || ''})<br/>
+          <strong>Address:</strong> ${a.address || '—'}<br/>
+          <strong>Previous School:</strong> ${a.prevSchool || '—'}<br/>
+          <strong>Parent:</strong> ${a.parentName || '—'} (${a.relation || ''})<br/>
+          <strong>Email:</strong> ${a.email || '—'}<br/>
+          <strong>Phone 2:</strong> ${a.phone2 || '—'}<br/>
+          <strong>WhatsApp:</strong> ${a.whatsapp || '—'}<br/>
+          <strong>Occupation:</strong> ${a.occupation || '—'}<br/>
+          <strong>Emergency:</strong> ${a.emgName || '—'} — ${a.emgPhone || '—'}<br/>
+          <strong>Blood Group:</strong> ${a.bloodGroup || '—'}<br/>
+          <strong>Allergies:</strong> ${a.allergies || '—'}<br/>
+          <strong>Medical:</strong> ${a.medical || '—'}<br/>
+          <strong>Comments:</strong> ${a.comments || '—'}<br/>
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);">
             <strong style="display:block;margin-bottom:8px;">Email Draft</strong>
             <input id="mailSubject_${a.id}" type="text" value="${escapeAdminDraftValue(draft.subject)}" placeholder="Email subject" style="width:100%;margin-bottom:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);"/>
@@ -1795,7 +1795,7 @@ async function downloadApplicationPdf(appId){
   pdf.save(`${String(app.studentName || 'application').replace(/\s+/g, '-').toLowerCase()}-${app.applicationCode || 'record'}.pdf`);
 }
 
-/* ── MESSAGES ── */
+/* â”€â”€ MESSAGES â”€â”€ */
 function loadMessages(){
   const msgs=D.contactMessages||[];
   const list=document.getElementById('msgsList');
@@ -1811,17 +1811,17 @@ function loadMessages(){
       <div class="msg-subj">${m.subject||'General Enquiry'}</div>
       <div class="msg-body">${m.message}</div>
       <div class="msg-acts">
-        ${m.email?`<a href="mailto:${m.email}?subject=Re: ${m.subject||'Your Enquiry'}&body=Dear ${m.name}," class="reply-link">✉️ Reply by Email</a>`:''}
-        ${m.phone?`<a href="tel:${m.phone}" class="reply-link">📞 Call</a>`:''}
+        ${m.email?`<a href="mailto:${m.email}?subject=Re: ${m.subject||'Your Enquiry'}&body=Dear ${m.name}," class="reply-link">âœ‰ï¸ Reply by Email</a>`:''}
+        ${m.phone?`<a href="tel:${m.phone}" class="reply-link">ðŸ“ž Call</a>`:''}
         ${m.phone?`<a href="https://wa.me/${m.phone.replace(/[^0-9]/g,'')}" target="_blank" class="reply-link">WhatsApp</a>`:''}
-        <button class="del-msg" onclick="deleteMsg(${i})">🗑 Delete</button>
+        <button class="del-msg" onclick="deleteMsg(${i})">ðŸ—‘ Delete</button>
       </div>
     </div>`).join('');
 }
 function deleteMsg(i){ if(!confirm('Delete this message?')) return; D.contactMessages.splice(i,1); NHS.save(D); loadMessages(); updateBadges(); }
 function markMsgsSeen(){ (D.contactMessages||[]).forEach(m=>m.seen=true); NHS.save(D); loadMessages(); updateBadges(); }
 
-/* ── DASHBOARD ── */
+/* â”€â”€ DASHBOARD â”€â”€ */
 function loadDashboard(){
   const apps=D.applications||[], msgs=D.contactMessages||[];
   document.getElementById('dashStats').innerHTML=`
@@ -1831,17 +1831,17 @@ function loadDashboard(){
     <div class="stat-card"><div class="stat-num">${msgs.length}</div><div class="stat-lbl">Messages</div></div>`;
   document.getElementById('dashApps').innerHTML=apps.slice(0,6).map(a=>`
     <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);gap:8px;">
-      <div><strong style="font-size:.86rem;">${a.studentName}</strong><br/><span style="font-size:.74rem;color:var(--dim);">${a.applyClass} · ${a.date}</span></div>
+      <div><strong style="font-size:.86rem;">${a.studentName}</strong><br/><span style="font-size:.74rem;color:var(--dim);">${a.applyClass} Â· ${a.date}</span></div>
       <span class="status s-${a.status}">${a.status}</span>
     </div>`).join('')||'<p style="color:var(--dim);font-size:.84rem;padding:16px 0;">No applications yet.</p>';
   document.getElementById('dashMsgs').innerHTML=msgs.slice(0,5).map(m=>`
     <div style="padding:9px 0;border-bottom:1px solid var(--border);">
       <strong style="font-size:.86rem;">${m.name}</strong> <span style="font-size:.74rem;color:var(--dim);">${m.subject||'Enquiry'}</span>
-      <br/><span style="font-size:.8rem;color:var(--dim);">${m.message.substring(0,70)}…</span>
+      <br/><span style="font-size:.8rem;color:var(--dim);">${m.message.substring(0,70)}â€¦</span>
     </div>`).join('')||'<p style="color:var(--dim);font-size:.84rem;padding:16px 0;">No messages yet.</p>';
 }
 
-/* ── BADGES ── */
+/* â”€â”€ BADGES â”€â”€ */
 function updateBadges(){
   const apps=(D.applications||[]).filter(a=>!a.seen).length;
   const msgs=(D.contactMessages||[]).filter(m=>!m.seen).length;
@@ -1851,7 +1851,7 @@ function updateBadges(){
   mb.textContent=msgs; mb.classList.toggle('show',msgs>0);
 }
 
-/* ── NOTIFICATIONS PAGE ── */
+/* â”€â”€ NOTIFICATIONS PAGE â”€â”€ */
 function renderNoticePreview(){
   const preview = document.getElementById('noticePreview');
   if(!preview) return;
@@ -1862,12 +1862,12 @@ function renderNoticePreview(){
   const linkText = v('nNoticeLinkText');
   preview.innerHTML = `
     <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;color:#fff;">
-      <div style="width:56px;height:56px;border-radius:16px;background:rgba(220,231,117,.14);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎒</div>
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(220,231,117,.14);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">ðŸŽ’</div>
       <div>
-        <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.12);color:var(--lime);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">● ${badge}</div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.12);color:var(--lime);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">â— ${badge}</div>
         <div style="font-family:'Playfair Display',serif;font-size:1.25rem;margin:10px 0 8px;">${title}</div>
         <div style="font-size:.88rem;line-height:1.7;color:rgba(255,255,255,.84);">${message}</div>
-        ${linkText ? `<div style="margin-top:12px;font-size:.82rem;font-weight:700;color:#fff;">${linkText} ›</div>` : ''}
+        ${linkText ? `<div style="margin-top:12px;font-size:.82rem;font-weight:700;color:#fff;">${linkText} â€º</div>` : ''}
       </div>
       <div style="font-size:.75rem;color:${enabled ? 'var(--lime)' : 'rgba(255,255,255,.46)'};font-weight:700;text-transform:uppercase;">${enabled ? 'Live' : 'Draft'}</div>
     </div>`;
@@ -2016,21 +2016,21 @@ function removeAdminUser(index){
   renderAdminUsers();
 }
 
-/* ── PASSWORD ── */
+/* â”€â”€ PASSWORD â”€â”€ */
 function changePw(){
   const cur=document.getElementById('pwCur').value;
   const nw=document.getElementById('pwNew').value;
   const cf=document.getElementById('pwConf').value;
   const msg=document.getElementById('pwMsg');
-  if(cur!==D.adminPassword){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='❌ Current password is incorrect.';return; }
-  if(nw.length<6){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='❌ New password must be at least 6 characters.';return; }
-  if(nw!==cf){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='❌ Passwords do not match.';return; }
+  if(cur!==D.adminPassword){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='âŒ Current password is incorrect.';return; }
+  if(nw.length<6){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='âŒ New password must be at least 6 characters.';return; }
+  if(nw!==cf){ msg.style.display='block';msg.style.color='#f87171';msg.textContent='âŒ Passwords do not match.';return; }
   D.adminPassword=nw; NHS.save(D);
-  msg.style.display='block';msg.style.color='var(--ok)';msg.textContent='✅ Password updated successfully.';
+  msg.style.display='block';msg.style.color='var(--ok)';msg.textContent='âœ… Password updated successfully.';
   document.getElementById('pwCur').value='';document.getElementById('pwNew').value='';document.getElementById('pwConf').value='';
 }
 
-/* ── SAVE ALL ── */
+/* â”€â”€ SAVE ALL â”€â”€ */
 async function saveAll(){
   try{
     collectGeneral(); collectHomepage(); collectAbout();
@@ -2045,7 +2045,7 @@ async function saveAll(){
   }catch(e){ alert('Save error: '+e.message); console.error(e); }
 }
 
-/* ── UTILITY ── */
+/* â”€â”€ UTILITY â”€â”€ */
 function v(id){ const el=document.getElementById(id); return el?el.value:''; }
 
 function escapeAdminDraftValue(value){
@@ -2056,7 +2056,7 @@ function escapeAdminDraftValue(value){
     .replace(/>/g,'&gt;');
 }
 
-/* ── CTRL+SHIFT+A ── */
+/* â”€â”€ CTRL+SHIFT+A â”€â”€ */
 document.addEventListener('keydown',e=>{
   if(e.ctrlKey&&e.shiftKey&&e.key==='A'){
     const unlocked = getAdminUnlock();
