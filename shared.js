@@ -715,14 +715,37 @@ function renderNav(active) {
       </div>
     </nav>`;
 
+  syncNavOffset();
+  updateNavScrollState();
+
   window.addEventListener('scroll', () => {
-    const nav = document.getElementById('navbar');
-    if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
+    syncNavOffset();
+    updateNavScrollState();
+  });
+
+  window.addEventListener('resize', () => {
+    syncNavOffset();
+    if (window.innerWidth > 860) closeNav();
+  });
+
+  document.getElementById('navLinks')?.addEventListener('click', (event) => {
+    if (event.target.closest('a')) closeNav();
   });
 
   document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.shiftKey && event.key === 'A') window.location.href = 'admin.html';
   });
+}
+
+function syncNavOffset() {
+  const nav = document.getElementById('navbar');
+  if (!nav) return;
+  document.documentElement.style.setProperty('--nav-offset', `${Math.ceil(nav.offsetHeight)}px`);
+}
+
+function updateNavScrollState() {
+    const nav = document.getElementById('navbar');
+    if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
 }
 
 function renderFooter() {
@@ -813,10 +836,6 @@ document.addEventListener('click', (event) => {
   if (navLinks && navLinks.classList.contains('nav-open') && !event.target.closest('.navbar')) {
     closeNav();
   }
-});
-
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 860) closeNav();
 });
 
 document.addEventListener('keydown', (event) => {
