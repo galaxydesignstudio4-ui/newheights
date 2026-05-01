@@ -1,4 +1,4 @@
-/* ===== NEW HEIGHTS SCHOOL - SHARED DATA + UTILITIES v4 ===== */
+﻿/* ===== NEW HEIGHTS SCHOOL - SHARED DATA + UTILITIES v4 ===== */
 
 const NHS = (function () {
   const STORAGE_KEY = 'nhs_v3';
@@ -31,7 +31,7 @@ const NHS = (function () {
       whatsapp: "https://wa.me/233552517018"
     },
     footerAbout: "An ultra-modern school at the heart of the equator, New Dawhenya, Ghana. Quality, affordable education - Higher and Higher Still.",
-    footerCopyright: "© 2025 New Heights School, New Dawhenya, Ghana. All rights reserved.",
+    footerCopyright: "\u00A9 2025 New Heights School, New Dawhenya, Ghana. All rights reserved.",
     galaxyStudioUrl: "https://galaxystudio.com",
     contactAddress: "New Dawhenya, Off Methodist Junction, Ghana",
     contactPhone1: "+233 552 517 018",
@@ -64,12 +64,12 @@ const NHS = (function () {
       { num: "100%", label: "Committed to Quality" }
     ],
     whyCards: [
-      { icon: "🎓", title: "Quality Education", text: "We deliver a rigorous hybrid curriculum combining the Montessori System with the Ghana Education Service standards for holistic development." },
-      { icon: "💰", title: "Affordable Fees", text: "We believe every child deserves world-class education regardless of their family's economic background - quality without compromise." },
-      { icon: "🌿", title: "Conducive Environment", text: "Our campus at the heart of the equator offers a serene, safe, and inspiring setting for effective learning and personal growth." },
-      { icon: "👩‍🏫", title: "Qualified Teachers", text: "Every member of our teaching staff is professionally trained, experienced, and deeply passionate about child development." },
-      { icon: "💻", title: "State-of-the-art IT", text: "Our ICT programme equips students with modern digital skills and technological literacy essential for the 21st century." },
-      { icon: "🥁", title: "Extracurricular Activities", text: "Cadet Corps, Cultural Troops, School Choir and more - we build confident, well-rounded young people beyond the classroom." }
+      { icon: "\u{1F393}", title: "Quality Education", text: "We deliver a rigorous hybrid curriculum combining the Montessori System with the Ghana Education Service standards for holistic development." },
+      { icon: "\u{1F4B0}", title: "Affordable Fees", text: "We believe every child deserves world-class education regardless of their family's economic background - quality without compromise." },
+      { icon: "\u{1F33F}", title: "Conducive Environment", text: "Our campus at the heart of the equator offers a serene, safe, and inspiring setting for effective learning and personal growth." },
+      { icon: "\u{1F469}\u200D\u{1F3EB}", title: "Qualified Teachers", text: "Every member of our teaching staff is professionally trained, experienced, and deeply passionate about child development." },
+      { icon: "\u{1F4BB}", title: "State-of-the-art IT", text: "Our ICT programme equips students with modern digital skills and technological literacy essential for the 21st century." },
+      { icon: "\u{1F941}", title: "Extracurricular Activities", text: "Cadet Corps, Cultural Troops, School Choir and more - we build confident, well-rounded young people beyond the classroom." }
     ],
     programs: [
       { image: "", badge: "Nursery", title: "Nursery", text: "A nurturing, play-based foundation that builds early language, numeracy, and social-emotional skills in a warm, caring environment." },
@@ -125,19 +125,19 @@ const NHS = (function () {
         { num: "4", title: "Confirm & Enroll", text: "Pay the enrolment fee, submit required documents, receive your welcome pack, and officially join the New Heights School family!" }
       ],
       fees: [
-        { level: "Nursery 1", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Nursery 2", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Kindergarten 1", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Kindergarten 2", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Primary 1", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Primary 2", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Primary 3", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Primary 4", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Primary 5", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "Primary 6", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "JHS 1", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "JHS 2", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" },
-        { level: "JHS 3", tuition: "GH₵ -", levies: "GH₵ -", feeding: "GH₵ -", enrolment: "GH₵ -" }
+        { level: "Nursery 1", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Nursery 2", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Kindergarten 1", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Kindergarten 2", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Primary 1", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Primary 2", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Primary 3", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Primary 4", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Primary 5", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "Primary 6", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "JHS 1", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "JHS 2", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" },
+        { level: "JHS 3", tuition: "GH\u20B5 -", levies: "GH\u20B5 -", feeding: "GH\u20B5 -", enrolment: "GH\u20B5 -" }
       ],
       feesNote: "* Fees are reviewed each academic year. Contact the school directly for the current term's exact fee schedule. Sibling discounts and scholarship opportunities are available."
     },
@@ -165,9 +165,41 @@ const NHS = (function () {
   let cache = clone(DEFAULT);
   let supabaseClient = null;
   let initPromise = null;
+  const MOJIBAKE_PATTERN = /(?:[\u00C3\u00C2\u00E2\u00F0].|\uFFFD)/;
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
+  }
+
+  function decodeLatin1Utf8(value) {
+    try {
+      const bytes = Uint8Array.from(Array.from(value, (char) => char.charCodeAt(0) & 0xff));
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (_err) {
+      return value;
+    }
+  }
+
+  function repairText(value) {
+    if (typeof value !== 'string' || !MOJIBAKE_PATTERN.test(value)) return value;
+    let repaired = value;
+    for (let i = 0; i < 2; i += 1) {
+      const next = decodeLatin1Utf8(repaired);
+      if (!next || next === repaired) break;
+      repaired = next;
+      if (!MOJIBAKE_PATTERN.test(repaired)) break;
+    }
+    return repaired;
+  }
+
+  function sanitizeState(value) {
+    if (Array.isArray(value)) return value.map(sanitizeState);
+    if (!value || typeof value !== 'object') {
+      return typeof value === 'string' ? repairText(value) : value;
+    }
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [key, sanitizeState(entry)])
+    );
   }
 
   function formatDateTime(value) {
@@ -211,7 +243,7 @@ const NHS = (function () {
     if (!merged.googleMapEmbed || merged.googleMapEmbed.includes('2sNew%20Dawhenya')) {
       merged.googleMapEmbed = base.googleMapEmbed;
     }
-    return merged;
+    return sanitizeState(merged);
   }
 
   function ensureRequiredAdmins(users) {
@@ -226,9 +258,9 @@ const NHS = (function () {
   function readLocal() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? mergeState(DEFAULT, JSON.parse(raw)) : clone(DEFAULT);
+      return raw ? mergeState(DEFAULT, JSON.parse(raw)) : mergeState(DEFAULT, {});
     } catch (_err) {
-      return clone(DEFAULT);
+      return mergeState(DEFAULT, {});
     }
   }
 
@@ -874,7 +906,7 @@ function renderNav(active) {
   const d = NHS.get();
   const logo = d.logoDataUrl
     ? `<img src="${d.logoDataUrl}" alt="Logo" class="nav-logo-img">`
-    : `<span class="nav-logo-placeholder">🏫</span>`;
+    : `<span class="nav-logo-placeholder">&#127979;</span>`;
 
   document.getElementById('navPlaceholder').innerHTML = `
     <nav class="navbar" id="navbar">
@@ -926,7 +958,7 @@ function renderFooter() {
         <div class="footer-grid">
           <div class="footer-brand">
             <a href="index.html" class="nav-logo" style="margin-bottom:14px;display:inline-flex;align-items:center;gap:10px;">
-              ${d.logoDataUrl ? `<img src="${d.logoDataUrl}" alt="Logo" style="height:38px;object-fit:contain;">` : '🏫'}
+              ${d.logoDataUrl ? `<img src="${d.logoDataUrl}" alt="Logo" style="height:38px;object-fit:contain;">` : '&#127979;'}
               <span>${d.schoolName} <em class="logo-accent" style="font-style:normal;">${d.schoolTagline}</em></span>
             </a>
             <p>${d.footerAbout}</p>
@@ -947,24 +979,24 @@ function renderFooter() {
           </div>
           <div class="footer-col">
             <h4>Quick Links</h4>
-            <ul>${d.navLinks.map((link) => `<li><a href="${link.href}">→ ${link.label}</a></li>`).join('')}</ul>
+            <ul>${d.navLinks.map((link) => `<li><a href="${link.href}">&rarr; ${link.label}</a></li>`).join('')}</ul>
           </div>
           <div class="footer-col">
             <h4>Programs</h4>
             <ul>
-              <li><a href="programs.html">→ Nursery</a></li>
-              <li><a href="programs.html">→ Kindergarten</a></li>
-              <li><a href="programs.html">→ Primary School</a></li>
-              <li><a href="programs.html">→ Junior High (JHS)</a></li>
+              <li><a href="programs.html">&rarr; Nursery</a></li>
+              <li><a href="programs.html">&rarr; Kindergarten</a></li>
+              <li><a href="programs.html">&rarr; Primary School</a></li>
+              <li><a href="programs.html">&rarr; Junior High (JHS)</a></li>
             </ul>
           </div>
           <div class="footer-col">
             <h4>Contact Us</h4>
             <ul>
-              <li><a href="contact.html">📍 ${d.contactAddress}</a></li>
-              <li><a href="tel:${d.contactPhone1}">📞 ${d.contactPhone1}</a></li>
-              ${d.contactPhone2 ? `<li><a href="tel:${d.contactPhone2}">📞 ${d.contactPhone2}</a></li>` : ''}
-              <li><a href="mailto:${d.contactEmail1}">✉ ${d.contactEmail1}</a></li>
+              <li><a href="contact.html">&#128205; ${d.contactAddress}</a></li>
+              <li><a href="tel:${d.contactPhone1}">&#128222; ${d.contactPhone1}</a></li>
+              ${d.contactPhone2 ? `<li><a href="tel:${d.contactPhone2}">&#128222; ${d.contactPhone2}</a></li>` : ''}
+              <li><a href="mailto:${d.contactEmail1}">&#9993; ${d.contactEmail1}</a></li>
             </ul>
           </div>
         </div>
@@ -1025,3 +1057,4 @@ function initReveal() {
 
   document.querySelectorAll('.reveal, .reveal-left').forEach((el) => io.observe(el));
 }
+
