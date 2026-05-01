@@ -77,8 +77,9 @@ p{color:var(--gray);line-height:1.7;}
 /* Mobile Nav */
 @media(max-width:860px){
   .hamburger{display:flex;}
+  .nav-inner{position:relative;}
   .nav-links{
-    display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
+    display:none;position:fixed;top:var(--nav-offset,var(--nav-h));left:0;right:0;bottom:0;
     flex-direction:column;align-items:stretch;padding:30px clamp(22px,7vw,40px) 44px;
     background:linear-gradient(180deg,rgba(27,94,32,.99),rgba(18,74,27,.98));backdrop-filter:blur(20px);
     gap:14px;overflow-y:auto;z-index:999;
