@@ -642,6 +642,7 @@ img{max-width:100%;display:block;}
               <div class="af"><label>Template ID</label><input id="nTplId" type="text" placeholder="template_xxxxxxx"/></div>
               <div class="af"><label>Public Key</label><input id="nPubKey" type="text" placeholder="your_public_key"/></div>
             </div>
+            <div id="emailConfigStatus" style="margin-top:12px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.78rem;color:var(--dim);line-height:1.7;"></div>
           </div>
           <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;">
             <h3 style="font-size:.9rem;color:var(--text);margin-bottom:8px;">SMS via Supabase Edge Function</h3>
@@ -672,7 +673,7 @@ img{max-width:100%;display:block;}
             </div>
             <div style="margin-top:14px;padding:16px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--border);">
               <div style="font-size:.72rem;color:var(--dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;">Preview</div>
-              <div id="noticePreview" style="border-radius:18px;padding:18px;background:linear-gradient(135deg,#0f4f1d 0%,#1b5e20 48%,#2e7d32 100%);border:1px solid rgba(220,231,117,.16);"></div>
+              <div id="noticePreview" style="max-width:360px;"></div>
             </div>
           </div>
         </div>
@@ -1771,6 +1772,63 @@ function collectNotifications(){
   D.websiteNotice = Object.assign({}, prevNotice, nextNotice, {
     updatedAt: changed ? new Date().toISOString() : (prevNotice.updatedAt || '')
   });
+}
+
+function renderNoticePreview(){
+  const preview = document.getElementById('noticePreview');
+  if(!preview) return;
+  const enabled = !!document.getElementById('nNoticeEnabled')?.checked;
+  const badge = v('nNoticeBadge') || 'Important Notice';
+  const title = v('nNoticeTitle') || 'Information from New Heights School';
+  const message = v('nNoticeMessage') || 'Your important school notice will appear here.';
+  const linkText = v('nNoticeLinkText');
+  preview.innerHTML = `
+    <div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;color:#fff;padding:14px 14px 14px 13px;border-radius:18px;background:linear-gradient(135deg,#0f4f1d 0%,#1b5e20 48%,#2e7d32 100%);border:1px solid rgba(220,231,117,.16);box-shadow:0 16px 30px rgba(0,0,0,.18);">
+      <div style="width:44px;height:44px;border-radius:14px;background:rgba(220,231,117,.14);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">&#127890;</div>
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.12);color:var(--lime);font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">&#9679; ${badge}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.02rem;margin:8px 0 6px;">${title}</div>
+        <div style="font-size:.82rem;line-height:1.55;color:rgba(255,255,255,.84);">${message}</div>
+        ${linkText ? `<div style="margin-top:10px;font-size:.78rem;font-weight:700;color:#fff;">${linkText} &rsaquo;</div>` : ''}
+      </div>
+      <div style="font-size:.72rem;color:${enabled ? 'var(--lime)' : 'rgba(255,255,255,.46)'};font-weight:700;text-transform:uppercase;">${enabled ? 'Live' : 'Draft'}</div>
+    </div>`;
+}
+
+function renderEmailConfigStatus(){
+  const status = document.getElementById('emailConfigStatus');
+  if(!status) return;
+  const issues = NHS.getEmailSettingsIssues ? NHS.getEmailSettingsIssues() : [];
+  status.innerHTML = issues.length
+    ? `<strong style="color:#facc15;">Setup needed:</strong> add ${issues.join(', ')}.<br/>Template variables to include: <code>{{student_name}}</code>, <code>{{parent_name}}</code>, <code>{{apply_class}}</code>, <code>{{status}}</code>, <code>{{school_name}}</code>, <code>{{tracking_code}}</code>, <code>{{email_message}}</code>.`
+    : `<strong style="color:#86efac;">EmailJS looks ready.</strong> Save changes, then use the Email or Exam Email buttons in Applications.`;
+}
+
+function loadNotifications(){
+  document.getElementById('nAdminEmail').value = D.adminEmail||'';
+  document.getElementById('nSenderName').value = D.emailjsSenderName||'';
+  document.getElementById('nSvcId').value  = D.emailjsServiceId||'';
+  document.getElementById('nTplId').value  = D.emailjsTemplateId||'';
+  document.getElementById('nPubKey').value = D.emailjsPublicKey||'';
+  document.getElementById('nExamMessage').value = D.examEmailMessage || NHS.DEFAULT.examEmailMessage;
+  const notice = D.websiteNotice || NHS.DEFAULT.websiteNotice;
+  document.getElementById('nNoticeEnabled').checked = !!notice.enabled;
+  document.getElementById('nNoticeBadge').value = notice.badge || '';
+  document.getElementById('nNoticeTitle').value = notice.title || '';
+  document.getElementById('nNoticeMessage').value = notice.message || '';
+  document.getElementById('nNoticeLinkText').value = notice.linkText || '';
+  document.getElementById('nNoticeLinkUrl').value = notice.linkUrl || '';
+  ['nNoticeEnabled','nNoticeBadge','nNoticeTitle','nNoticeMessage','nNoticeLinkText','nNoticeLinkUrl','nSvcId','nTplId','nPubKey'].forEach((id) => {
+    const el = document.getElementById(id);
+    if(!el || el.dataset.noticeBound === 'true') return;
+    el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
+      renderNoticePreview();
+      renderEmailConfigStatus();
+    });
+    el.dataset.noticeBound = 'true';
+  });
+  renderNoticePreview();
+  renderEmailConfigStatus();
 }
 
 function renderAdminUsers(){

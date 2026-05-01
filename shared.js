@@ -642,8 +642,9 @@ const NHS = (function () {
       ? `Admission Examination Notice - ${d.schoolName} ${d.schoolTagline}`.trim()
       : `Admission Status Update - ${d.schoolName} ${d.schoolTagline}`.trim();
     if (!app?.email) throw new Error('Parent email is missing.');
-    if (!d.emailjsPublicKey || !d.emailjsServiceId || !d.emailjsTemplateId) {
-      throw new Error('Email settings are not configured in admin notifications.');
+    const emailIssues = getEmailSettingsIssues();
+    if (emailIssues.length) {
+      throw new Error(`Email settings are missing: ${emailIssues.join(', ')}. Open Admin > Notifications and complete the EmailJS setup.`);
     }
     const emailjs = await loadEmailJs();
     emailjs.init({
@@ -679,6 +680,7 @@ const NHS = (function () {
     fileToBase64,
     getAdminUserByEmail,
     get,
+    getEmailSettingsIssues,
     getStatusLabel,
     getSupabase,
     getUnseenCount,
@@ -735,11 +737,10 @@ function closeWebsiteNotice() {
 function renderWebsiteNotice() {
   let placeholder = document.getElementById('siteNoticePlaceholder');
   if (!placeholder) {
-    const navPlaceholder = document.getElementById('navPlaceholder');
-    if (!navPlaceholder?.parentNode) return;
+    if (!document.body) return;
     placeholder = document.createElement('div');
     placeholder.id = 'siteNoticePlaceholder';
-    navPlaceholder.insertAdjacentElement('afterend', placeholder);
+    document.body.appendChild(placeholder);
   }
   if (!placeholder) return;
   const notice = NHS.get().websiteNotice || {};
@@ -753,9 +754,8 @@ function renderWebsiteNotice() {
   const linkText = String(notice.linkText || '').trim();
   const linkUrl = String(notice.linkUrl || '').trim();
   placeholder.innerHTML = `
-    <section class="site-notice-wrap">
-      <div class="container">
-        <div class="site-notice-banner" role="status" aria-live="polite">
+    <div class="site-notice-wrap" role="status" aria-live="polite">
+      <div class="site-notice-banner">
           <div class="site-notice-icon" aria-hidden="true">🎒</div>
           <div class="site-notice-copy">
             <span class="site-notice-badge">${badge}</span>
@@ -767,6 +767,48 @@ function renderWebsiteNotice() {
         </div>
       </div>
     </section>`;
+}
+
+function renderWebsiteNotice() {
+  let placeholder = document.getElementById('siteNoticePlaceholder');
+  if (!placeholder) {
+    if (!document.body) return;
+    placeholder = document.createElement('div');
+    placeholder.id = 'siteNoticePlaceholder';
+    document.body.appendChild(placeholder);
+  }
+  const notice = NHS.get().websiteNotice || {};
+  if (!isNoticeVisible(notice)) {
+    placeholder.innerHTML = '';
+    return;
+  }
+  const badge = String(notice.badge || 'Important Notice').trim();
+  const title = String(notice.title || 'Information from New Heights School').trim();
+  const message = String(notice.message || '').trim();
+  const linkText = String(notice.linkText || '').trim();
+  const linkUrl = String(notice.linkUrl || '').trim();
+  placeholder.innerHTML = `
+    <div class="site-notice-wrap" role="status" aria-live="polite">
+      <div class="site-notice-banner">
+        <div class="site-notice-icon" aria-hidden="true">&#127890;</div>
+        <div class="site-notice-copy">
+          <span class="site-notice-badge">${badge}</span>
+          <h2>${title}</h2>
+          <p>${message}</p>
+          ${linkText && linkUrl ? `<a href="${linkUrl}" class="site-notice-link">${linkText}</a>` : ''}
+        </div>
+        <button class="site-notice-close" type="button" aria-label="Close notice" onclick="closeWebsiteNotice()">&times;</button>
+      </div>
+    </div>`;
+}
+
+function getEmailSettingsIssues() {
+  const d = NHS.get();
+  const issues = [];
+  if (!String(d.emailjsServiceId || '').trim()) issues.push('Service ID');
+  if (!String(d.emailjsTemplateId || '').trim()) issues.push('Template ID');
+  if (!String(d.emailjsPublicKey || '').trim()) issues.push('Public Key');
+  return issues;
 }
 
 function bindNavEventsOnce() {
