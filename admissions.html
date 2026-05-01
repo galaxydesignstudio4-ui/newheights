@@ -700,23 +700,34 @@ function renderAdmissionsContent() {
   const D = NHS.get();
   const adm = D.admissions || {};
   const defaultSteps = NHS.DEFAULT.admissions.steps;
-  const savedSteps = (adm.steps || []).filter((step) => step?.num && step?.title && step?.text);
-  const steps = savedSteps.length === 4 ? savedSteps : defaultSteps;
+  const savedSteps = Array.isArray(adm.steps)
+    ? adm.steps.filter((step) => step && (step.num || step.title || step.text))
+    : [];
+  const steps = defaultSteps.map((fallback, index) => {
+    const saved = savedSteps[index] || {};
+    return {
+      num: String(saved.num || fallback.num || index + 1),
+      title: String(saved.title || fallback.title || '').trim(),
+      text: String(saved.text || fallback.text || '').trim()
+    };
+  });
+  const stepTips = [
+    'Keep your phone number and email active for updates.',
+    'Bring any previous report cards or transfer records.',
+    'Use your 6-digit admission code to track progress online.',
+    'Our admissions team will guide you through final onboarding.'
+  ];
   document.getElementById('stepsWrap').innerHTML = steps.map((step) => `
     <div class="step-box reveal">
       <div class="step-circle">${step.num}</div>
       <div class="step-kicker">Step ${step.num}</div>
       <h3>${step.title}</h3>
       <p>${step.text}</p>
-      <div class="step-tip">${[
-        'Keep your phone number and email active for updates.',
-        'Bring any previous report cards or transfer records.',
-        'Use your 6-digit admission code to track progress online.',
-        'Our admissions team will guide you through final onboarding.'
-      ][Math.max(0, Number(step.num || 1) - 1)] || 'Our admissions office is ready to help at every stage.'}</div>
+      <div class="step-tip">${stepTips[Math.max(0, Number(step.num || 1) - 1)] || stepTips[0]}</div>
     </div>
   `).join('');
-  document.getElementById('feesBody').innerHTML = (adm.fees || []).map((fee) => `
+  const fees = Array.isArray(adm.fees) && adm.fees.length ? adm.fees : NHS.DEFAULT.admissions.fees;
+  document.getElementById('feesBody').innerHTML = fees.map((fee) => `
     <tr>
       <td><strong>${fee.level}</strong></td>
       <td>${fee.tuition}</td>
@@ -735,12 +746,13 @@ function renderAdmissionsContent() {
   renderNav('admissions.html');
   renderFooter();
   renderAdmissionsContent();
+  initReveal();
   await NHS.init();
   renderNav('admissions.html');
   renderFooter();
-  initReveal();
   updateWizardUI();
   renderAdmissionsContent();
+  initReveal();
 })();
 </script>
 </body>
