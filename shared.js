@@ -671,6 +671,67 @@ const NHS = (function () {
     });
   }
 
+  function buildStatusEmailDraft(app, overrideStatus, options) {
+    const d = get();
+    const status = String(overrideStatus || app?.status || 'pending').toLowerCase();
+    const mode = options?.mode || 'status';
+    const schoolName = `${d.schoolName} ${d.schoolTagline}`.trim();
+    const defaultSubject = mode === 'exam'
+      ? `Admission Examination Notice - ${schoolName}`.trim()
+      : `Admission Status Update - ${schoolName}`.trim();
+    const subject = String(options?.subject || defaultSubject).trim();
+    const note = String(options?.message || (mode === 'exam' ? d.examEmailMessage : '')).trim();
+    const bodyLines = [
+      `Dear ${app?.parentName || 'Parent/Guardian'},`,
+      '',
+      mode === 'exam'
+        ? `This is to inform you that ${app?.studentName || 'your child'} has been scheduled for an admission examination/assessment at ${schoolName}.`
+        : `This is to update you on the admission application for ${app?.studentName || 'your child'} at ${schoolName}.`,
+      '',
+      `Student Name: ${app?.studentName || '-'}`,
+      `Class Applied For: ${app?.applyClass || '-'}`,
+      `Application Status: ${getStatusLabel(status)}`,
+      `Admission Code: ${app?.applicationCode || '-'}`,
+      note ? '' : null,
+      note || null,
+      '',
+      `For support, please contact us on ${d.contactPhone1 || '-'} or ${d.contactEmail1 || '-'}.`,
+      '',
+      'Regards,',
+      d.emailjsSenderName || schoolName
+    ].filter((line) => line !== null);
+    return {
+      to: String(app?.email || '').trim(),
+      subject,
+      body: bodyLines.join('\n')
+    };
+  }
+
+  function buildGmailComposeUrl(to, subject, body) {
+    const params = new URLSearchParams({
+      view: 'cm',
+      fs: '1',
+      to: to || '',
+      su: subject || '',
+      body: body || ''
+    });
+    return `https://mail.google.com/mail/?${params.toString()}`;
+  }
+
+  function openGmailDraft(app, overrideStatus, options) {
+    const draft = options?.body
+      ? {
+          to: String(app?.email || '').trim(),
+          subject: String(options?.subject || '').trim(),
+          body: String(options?.body || '')
+        }
+      : buildStatusEmailDraft(app, overrideStatus, options);
+    if (!draft.to) throw new Error('Parent email is missing.');
+    const url = buildGmailComposeUrl(draft.to, draft.subject, draft.body);
+    window.open(url, '_blank', 'noopener');
+    return draft;
+  }
+
   return {
     DEFAULT,
     addApplication,
@@ -687,7 +748,10 @@ const NHS = (function () {
     init,
     initLocal,
     isApprovedAdminEmail,
+    buildStatusEmailDraft,
+    buildGmailComposeUrl,
     loadEmailJs,
+    openGmailDraft,
     refresh,
     removeApplication,
     removeGalleryImage,
