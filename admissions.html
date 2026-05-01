@@ -8,9 +8,30 @@
 <style>
 .admissions-hero-copy{max-width:760px;margin:0 auto;}
 .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px;}
-.steps-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative;}
-.step-box{background:var(--white);border-radius:var(--r16);padding:24px 20px;box-shadow:var(--sh2);text-align:center;}
-.step-circle{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--g-primary),var(--g-sec));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;margin:0 auto 16px;}
+.steps-wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;position:relative;align-items:stretch;}
+.steps-wrap::before{
+  content:'';position:absolute;left:8%;right:8%;top:54px;height:2px;z-index:0;
+  background:linear-gradient(90deg,rgba(46,125,50,.18),rgba(76,175,80,.34),rgba(46,125,50,.18));
+}
+.step-box{
+  position:relative;z-index:1;background:linear-gradient(180deg,#fff 0%,#f8fbf8 100%);
+  border-radius:28px;padding:26px 22px 24px;box-shadow:0 18px 44px rgba(18,59,24,.08);
+  text-align:left;border:1px solid rgba(46,125,50,.08);overflow:hidden;
+}
+.step-box::after{
+  content:'';position:absolute;inset:auto 0 0 0;height:4px;
+  background:linear-gradient(90deg,var(--g-primary),var(--g-sec),var(--lime));
+}
+.step-circle{
+  width:68px;height:68px;border-radius:24px;background:linear-gradient(135deg,var(--g-primary),var(--g-sec));
+  color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;
+  font-size:1.7rem;font-weight:800;margin:0 0 18px;box-shadow:0 14px 30px rgba(46,125,50,.24);
+}
+.step-kicker{display:inline-flex;align-items:center;gap:8px;font-size:.74rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--g-primary);margin-bottom:10px;}
+.step-kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--g-sec);}
+.step-box h3{margin-bottom:10px;color:var(--g-dark);font-size:1.05rem;}
+.step-box p{font-size:.9rem;line-height:1.72;}
+.step-tip{margin-top:14px;padding-top:14px;border-top:1px solid rgba(46,125,50,.12);font-size:.8rem;color:var(--g-primary);font-weight:600;}
 .fees-card{background:var(--white);border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh2);}
 .fees-card table{width:100%;border-collapse:collapse;}
 .fees-card thead th{background:var(--g-primary);color:#fff;padding:14px 18px;text-align:left;font-size:.82rem;font-weight:700;letter-spacing:.04em;}
@@ -67,6 +88,7 @@
 }
 @media(max-width:860px){
   .steps-wrap{grid-template-columns:1fr 1fr;}
+  .steps-wrap::before{display:none;}
   .step-pills{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:640px){
@@ -99,28 +121,36 @@
     <div class="section-head center text-center reveal">
       <span class="label">How It Works</span>
       <h2>Four Simple Steps to Enrolment</h2>
-      <p>Submit the form, meet the admissions team, receive your decision, then confirm your child's place at New Heights School.</p>
+      <p>Submit the form, meet the admissions team, receive your decision, then confirm your child&apos;s place at New Heights School.</p>
     </div>
     <div class="steps-wrap" id="stepsWrap">
       <div class="step-box reveal">
         <div class="step-circle">1</div>
+        <div class="step-kicker">Step One</div>
         <h3>Complete Application</h3>
         <p>Fill out the admission form with accurate details about your child, parent or guardian, and previous schooling.</p>
+        <div class="step-tip">Keep your phone number and email active for updates.</div>
       </div>
       <div class="step-box reveal">
         <div class="step-circle">2</div>
+        <div class="step-kicker">Step Two</div>
         <h3>Interview & Assessment</h3>
         <p>Your child may attend a friendly age-appropriate assessment while parents meet the admissions team.</p>
+        <div class="step-tip">Bring any previous report cards or transfer records.</div>
       </div>
       <div class="step-box reveal">
         <div class="step-circle">3</div>
+        <div class="step-kicker">Step Three</div>
         <h3>Receive Decision</h3>
         <p>The school reviews the application and sends the admission status or examination notice to the parent.</p>
+        <div class="step-tip">Use your 6-digit admission code to track progress online.</div>
       </div>
       <div class="step-box reveal">
         <div class="step-circle">4</div>
+        <div class="step-kicker">Step Four</div>
         <h3>Confirm & Enrol</h3>
         <p>Submit required documents, pay the enrolment fee, and officially join the New Heights School family.</p>
+        <div class="step-tip">Our admissions team will guide you through final onboarding.</div>
       </div>
     </div>
   </div>
@@ -675,8 +705,15 @@ function renderAdmissionsContent() {
   document.getElementById('stepsWrap').innerHTML = steps.map((step) => `
     <div class="step-box reveal">
       <div class="step-circle">${step.num}</div>
+      <div class="step-kicker">Step ${step.num}</div>
       <h3>${step.title}</h3>
       <p>${step.text}</p>
+      <div class="step-tip">${[
+        'Keep your phone number and email active for updates.',
+        'Bring any previous report cards or transfer records.',
+        'Use your 6-digit admission code to track progress online.',
+        'Our admissions team will guide you through final onboarding.'
+      ][Math.max(0, Number(step.num || 1) - 1)] || 'Our admissions office is ready to help at every stage.'}</div>
     </div>
   `).join('');
   document.getElementById('feesBody').innerHTML = (adm.fees || []).map((fee) => `

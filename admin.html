@@ -652,6 +652,29 @@ img{max-width:100%;display:block;}
             <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px;line-height:1.6;">This message is added when you click the Exam Email button on an application. Your EmailJS/Gmail template should include {{email_message}} or {{message}}.</p>
             <div class="af"><label>Exam Email Message</label><textarea id="nExamMessage" rows="5" placeholder="Enter examination instruction for parents"></textarea></div>
           </div>
+          <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:18px;">
+            <h3 style="font-size:.9rem;color:var(--text);margin-bottom:8px;">Important Website Notice</h3>
+            <p style="font-size:.78rem;color:var(--dim);margin-bottom:14px;line-height:1.6;">Use this for urgent reminders to parents. It appears near the top of the website in a highlighted banner and parents can close it after reading.</p>
+            <div class="af" style="margin-bottom:12px;">
+              <label style="display:flex;align-items:center;gap:10px;text-transform:none;letter-spacing:0;font-size:.84rem;color:var(--text);">
+                <input id="nNoticeEnabled" type="checkbox" style="width:18px;height:18px;accent-color:var(--green);"/>
+                Show this important notice on the website
+              </label>
+            </div>
+            <div class="af-row">
+              <div class="af"><label>Badge</label><input id="nNoticeBadge" type="text" placeholder="Important Notice"/></div>
+              <div class="af"><label>Heading</label><input id="nNoticeTitle" type="text" placeholder="Information from New Heights School"/></div>
+            </div>
+            <div class="af"><label>Notice Message</label><textarea id="nNoticeMessage" rows="5" placeholder="Enter the message parents should read first."></textarea></div>
+            <div class="af-row">
+              <div class="af"><label>Button Text (Optional)</label><input id="nNoticeLinkText" type="text" placeholder="View more"/></div>
+              <div class="af"><label>Button Link (Optional)</label><input id="nNoticeLinkUrl" type="text" placeholder="admissions.html or https://..."/></div>
+            </div>
+            <div style="margin-top:14px;padding:16px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--border);">
+              <div style="font-size:.72rem;color:var(--dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;">Preview</div>
+              <div id="noticePreview" style="border-radius:18px;padding:18px;background:linear-gradient(135deg,#0f4f1d 0%,#1b5e20 48%,#2e7d32 100%);border:1px solid rgba(220,231,117,.16);"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1686,6 +1709,26 @@ function updateBadges(){
 }
 
 /* ── NOTIFICATIONS PAGE ── */
+function renderNoticePreview(){
+  const preview = document.getElementById('noticePreview');
+  if(!preview) return;
+  const enabled = !!document.getElementById('nNoticeEnabled')?.checked;
+  const badge = v('nNoticeBadge') || 'Important Notice';
+  const title = v('nNoticeTitle') || 'Information from New Heights School';
+  const message = v('nNoticeMessage') || 'Your important school notice will appear here.';
+  const linkText = v('nNoticeLinkText');
+  preview.innerHTML = `
+    <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;color:#fff;">
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(220,231,117,.14);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎒</div>
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.12);color:var(--lime);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">● ${badge}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.25rem;margin:10px 0 8px;">${title}</div>
+        <div style="font-size:.88rem;line-height:1.7;color:rgba(255,255,255,.84);">${message}</div>
+        ${linkText ? `<div style="margin-top:12px;font-size:.82rem;font-weight:700;color:#fff;">${linkText} ›</div>` : ''}
+      </div>
+      <div style="font-size:.75rem;color:${enabled ? 'var(--lime)' : 'rgba(255,255,255,.46)'};font-weight:700;text-transform:uppercase;">${enabled ? 'Live' : 'Draft'}</div>
+    </div>`;
+}
 function loadNotifications(){
   document.getElementById('nAdminEmail').value = D.adminEmail||'';
   document.getElementById('nSenderName').value = D.emailjsSenderName||'';
@@ -1693,6 +1736,20 @@ function loadNotifications(){
   document.getElementById('nTplId').value  = D.emailjsTemplateId||'';
   document.getElementById('nPubKey').value = D.emailjsPublicKey||'';
   document.getElementById('nExamMessage').value = D.examEmailMessage || NHS.DEFAULT.examEmailMessage;
+  const notice = D.websiteNotice || NHS.DEFAULT.websiteNotice;
+  document.getElementById('nNoticeEnabled').checked = !!notice.enabled;
+  document.getElementById('nNoticeBadge').value = notice.badge || '';
+  document.getElementById('nNoticeTitle').value = notice.title || '';
+  document.getElementById('nNoticeMessage').value = notice.message || '';
+  document.getElementById('nNoticeLinkText').value = notice.linkText || '';
+  document.getElementById('nNoticeLinkUrl').value = notice.linkUrl || '';
+  ['nNoticeEnabled','nNoticeBadge','nNoticeTitle','nNoticeMessage','nNoticeLinkText','nNoticeLinkUrl'].forEach((id) => {
+    const el = document.getElementById(id);
+    if(!el || el.dataset.noticeBound === 'true') return;
+    el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', renderNoticePreview);
+    el.dataset.noticeBound = 'true';
+  });
+  renderNoticePreview();
 }
 function collectNotifications(){
   D.adminEmail         = v('nAdminEmail');
@@ -1701,6 +1758,19 @@ function collectNotifications(){
   D.emailjsTemplateId  = v('nTplId');
   D.emailjsPublicKey   = v('nPubKey');
   D.examEmailMessage   = v('nExamMessage') || NHS.DEFAULT.examEmailMessage;
+  const prevNotice = D.websiteNotice || NHS.DEFAULT.websiteNotice;
+  const nextNotice = {
+    enabled: !!document.getElementById('nNoticeEnabled')?.checked,
+    badge: v('nNoticeBadge') || NHS.DEFAULT.websiteNotice.badge,
+    title: v('nNoticeTitle') || NHS.DEFAULT.websiteNotice.title,
+    message: v('nNoticeMessage') || NHS.DEFAULT.websiteNotice.message,
+    linkText: v('nNoticeLinkText'),
+    linkUrl: v('nNoticeLinkUrl')
+  };
+  const changed = ['enabled','badge','title','message','linkText','linkUrl'].some((key) => String(prevNotice[key] ?? '') !== String(nextNotice[key] ?? ''));
+  D.websiteNotice = Object.assign({}, prevNotice, nextNotice, {
+    updatedAt: changed ? new Date().toISOString() : (prevNotice.updatedAt || '')
+  });
 }
 
 function renderAdminUsers(){

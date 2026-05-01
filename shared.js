@@ -141,6 +141,15 @@ const NHS = (function () {
       ],
       feesNote: "* Fees are reviewed each academic year. Contact the school directly for the current term's exact fee schedule. Sibling discounts and scholarship opportunities are available."
     },
+    websiteNotice: {
+      enabled: false,
+      badge: "Important Notice",
+      title: "Information from New Heights School",
+      message: "We will use this space to share urgent admissions updates, school reminders, and important notices with parents.",
+      linkText: "",
+      linkUrl: "",
+      updatedAt: ""
+    },
     emailjsServiceId: "",
     emailjsTemplateId: "",
     emailjsPublicKey: "",
@@ -195,6 +204,7 @@ const NHS = (function () {
     merged.ctaBanner = Object.assign({}, base.ctaBanner, data?.ctaBanner || {});
     merged.about = Object.assign({}, base.about, data?.about || {});
     merged.admissions = Object.assign({}, base.admissions, data?.admissions || {});
+    merged.websiteNotice = Object.assign({}, base.websiteNotice, data?.websiteNotice || {});
     merged.examEmailMessage = data?.examEmailMessage || base.examEmailMessage;
     merged.adminUsers = ensureRequiredAdmins(data?.adminUsers || base.adminUsers || []);
     if (!merged.contactEmail2) merged.contactEmail2 = "galaxydesignstudio4@gmail.com";
@@ -690,6 +700,105 @@ const NHS = (function () {
   };
 })();
 
+const NHS_NOTICE_STORAGE_KEY = 'nhs_notice_dismissed_v1';
+let navBindingsReady = false;
+let adminShortcutReady = false;
+
+function getNoticeDismissedAt() {
+  try {
+    return localStorage.getItem(NHS_NOTICE_STORAGE_KEY) || '';
+  } catch (_err) {
+    return '';
+  }
+}
+
+function setNoticeDismissedAt(value) {
+  try {
+    if (value) localStorage.setItem(NHS_NOTICE_STORAGE_KEY, value);
+    else localStorage.removeItem(NHS_NOTICE_STORAGE_KEY);
+  } catch (_err) {}
+}
+
+function isNoticeVisible(notice) {
+  if (!notice?.enabled) return false;
+  const updatedAt = String(notice.updatedAt || '').trim();
+  if (!updatedAt) return true;
+  return getNoticeDismissedAt() !== updatedAt;
+}
+
+function closeWebsiteNotice() {
+  const notice = NHS.get().websiteNotice || {};
+  setNoticeDismissedAt(String(notice.updatedAt || '').trim() || 'dismissed');
+  renderWebsiteNotice();
+}
+
+function renderWebsiteNotice() {
+  let placeholder = document.getElementById('siteNoticePlaceholder');
+  if (!placeholder) {
+    const navPlaceholder = document.getElementById('navPlaceholder');
+    if (!navPlaceholder?.parentNode) return;
+    placeholder = document.createElement('div');
+    placeholder.id = 'siteNoticePlaceholder';
+    navPlaceholder.insertAdjacentElement('afterend', placeholder);
+  }
+  if (!placeholder) return;
+  const notice = NHS.get().websiteNotice || {};
+  if (!isNoticeVisible(notice)) {
+    placeholder.innerHTML = '';
+    return;
+  }
+  const badge = String(notice.badge || 'Important Notice').trim();
+  const title = String(notice.title || 'Information from New Heights School').trim();
+  const message = String(notice.message || '').trim();
+  const linkText = String(notice.linkText || '').trim();
+  const linkUrl = String(notice.linkUrl || '').trim();
+  placeholder.innerHTML = `
+    <section class="site-notice-wrap">
+      <div class="container">
+        <div class="site-notice-banner" role="status" aria-live="polite">
+          <div class="site-notice-icon" aria-hidden="true">🎒</div>
+          <div class="site-notice-copy">
+            <span class="site-notice-badge">${badge}</span>
+            <h2>${title}</h2>
+            <p>${message}</p>
+            ${linkText && linkUrl ? `<a href="${linkUrl}" class="site-notice-link">${linkText}</a>` : ''}
+          </div>
+          <button class="site-notice-close" type="button" aria-label="Close notice" onclick="closeWebsiteNotice()">×</button>
+        </div>
+      </div>
+    </section>`;
+}
+
+function bindNavEventsOnce() {
+  if (navBindingsReady) return;
+  navBindingsReady = true;
+  window.addEventListener('scroll', () => {
+    syncNavOffset();
+    updateNavScrollState();
+  });
+  window.addEventListener('resize', () => {
+    syncNavOffset();
+    if (window.innerWidth > 860) closeNav();
+  });
+  document.addEventListener('click', (event) => {
+    const navLinks = document.getElementById('navLinks');
+    if (navLinks && navLinks.classList.contains('nav-open') && !event.target.closest('.navbar')) {
+      closeNav();
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeNav();
+  });
+}
+
+function bindAdminShortcutOnce() {
+  if (adminShortcutReady) return;
+  adminShortcutReady = true;
+  document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.shiftKey && event.key === 'A') window.location.href = 'admin.html';
+  });
+}
+
 function renderNav(active) {
   const d = NHS.get();
   const logo = d.logoDataUrl
@@ -717,23 +826,12 @@ function renderNav(active) {
 
   syncNavOffset();
   updateNavScrollState();
-
-  window.addEventListener('scroll', () => {
-    syncNavOffset();
-    updateNavScrollState();
-  });
-
-  window.addEventListener('resize', () => {
-    syncNavOffset();
-    if (window.innerWidth > 860) closeNav();
-  });
+  renderWebsiteNotice();
+  bindNavEventsOnce();
+  bindAdminShortcutOnce();
 
   document.getElementById('navLinks')?.addEventListener('click', (event) => {
     if (event.target.closest('a')) closeNav();
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.shiftKey && event.key === 'A') window.location.href = 'admin.html';
   });
 }
 
@@ -807,41 +905,43 @@ function renderFooter() {
     </footer>`;
 }
 
+
 function closeNav() {
+  const nav = document.getElementById('navbar');
   const navLinks = document.getElementById('navLinks');
   const button = document.getElementById('hamburgerBtn');
   if (!navLinks) return;
   navLinks.classList.remove('nav-open');
+  nav?.classList.remove('nav-open');
   if (button) {
     button.classList.remove('active');
     button.setAttribute('aria-expanded', 'false');
   }
-  document.body.style.overflow = '';
+  document.body.classList.remove('nav-open-active');
+  document.documentElement.classList.remove('nav-open-active');
 }
 
+
 function toggleNav() {
+  const nav = document.getElementById('navbar');
   const navLinks = document.getElementById('navLinks');
   const button = document.getElementById('hamburgerBtn');
   if (!navLinks) return;
   const open = navLinks.classList.toggle('nav-open');
+  nav?.classList.toggle('nav-open', open);
   if (button) {
     button.classList.toggle('active', open);
     button.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
-  document.body.style.overflow = open ? 'hidden' : '';
+  document.body.classList.toggle('nav-open-active', open);
+  document.documentElement.classList.toggle('nav-open-active', open);
 }
 
 document.addEventListener('click', (event) => {
-  const navLinks = document.getElementById('navLinks');
-  if (navLinks && navLinks.classList.contains('nav-open') && !event.target.closest('.navbar')) {
-    closeNav();
+  if (event.target.closest('.site-notice-close')) {
+    closeWebsiteNotice();
   }
 });
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeNav();
-});
-
 function initReveal() {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
