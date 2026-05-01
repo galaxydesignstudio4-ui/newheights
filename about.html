@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>About Us — New Heights School</title>
+<title>About Us &mdash; New Heights School</title>
 <link rel="stylesheet" href="shared.css"/>
 <style>
 .about-2col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,72px);align-items:center;}
@@ -18,20 +18,17 @@
 .val-icon{font-size:2rem;margin-bottom:12px;}
 .val-card h3{font-size:1rem;color:var(--g-dark);margin-bottom:7px;}
 .val-card p{font-size:.84rem;}
-/* Curriculum */
 .curriculum-box{background:var(--white);border-radius:var(--r16);padding:clamp(24px,4vw,40px);box-shadow:var(--sh2);margin-top:32px;}
 .curriculum-box h3{color:var(--g-dark);margin-bottom:14px;}
 .curriculum-box p{font-size:.95rem;line-height:1.75;}
 .extra-list{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;}
 .extra-tag{background:var(--g-light);color:var(--g-dark);padding:8px 18px;border-radius:var(--r100);font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:7px;}
-/* Timeline */
 .timeline{position:relative;padding-left:36px;border-left:2px solid var(--g-light);max-width:700px;margin:0 auto;}
 .tl-item{position:relative;margin-bottom:36px;}
 .tl-item::before{content:'';position:absolute;left:-44px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--g-primary);border:3px solid var(--g-light);box-shadow:0 0 0 3px var(--g-sec);}
 .tl-year{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--g-primary);margin-bottom:3px;}
 .tl-item h4{font-family:'DM Sans',sans-serif;font-weight:700;margin-bottom:5px;}
 .tl-item p{font-size:.88rem;}
-/* Team */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;}
 .team-card{background:var(--white);border-radius:var(--r16);overflow:hidden;box-shadow:var(--sh1);transition:var(--ease);}
 .team-card:hover{transform:translateY(-5px);box-shadow:var(--sh3);}
@@ -52,36 +49,34 @@
   <div class="container">
     <span class="label label-light">Who We Are</span>
     <h1>About New Heights School</h1>
-    <p>Rooted in New Dawhenya, Ghana — growing futures since 2013.</p>
+    <p>Rooted in New Dawhenya, Ghana &mdash; growing futures since 2013.</p>
   </div>
 </div>
 
-<!-- MISSION & VISION -->
 <section class="section section-white">
   <div class="container">
     <div class="about-2col">
       <div class="reveal-left">
-        <div class="about-img-full" id="aboutImgBox">🏫</div>
+        <div class="about-img-full" id="aboutImgBox">School</div>
       </div>
       <div class="reveal">
         <span class="label">Our Foundation</span>
         <h2>Empowering Minds, Shaping Futures</h2>
         <p id="missionText" style="margin-top:14px;line-height:1.8;font-size:1rem;"></p>
         <div class="mv-grid">
-          <div class="mv-card"><h3>🎯 Mission</h3><p id="missionCard"></p></div>
-          <div class="mv-card"><h3>🔭 Vision</h3><p id="visionCard"></p></div>
+          <div class="mv-card"><h3>Mission</h3><p id="missionCard"></p></div>
+          <div class="mv-card"><h3>Vision</h3><p id="visionCard"></p></div>
         </div>
       </div>
     </div>
     <div class="val-row">
-      <div class="val-card reveal"><div class="val-icon">🌟</div><h3>Excellence</h3><p>Pursuing the highest academic and character standards in all we do.</p></div>
-      <div class="val-card reveal"><div class="val-icon">❤️</div><h3>Integrity</h3><p>Building honest, ethical and responsible citizens for Ghana and the world.</p></div>
-      <div class="val-card reveal"><div class="val-icon">🤝</div><h3>Service</h3><p>Giving back to our community and nurturing a culture of compassion.</p></div>
+      <div class="val-card reveal"><div class="val-icon">&#10024;</div><h3>Excellence</h3><p>Pursuing the highest academic and character standards in all we do.</p></div>
+      <div class="val-card reveal"><div class="val-icon">&#10084;</div><h3>Integrity</h3><p>Building honest, ethical and responsible citizens for Ghana and the world.</p></div>
+      <div class="val-card reveal"><div class="val-icon">&#129309;</div><h3>Service</h3><p>Giving back to our community and nurturing a culture of compassion.</p></div>
     </div>
   </div>
 </section>
 
-<!-- CURRICULUM -->
 <section class="section section-alt">
   <div class="container">
     <div class="section-head reveal">
@@ -99,19 +94,17 @@
   </div>
 </section>
 
-<!-- TIMELINE -->
 <section class="section section-white">
   <div class="container">
     <div class="section-head center text-center reveal">
       <span class="label">Our Journey</span>
       <h2>Milestones That Made Us</h2>
-      <p>From humble beginnings to a full ultra-modern campus — every step with purpose.</p>
+      <p>From humble beginnings to a full ultra-modern campus &mdash; every step with purpose.</p>
     </div>
     <div class="timeline" id="timeline"></div>
   </div>
 </section>
 
-<!-- TEAM -->
 <section class="section section-alt">
   <div class="container">
     <div class="section-head center text-center reveal">
@@ -127,49 +120,61 @@
   <div class="container">
     <h2>Ready to Join Our Family?</h2>
     <p>We'd love to welcome your child into the New Heights community.</p>
-    <a href="admissions.html" class="btn btn-lime">Start Your Application →</a>
+    <a href="admissions.html" class="btn btn-lime">Start Your Application &rarr;</a>
   </div>
 </section>
 
 <div id="footerPlaceholder"></div>
 <script src="shared.js"></script>
 <script>
+function renderAboutPage() {
+  const D = NHS.get();
+  const ab = D.about;
+  const aib = document.getElementById('aboutImgBox');
+
+  if (ab.image) {
+    aib.innerHTML = `<img src="${ab.image}" alt="School"/>`;
+    aib.style.fontSize = '';
+  } else {
+    aib.textContent = 'School';
+  }
+
+  document.getElementById('missionText').textContent = ab.mission;
+  document.getElementById('missionCard').textContent = `${ab.mission.substring(0, 180)}...`;
+  document.getElementById('visionCard').textContent = `${ab.vision.substring(0, 180)}...`;
+  document.getElementById('curriculumText').textContent = ab.curriculum;
+  document.getElementById('extraList').innerHTML = (ab.extracurricular || []).map((item) => `
+    <span class="extra-tag">* ${item}</span>`).join('');
+
+  document.getElementById('timeline').innerHTML = ab.timeline.map((item) => `
+    <div class="tl-item reveal">
+      <div class="tl-year">${item.year}</div>
+      <h4>${item.title}</h4>
+      <p>${item.text}</p>
+    </div>`).join('');
+
+  document.getElementById('teamGrid').innerHTML = ab.team.map((member) => `
+    <div class="team-card reveal">
+      <div class="team-photo">${member.image ? `<img src="${member.image}" alt="${member.name}"/>` : 'Staff'}</div>
+      <div class="team-body">
+        <h3>${member.name}</h3>
+        <div class="team-role">${member.role}</div>
+        <p>${member.bio}</p>
+      </div>
+    </div>`).join('');
+}
+
 (async function () {
-NHS.initLocal();
-renderNav('about.html'); renderFooter();
-await NHS.init();
-renderNav('about.html'); renderFooter();
-const D = NHS.get(); const ab = D.about;
-
-// Image
-const aib = document.getElementById('aboutImgBox');
-if (ab.image) { aib.innerHTML=`<img src="${ab.image}" alt="School"/>`; aib.style.fontSize=''; }
-
-document.getElementById('missionText').textContent  = ab.mission;
-document.getElementById('missionCard').textContent  = ab.mission.substring(0,180)+'…';
-document.getElementById('visionCard').textContent   = ab.vision.substring(0,180)+'…';
-document.getElementById('curriculumText').textContent = ab.curriculum;
-document.getElementById('extraList').innerHTML = (ab.extracurricular||[]).map(e=>`
-  <span class="extra-tag">🎯 ${e}</span>`).join('');
-
-document.getElementById('timeline').innerHTML = ab.timeline.map(t=>`
-  <div class="tl-item reveal">
-    <div class="tl-year">${t.year}</div>
-    <h4>${t.title}</h4>
-    <p>${t.text}</p>
-  </div>`).join('');
-
-document.getElementById('teamGrid').innerHTML = ab.team.map(m=>`
-  <div class="team-card reveal">
-    <div class="team-photo">${m.image ? `<img src="${m.image}" alt="${m.name}"/>` : '👤'}</div>
-    <div class="team-body">
-      <h3>${m.name}</h3>
-      <div class="team-role">${m.role}</div>
-      <p>${m.bio}</p>
-    </div>
-  </div>`).join('');
-
-initReveal();
+  NHS.initLocal();
+  renderNav('about.html');
+  renderFooter();
+  renderAboutPage();
+  initReveal();
+  await NHS.init();
+  renderNav('about.html');
+  renderFooter();
+  renderAboutPage();
+  initReveal();
 })();
 </script>
 </body>

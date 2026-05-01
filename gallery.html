@@ -39,10 +39,10 @@
   <div class="container" id="galContainer"></div>
 </section>
 <div class="lightbox" id="lightbox">
-  <button class="lb-close" onclick="closeLB()">×</button>
-  <button class="lb-nav lb-prev" onclick="navLB(-1)">‹</button>
+  <button class="lb-close" onclick="closeLB()">&times;</button>
+  <button class="lb-nav lb-prev" onclick="navLB(-1)">&lsaquo;</button>
   <img class="lb-img" id="lbImg" src="" alt=""/>
-  <button class="lb-nav lb-next" onclick="navLB(1)">›</button>
+  <button class="lb-nav lb-next" onclick="navLB(1)">&rsaquo;</button>
   <div class="lb-cap" id="lbCap"></div>
 </div>
 <div id="footerPlaceholder"></div>
@@ -50,6 +50,21 @@
 <script>
 let lbIdx = 0;
 let imgs = [];
+
+function renderGalleryPage() {
+  imgs = NHS.get().galleryImages || [];
+  const gc = document.getElementById('galContainer');
+  if (!imgs.length) {
+    gc.innerHTML = `<div class="empty-gallery"><div class="eg-icon">Photos</div><p>No photos yet. The admin can upload school images from the admin panel.</p></div>`;
+    return;
+  }
+
+  gc.innerHTML = `<div class="masonry">${imgs.map((g, i) => `
+    <div class="m-item" onclick="openLB(${i})">
+      <img src="${g.url}" alt="${g.caption}" loading="lazy"/>
+      <div class="m-overlay"><span>${g.caption}</span></div>
+    </div>`).join('')}</div>`;
+}
 
 function openLB(i) {
   lbIdx = i;
@@ -81,21 +96,11 @@ document.addEventListener('keydown', (event) => {
   NHS.initLocal();
   renderNav('gallery.html');
   renderFooter();
+  renderGalleryPage();
   await NHS.init(true, { gallery: true });
   renderNav('gallery.html');
   renderFooter();
-  imgs = NHS.get().galleryImages || [];
-  const gc = document.getElementById('galContainer');
-  if (!imgs.length) {
-    gc.innerHTML = `<div class="empty-gallery"><div class="eg-icon">🖼️</div><p>No photos yet. The admin can upload school images from the admin panel.</p></div>`;
-    return;
-  }
-
-  gc.innerHTML = `<div class="masonry">${imgs.map((g, i) => `
-    <div class="m-item" onclick="openLB(${i})">
-      <img src="${g.url}" alt="${g.caption}" loading="lazy"/>
-      <div class="m-overlay"><span>${g.caption}</span></div>
-    </div>`).join('')}</div>`;
+  renderGalleryPage();
 })();
 </script>
 </body>
